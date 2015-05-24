@@ -1,11 +1,31 @@
 \chapter{Introduction}
 \label{chapter:intro}
 
-\section{Cele pracy}
-\label{sec:celePracy}
+\section{Language models}
+\label{section:lm}
+Modeling language lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling cheking, parsing, machine tranlation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to perform binary classification (reject invalid sentences) or resolve disambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses. Typically, the recognizer seeks the word sequence $\hat{W}$ which is most likely to be produced from acoustic evidence $A$:
+\begin{equation}
+  P(\hat W|A)=\max_{W}P(W|A)\propto\max_{W}P(A|W)P(W)
+\end{equation}
+The language model assigns a probability estimate $P(W)$ to word sequences $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
+\begin{equation}
+  P(W)=\prod^{n}_{i=1}=P(w_{i}|h_{i})
+\end{equation}
+where $h_{i}=\{w_{1}, ldots, w_{i-1}\}$ is the word history for $w_{i}$, often reduced to equivalence class $\phi(h_{i})$:
+\begin{equation}
+  P(w_{i}|h_{i})\approx P(w_{i}|\phi(h_{i}))
+\end{equation}
 
-\section{Zawartość pracy}
-\label{sec:zawartoscPracy}
+\cite{rosenfeld2000two}
+
+\section{Automatic speech recognition}
+\label{section:asr}
+
+\section{Polish vs. English}
+\label{section:polish}
+
+\section{Outline}
+\label{section:outline}
 
 
 

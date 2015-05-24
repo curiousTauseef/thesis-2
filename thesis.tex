@@ -1,12 +1,16 @@
 \documentclass[en,11pt]{aghdpl}
-\usepackage[polish]{babel}
+\usepackage{amsmath}
+\usepackage{epigraph}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{enumerate}
 \usepackage{listings}
 \lstloadlanguages{TeX}
 
+\DeclareMathOperator*{\argmax}{arg\, max}
+
 \author{Sebastian Dziadzio}
+\shortauthor{S. Dziadzio}
 
 \titlePL{Zastosowanie morfosyntaktycznych i semantycznych modeli językowych w automatycznym rozpoznawaniu mowy}
 \titleEN{Application of Morphosyntactic and~Semantic Language Models in~Automatic Speech Recognition}
@@ -25,16 +29,15 @@
 \setcounter{secnumdepth}{4}
 
 \begin{document}
-
 \titlepages
-\setcounter{tocdepth}{3}
-\tableofcontents
-\clearpage
 
+\include{quotes}
+\tableofcontents
 \include{chapter1}
 \include{chapter2}
 \include{chapter3}
 \include{chapter4}
+\include{chapter5}
 
 \bibliographystyle{alpha}
 \bibliography{bibliography}
