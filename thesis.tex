@@ -5,13 +5,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage{enumerate}
 \usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows, positioning, calc, backgrounds}
+\usepackage{nomencl}
+\makenomenclature
 \lstloadlanguages{TeX}
 
 \DeclareMathOperator*{\argmax}{arg\, max}
 
 \author{Sebastian Dziadzio}
 \shortauthor{S. Dziadzio}
-
 \titlePL{Zastosowanie morfosyntaktycznych i semantycznych modeli językowych w automatycznym rozpoznawaniu mowy}
 \titleEN{Application of Morphosyntactic and~Semantic Language Models in~Automatic Speech Recognition}
 \shorttitlePL{Modele językowe w automatycznym rozpoznawaniu mowy}
@@ -20,18 +23,19 @@
 \thesistype{Master of Science Thesis}
 \supervisor{dr Bartosz Ziółko}
 \date{2015}
-
 \department{Department of Applied Computer Science}
 \faculty{Faculty of Electrical Engineering, Automatics, Computer Science and Biomedical Engineering}
 \degreeprogramme{Computer Science}
 
 \setlength{\cftsecnumwidth}{10mm}
+\setlength{\skip\footins}{1cm}
 \setcounter{secnumdepth}{4}
 
 \begin{document}
 \titlepages
 
 \include{quotes}
+\printnomenclature
 \tableofcontents
 \include{chapter1}
 \include{chapter2}
@@ -39,7 +43,7 @@
 \include{chapter4}
 \include{chapter5}
 
-\bibliographystyle{alpha}
+\bibliographystyle{acm}
 \bibliography{bibliography}
 
 \end{document}

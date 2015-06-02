@@ -3,16 +3,41 @@
 
 \section{Automatic speech recognition}
 \label{section:asr}
-Automatic speech recognition (ASR) \nomenclature{ASR}{Automatic Speech Recognition} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments} \cite{jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. Large-vocabulary continuous speech recognition falls into two distinct categories\nomenclature{LVCSR}{Large Vocabulary Continuous Speech Recognition}(LVCSR): speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably and unambiguously measured in terms of word recognition errors. In general, the recogniser tries to determie the most likely word sequence $\hat{W}$ from possible hypotheses $W$ given a sequence of observed acoustic features $A$:
+Automatic speech recognition (ASR) \nomenclature{ASR}{Automatic Speech Recognition} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. Large-vocabulary continuous speech recognition falls into two distinct categories\nomenclature{LVCSR}{Large Vocabulary Continuous Speech Recognition}(LVCSR): speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably and unambiguously measured in terms of word recognition errors. In general, the recogniser tries to determie the most likely word sequence $\hat{W}$ from possible hypotheses $W$ given a sequence of observed acoustic features $A$:
 \begin{equation}
 \label{equation:recogniser}
   \hat{W}=\max_{W}P(W|A)
 \end{equation}
-We can rearrange equation the conditional probability using the Bayes rule:
+We can rearrange the conditional probability using the Bayes rule:
 \begin{equation}
   \label{equation:bayesian}
-  P(W|A)=\frac{P(A|W)}{P(A)}\propto\max_{W}P(A|W)P(W)
-\nomenclature{$P(W|A)$}{Probability of a word sequence $W$ being produced from acoustic evidence $A$}
+  P(W|A)=\frac{P(A|W)P(W)}{P(A)}\propto{P(A|W)P(W)}
+  \nomenclature{$P(W|A)$}{Probability of a word sequence $W$ being produced from acoustic evidence $A$}
+\end{equation}
+$P(W)$ is estimated by the language model (see section \ref{section:lm}), while $P(A|W)$ is computed using the acoustic model \cite{whittaker2000statistical}. Typical ASR systems use Hidden Markov Models (HMMs) \nomenclature{HMMs}{Hidden Markov Models} to model the sequential structure of speech signal \cite{juang1985mixture, baker1975dragon} and Gaussian Mixture Models (GMMs) \nomenclature{GMMs}{Gaussian Mixture Models} for modelling the emission distribution of HMMs \cite{mohamed2012acoustic, bourlard1994connectionist}.
+\subsection{Feature extraction}
+Speech is a non-stationary process, so to represent it as a succession of discrete stationary states, it is assumed that over a short period of time signal statistics do not differ from sample to sample. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. Typically the features are calculated in 20-30 ms overlapping windows. The most popular method of spectral analysis is Linear Predictive Coding \nomenclature{LPC}{Linear Predictive Coding} and Mel-Frequency Cepstral Coefficients \nomenclature{MFCC}{Mel-Frequency Cepstral Coefficients}. 
+\begin{figure}[!ht]
+  \centering
+    \begin{tikzpicture}[block/.style = {draw, rectangle, minimum width = 4cm, minimum height = 1cm, font = \small}]
+      \node [block] (preemphasis) {Preemphasis};
+      \node [block, right = of preemphasis] (framing) {Framing};
+      \node [block, right = of framing] (windowing) {Windowing};
+      \node [block, below = of windowing] (dft) {|(DFT)|\textsuperscript{2}};
+      \node [block, below = of dft] (melfilter) {Mel Filters};
+      \node [block, left = of melfilter] (dct) {DCT};
+      \node [block, left = of dct] (delta) {Delta Coefficients};
+      \path[draw,->]
+      (preemphasis) edge (framing)
+      (framing) edge (windowing)
+      (windowing) edge (dft)
+      (dft) edge (melfilter)
+      (melfilter) edge (dct)
+      (dct) edge (delta);
+    \end{tikzpicture}
+  \caption{Calculating MFCC}
+\end{figure}
+\subsection{Acoustic model}
 
 \section{Language models}
 \label{section:lm}
