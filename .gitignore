@@ -1,0 +1,15 @@
+*.aux
+*.pdf
+*.log
+*.toc
+*.cls~
+*.tex~
+*.bib~
+*.nlo
+*.nls
+*.blg
+*.ilg
+*.cls#
+*.sh~
+*.bbl
+output
