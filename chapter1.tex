@@ -3,7 +3,8 @@
 
 \section{Automatic speech recognition}
 \label{section:asr}
-Automatic speech recognition (ASR) \nomenclature{ASR}{Automatic Speech Recognition} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. Large-vocabulary continuous speech recognition falls into two distinct categories\nomenclature{LVCSR}{Large Vocabulary Continuous Speech Recognition}(LVCSR): speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably and unambiguously measured in terms of word recognition errors.
+Automatic speech recognition (ASR) \nomenclature{ASR}{Automatic Speech Recognition} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. Large-vocabulary continuous speech recognition \nomenclature{LVCSR}{Large Vocabulary Continuous Speech Recognition}(LVCSR) falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably measured in terms of word recognition errors.
+
 \subsection{Bayesian framework}
 In general, the recogniser tries to determine the most likely word sequence $\hat{W}$ from possible hypotheses $W$ given a sequence of observed acoustic features $A$:
 \begin{equation}
@@ -17,39 +18,104 @@ We can rearrange the conditional probability using the Bayes rule:
   \nomenclature{$P(W|A)$}{Probability of a word sequence $W$ being produced from acoustic evidence $A$}
 \end{equation}
 $P(W)$ is estimated by the language model (see section \ref{section:lm}), while $P(A|W)$ is computed using the acoustic model \cite{whittaker2000statistical}. Typical ASR systems use Hidden Markov Models (HMMs) \nomenclature{HMMs}{Hidden Markov Models} to model the sequential structure of speech signal \cite{juang1985mixture, baker1975dragon} and Gaussian Mixture Models (GMMs) \nomenclature{GMMs}{Gaussian Mixture Models} for modelling the emission distribution of HMMs \cite{mohamed2012acoustic, bourlard1994connectionist}.
+
 \subsection{Feature extraction}
-Speech is a non-stationary process, so to represent it as a succession of discrete stationary states, it is assumed that over a short period of time signal statistics do not differ from sample to sample. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. Typically the features are calculated in 20-30 ms overlapping windows. The most popular method of spectral analysis is Linear Predictive Coding \nomenclature{LPC}{Linear Predictive Coding} and Mel-Frequency Cepstral Coefficients \nomenclature{MFCCs}{Mel-Frequency Cepstral Coefficients}. 
+Speech is a non-stationary process, so to represent it as a succession of discrete stationary states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis is Linear Predictive Coding \nomenclature{LPC}{Linear Predictive Coding} and Mel-Frequency Cepstral Coefficients \nomenclature{MFCCs}{Mel-Frequency Cepstral Coefficients}. 
 \begin{figure}[!ht]
   \label{figure:mfcc}
   \centering
     \begin{tikzpicture}[block/.style = {draw, rectangle, minimum width = 4cm, minimum height = 1cm, font = \small}]
-      \node [block] (preemphasis) {Preemphasis};
-      \node [block, right = of preemphasis] (framing) {Framing};
-      \node [block, right = of framing] (windowing) {Windowing};
-      \node [block, below = of windowing] (dft) {|(DFT)|\textsuperscript{2}};
+      \node [block] (preemphasis) {Preemphasis};nn
+      \node [block, right = of preemphasis] (windowing) {Windowing};
+      \node [block, right = of windowing] (dft) {DFT};
       \node [block, below = of dft] (melfilter) {Mel Filters};
-      \node [block, left = of melfilter] (dct) {DCT};
+      \node [block, below = of melfilter] (log) {Logarithm};
+      \node [block, left = of log] (dct) {DCT};
       \node [block, left = of dct] (delta) {Delta Coefficients};
       \path[draw,->]
-      (preemphasis) edge (framing)
-      (framing) edge (windowing)
+      (preemphasis) edge (windowing)
       (windowing) edge (dft)
       (dft) edge (melfilter)
-      (melfilter) edge (dct)
+      (melfilter) edge (log)
+      (log) edge (dct)
       (dct) edge (delta);
     \end{tikzpicture}
   \caption{Calculating MFCC}
 \end{figure}
-\subsection{Acoustic model}
-The algorithm for calculating MFCCs is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{bhupinder2012preprocessing}. Typically, the signal is passed through a high-pass finite impulse response (FIR) \nomenclature{FIR}{Finite Impulse Response} filter:
-\begin{equation}
-H(z)=1-frac{a}{z}
-\end{equation}
-where $a$ usually takes values around $0.95$ \cite{nossair1995signal}. The signal is then divided into 
 
-\section{Language models}
+The algorithm for calculating MFCCs is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass finite impulse response (FIR) \nomenclature{FIR}{Finite Impulse Response} filter:
+\begin{equation}
+H(z)=1-\frac{a}{z}
+\end{equation}
+where $0.9 \leq a \leq 1.0$ (for a different approach see: \cite{nossair1995signal}). The signal is then divided into a sequence of frames using 20-30 ms windows with about 50\% overlap. The extraction takes place by multiplying the value of the signal at time $n$ ($s[n]$) with the value of the window at time $n$ ($w[n]$):
+\begin{equation}
+  y[n]=s[n]w[n]
+\end{equation}
+Hamming window is used to avoid discontinuities at boundaries:
+\begin{equation}
+\label{equation:hamming}
+  w[n]=
+  \begin{cases}
+    0.54-0.46\cos(\frac{2 \pi n}{L}) & 0 \leq n \leq L-1 \\
+    0                               & \text{otherwise}
+  \end{cases}
+\end{equation}
+
+The next step is to extract spectral information from the windowed signal using Discrete Fourier Transform (DFT) \nomenclature{DFT}{Discrete Fourier Transform}. The result of Fourier analysis is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
+\begin{equation}
+  X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}
+\end{equation}
+However, human hearing is not equally sensitive at all frequency bands. Many studies confirm that above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefora passed through a bank of triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
+\begin{equation}
+  m=1127\ln(1+\frac{f}{700})
+\end{equation}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{img/mel.png}
+  \caption{Plot of pitch mel scale versus Hertz scale \cite{vedala2008mel}.}
+  \label{figure:mel}
+\end{figure}
+
+Another property of human hearing is that we are less sensitive to slight variation in signal level at high amplitudes than at low amplitudes. To model that logarithmic response, we take the log of each of the mel spectrum values.
+
+Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse DFT of the log magnitude of the DFT of the signal, although Discrete Cosine Transform (DCT) \nomenclature{DCT}{Discrete Cosine Transform} is also frequently used instead of inverse DFT:
+\begin{equation}
+  \label{equation:cepstrum}
+  c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}
+\end{equation}
+
+In general, speech can be represented with the source-filter model. The original glottal source waveform of particular fundamental frequency is passed trough the vocal tract, which acts as a filter. However, glottal source features (fundamental frequency $F_{0}$ \nomenclature{$F_{0'}$}{Fundamental frequency}, pulse characteristic etc) are irrelevant for distinguishing phones. Cepstral analysis enables to deconvolve the source from the filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic.Generally, MFCCs are formed from the first 12 cepstral values, which carry information solely about the vocal tract  \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that the variance of different coefficients tends to be uncorrelated (which is not true in case of raw mel-frequency spectrum). This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see section \ref{section:acoustic}).
+
+Having 12 cepstral coefficients for each frame is not sufficient, as we need inormation about one more feature that is useful in phone recognition: energy. The energy of a signal $x$ in a window from time sample $t_{1}$ to time sample $t_{2}$ can be calculated as the sum over time of the power of the samples:
+\begin{equation}
+  \text{Energy}=\sum_{t=t_{1}}^{t_{2}}x^{2}[t]
+\end{equation}
+
+We also have to take into account the variability of the signal. Changes from frame to frame, such as the slope of a formant at its transitions, provide a useful cue for phone identity. For each of the 13 features (12 cepstral features and energy), we calculate the delta (velocity) and double delta (acceleration) features. This can be done simply by computing differences between cepstral values (although usually more sophisticated estimates are used):
+
+\begin{equation}
+  d(t)=\frac{c(t+1)-c(t-1)}{2}
+\end{equation}
+
+After adding energy coefficients and time derivatives, we end up with a total of 39 MFCCs:
+\begin{itemize}
+\itemsep0em
+\item 12 cepstral coefficients
+\item 12 delta cepstral coefficients
+\item 12 double delta cepstral coefficients
+\item 1 energy coefficient
+\item 1 delta energy coefficient
+\item 1 double delta energy coefficient
+\end{itemize}
+
+\subsection{Acoustic model}
+\label{section:acoustic}
+To estimate the posterior probability $P(A|W)$ in equation \ref{equation:bayesian}, we use an acoustic model, which represents the mapping from feature vector sequences to some linguistic units (usually phoneme-sized). Hidden Markov Models are most commonly used, although other techniques, such as neural networks, segmental models, and conditional random fields, have also been applied succesfully \cite{yu2009hidden, yu2008maximum, mohamed2012acoustic}. In case of HMMs, the training data usually comprises of 
+
+\subsection{Language models}
 \label{section:lm}
-Modeling language lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to perform binary classification (reject invalid sentences) or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$ \cite{rosenfeld2000two}. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
+ In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$ \cite{rosenfeld2000two}. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
 \begin{equation}
   P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i})
   \nomenclature{$P(W)$}{Probability of a word sequence $W=\{w_{1}, \ldots, w_{n}\}$}
