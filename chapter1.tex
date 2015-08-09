@@ -3,25 +3,24 @@
 
 \section{Automatic speech recognition}
 \label{section:asr}
-Automatic speech recognition (ASR) \nomenclature{ASR}{Automatic Speech Recognition} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. Large-vocabulary continuous speech recognition \nomenclature{LVCSR}{Large Vocabulary Continuous Speech Recognition}(LVCSR) falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably measured in terms of word recognition errors.
+\Gls{asr} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. \Gls{lvcsr} falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably measured in terms of word recognition errors.
 
 \subsection{Bayesian framework}
 In general, the recogniser tries to determine the most likely word sequence $\hat{W}=w_{1}, \ldots, w_{L}$ out of all possible hypotheses $W$ which is most likely to have generated the sequence of observed acoustic features\footnote{The process of feature extraction is described in subsection \ref{subsection:features}.} $Y=y_{1}, \ldots, y_{T}$:
 \begin{equation}
 \label{equation:recogniser}
-  \hat{W}=\max_{W}P(W|Y)
+  \hat{W}=\max_{W}P(W|Y).
 \end{equation}
 We can rearrange the conditional probability using the Bayes rule:
 \begin{equation}
   \label{equation:bayesian}
-  P(W|A)=\frac{P(Y|W)P(W)}{P(Y)}\propto{P(Y|W)P(W)}
-  \nomenclature{$P(W|Y)$}{Probability of a word sequence $W$ being produced from acoustic evidence $Y$}
+  \gls{probsequence}=\frac{P(Y|W)P(W)}{P(Y)}\propto{P(Y|W)P(W)}.
 \end{equation}
-$P(W)$ is estimated by the language model (see section \ref{section:lm}), while $P(Y|W)$ is computed using the acoustic model \cite{whittaker2000statistical}. Typical ASR systems use Hidden Markov Models (HMMs) \nomenclature{HMMs}{Hidden Markov Models} to model the sequential structure of speech signal \cite{juang1985mixture, baker1975dragon} and Gaussian Mixture Models (GMMs) \nomenclature{GMMs}{Gaussian Mixture Models} for modelling the emission distribution of HMMs \cite{mohamed2012acoustic, bourlard1994connectionist}.
+$P(W)$ is estimated by the language model (see section \ref{section:lm}), while $P(Y|W)$ is computed using the acoustic model \cite{whittaker2000statistical}. Typical ASR systems use \glspl{hmm} to model the sequential structure of speech signal and \glspl{gmm} for modelling the emission distribution of \glspl{hmm} \cite{baker1975dragon, bourlard1994connectionist}.
 
 \subsection{Feature extraction}
 \label{subsection:features}
-Speech is a non-stationary process, so to represent it as a succession of discrete stationary states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis is Linear Predictive Coding \nomenclature{LPC}{Linear Predictive Coding} and Mel-Frequency Cepstral Coefficients \nomenclature{MFCCs}{Mel-Frequency Cepstral Coefficients}. 
+Speech is a non-stationary process, so to represent it as a succession of discrete stationary states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis are \glspl{mfcc} and \gls{lpc}.
 \begin{figure}[!ht]
   \label{figure:mfcc}
   \centering
@@ -41,16 +40,16 @@ Speech is a non-stationary process, so to represent it as a succession of discre
       (log) edge (dct)
       (dct) edge (delta);
     \end{tikzpicture}
-  \caption{Calculating MFCC}
+  \caption{Calculating \gls{mfcc}}
 \end{figure}
 
-The algorithm for calculating MFCCs is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass finite impulse response (FIR) \nomenclature{FIR}{Finite Impulse Response} filter:
+The algorithm for calculating MFCCs is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
 \begin{equation}
-H(z)=1-\frac{a}{z}
+H(z)=1-\frac{a}{z},
 \end{equation}
 where $0.9 \leq a \leq 1.0$ (for a different approach see: \cite{nossair1995signal}). The signal is then divided into a sequence of frames using 20-30 ms windows with about 50\% overlap. The extraction takes place by multiplying the value of the signal at time $n$ ($s[n]$) with the value of the window at time $n$ ($w[n]$):
 \begin{equation}
-  y[n]=s[n]w[n]
+  y[n]=s[n]w[n].
 \end{equation}
 Hamming window is used to avoid discontinuities at boundaries:
 \begin{equation}
@@ -58,17 +57,17 @@ Hamming window is used to avoid discontinuities at boundaries:
   w[n]=
   \begin{cases}
     0.54-0.46\cos(\frac{2 \pi n}{L}) & 0 \leq n \leq L-1 \\
-    0                               & \text{otherwise}
+    0                               & \text{otherwise.}
   \end{cases}
 \end{equation}
 
-The next step is to extract spectral information from the windowed signal using Discrete Fourier Transform (DFT) \nomenclature{DFT}{Discrete Fourier Transform}. The result of Fourier analysis is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
+The next step is to extract spectral information from the windowed signal using \gls{dft}. The result of Fourier analysis is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
 \begin{equation}
-  X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}
+  X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}.
 \end{equation}
 However, human hearing is not equally sensitive at all frequency bands. Many studies confirm that above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefora passed through a bank of triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
 \begin{equation}
-  m=1127\ln(1+\frac{f}{700})
+  m=1127\ln(1+\frac{f}{700}).
 \end{equation}
 
 \begin{figure}[!ht]
@@ -80,92 +79,121 @@ However, human hearing is not equally sensitive at all frequency bands. Many stu
 
 Another property of human hearing is that we are less sensitive to slight variation in signal level at high amplitudes than at low amplitudes. To model that logarithmic response, we take the log of each of the mel spectrum values.
 
-Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse DFT of the log magnitude of the DFT of the signal, although Discrete Cosine Transform (DCT) \nomenclature{DCT}{Discrete Cosine Transform} is also frequently used instead of inverse DFT:
+Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse \gls{dft} of the log magnitude of the \gls{dft} of the signal, although \gls{dct} is also frequently used instead of inverse \gls{dft}:
 \begin{equation}
   \label{equation:cepstrum}
-  c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}
+  c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}.
 \end{equation}
 
-In general, speech can be represented with the source-filter model. The original glottal source waveform of particular fundamental frequency is passed trough the vocal tract, which acts as a filter. However, glottal source features (fundamental frequency $F_{0}$ \nomenclature{$F_{0}'$}{Fundamental frequency}, pulse characteristic etc) are irrelevant for distinguishing phones. Cepstral analysis enables to deconvolve the source from the filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic.Generally, MFCCs are formed from the first 12 cepstral values, which carry information solely about the vocal tract  \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that the variance of different coefficients tends to be uncorrelated (which is not true in case of raw mel-frequency spectrum). This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see section \ref{section:acoustic}).
+In general, speech can be represented with the source-filter model. The original glottal source waveform of particular fundamental frequency \gls{fundamental} is passed trough the vocal tract, which acts as a filter. However, glottal source features are irrelevant for distinguishing phones. Cepstral analysis enables to deconvolve the source from the filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values, which carry information solely about the vocal tract  \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that the variance of different coefficients tends to be uncorrelated (which is not true in case of raw mel-frequency spectrum). This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see section \ref{section:acoustic}).
 
 Having 12 cepstral coefficients for each frame is not sufficient, as we need inormation about one more feature that is useful in phone recognition: energy. The energy of a signal $x$ in a window from time sample $t_{1}$ to time sample $t_{2}$ can be calculated as the sum over time of the power of the samples:
 \begin{equation}
-  \text{Energy}=\sum_{t=t_{1}}^{t_{2}}x^{2}[t]
+  \text{Energy}=\sum_{t=t_{1}}^{t_{2}}x^{2}[t].
 \end{equation}
 
 We also have to take into account the variability of the signal. Changes from frame to frame, such as the slope of a formant at its transitions, provide a useful cue for phone identity. For each of the 13 features (12 cepstral features and energy), we calculate the delta (velocity) and double delta (acceleration) features. This can be done simply by computing differences between cepstral values (although usually more sophisticated estimates are used):
 
 \begin{equation}
-  d(t)=\frac{c(t+1)-c(t-1)}{2}
+  d(t)=\frac{c(t+1)-c(t-1)}{2}.
 \end{equation}
 
 After adding energy coefficients and time derivatives, we end up with a total of 39 MFCCs:
 \begin{itemize}
 \itemsep0em
-\item 12 cepstral coefficients
-\item 12 delta cepstral coefficients
-\item 12 double delta cepstral coefficients
-\item 1 energy coefficient
-\item 1 delta energy coefficient
-\item 1 double delta energy coefficient
+\item 12 cepstral coefficients,
+\item 12 delta cepstral coefficients,
+\item 12 double delta cepstral coefficients,
+\item 1 energy coefficient,
+\item 1 delta energy coefficient,
+\item 1 double delta energy coefficient.
 \end{itemize}
 
 \subsection{Acoustic model}
 \label{section:acoustic}
-To estimate the posterior probability $P(Y|W)$ in equation \ref{equation:bayesian}, we use an acoustic model, which represents the relationship between feature vector sequences and some linguistic units. Most acoustic models are based on Hidden Markov Models, although other techniques, such as neural networks, segmental models, and conditional random fields, have also been applied succesfully \cite{yu2009hidden, yu2008maximum, mohamed2012acoustic}. Considering the number of words in a typical language \footnote{In \ref{michel2011quantitative} the size of the English lexicon in 2000 is estimated as $1022000$.}, it is impractical to train a separate HMM for each word. For this reason, sub-word units are used, generally phoneme-sized. Each spoken word $w$ from sequence $W$ is decomposed into a sequence of $K_{w}$ basic sounds, called pronunciation:
+To estimate the posterior probability $P(Y|W)$ in Equation \ref{equation:bayesian}, we use an acoustic model, which represents the relationship between feature vector sequences and some linguistic units. Most acoustic models are based on Hidden Markov Models, although other techniques, such as neural networks, segmental models, and conditional random fields, have also been applied succesfully \cite{yu2009hidden, yu2008maximum, mohamed2012acoustic}. Considering the number of words in a typical language \footnote{In \ref{michel2011quantitative} the size of the English lexicon in 2000 is estimated as $1022000$.}, it is impractical to train a separate HMM for each word. For this reason, sub-word units are used, generally phoneme-sized. Each spoken word $w$ from sequence $W$ is decomposed into a sequence of $K_{w}$ basic sounds, called pronunciation:
 \begin{equation}
-  q^{w}=q_{1}, \ldots, q_{K_{w}}
-  \nomenclature{$q^{w}$}{Pronunciation of word $w$}
+  \gls{pronunciation}=q_{1}, \ldots, q_{K_{w}}.
 \end{equation}
 Since a word can have multiple pronunciation, we have to calculate the posterior probability as a sum over all possible pronunciations:
 \begin{equation}
   \label{equation:pronunciations}
-  P(Y|W) = \sum_{Q}P(Y|Q)P(Q|W)
+  P(Y|W) = \sum_{Q}P(Y|Q)P(Q|W),
 \end{equation}
 where $Q$ is the particular sequence of pronunciations:
 \begin{equation}
-  P(Q|W)=\prod_{i=1}^{L}P(q^{w_{l}}|w_{l})
+  P(Q|W)=\prod_{i=1}^{L}P(q^{w_{i}}|w_{i}).
 \end{equation}
-In practice, the number of alternative pronunciations for each word $w_{l}$ is small, which makes the summation \ref{equation:pronunciations} feasible. Each base phone $q$ is represented by a Hidden Markov Model of the form shown in Figure \ref{figure:hmm}, described by the following elements:
+In practice, the number of alternative pronunciations for each word $w_{i}$ is small, which makes the summation \ref{equation:pronunciations} feasible. To calculate $P(Y|W)$, we represent each base phone $q$ by a \gls{hmm} of the form shown in Figure \ref{figure:hmm}, described by the following elements:
 
-\begin{itemize}
-\item $N$ - number of states
-\item $S=\{S_{1}, \ldots, S_{N}\}$ - individual states
-\item $q_{t}$ - state at time t
-\item $A=\{a_{ij}\}$ - transition matrix describing the probability of transition from state $i$ to state $j$:
+\begin{description}
+\item $N$ -- number of states,
+\item $S=\{S_{1}, \ldots, S_{N}\}$ -- individual states,
+\item $\theta_{t}$ -- state at time t,
+\item $\pi=\{\pi_{i}\}$ -- initial state distribution:
+  \begin{equation*}
+    \pi_{i}=P(\theta_{1}=S_{i}) \qquad (1 \leqslant i \leqslant N),
+  \end{equation*}
+\item $A=\{a_{ij}\}$ -- transition matrix describing the probability of transition from state $i$ to state $j$:
+  \begin{equation*}
+    a_{ij}=P(\theta_{t+1}=S_{j}|\theta_{t}=S_{i}) \qquad (1 \leqslant i, j \leqslant N), 
+  \end{equation*}
+\item $B=\{b_{i}(y)\}$ -- observation distribution associated with state $S_{i}$,
+\end{description}
+
+Every time step, a \gls{hmm} makes a transition from its current states to one of its connected states, generating a feature vector according to the distribution associated with the state being entered. The model is therefore based on two important assumptions:
+\begin{enumerate}
+\item \emph{The first-order Markov assumption --} the probability of a state $\theta_{t}$ at time $t$ is only dependent on the previous state $\theta_{t-1}$:
   \begin{equation}
-    a_{ij}=P(q_{t+1}=S_{j}|q_{t}=S_{i}), \quad 1 \leqslant i, j \leqslant N 
+    P(\theta_{t}|\theta_{t-1}, \ldots, \theta_{1})=P(\theta_{t}|\theta_{t-1}).
   \end{equation}
-\item $B=\{b_{j}(Y)\}$ - observation distribution associated with state $j$
-\item $\pi=\{\pi_{i}\}$ - initial state distribution:
+\item \emph{The output independence assumption --} every observation is conditionally independent of all other observations: 
   \begin{equation}
-    \pi_{i}=P(q_{1}=S_{i}),\quad 1 \leqslant i \leqslant N
+    P(y_{t}|y_{t-1}, \ldots, y_{1})=P(y_{t}|y_{t-1}).
   \end{equation}
-\end{itemize}
+\end{enumerate}
 
-Every time step, a HMM makes a transition from its current states to one of its connected states, generating a feature vector according to the distribution associated with the state being entered \cite{gales2008application}. Two conditional assumptions follow:
+We can now return to Equation \ref{equation:pronunciations} and define $P(Y|Q)$ in terms of acoustic model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$:
+\begin{equation}
+  P(Y|Q)=\sum_{\Theta}P(\Theta, Y|Q),
+\end{equation}
+where $\Theta=\theta_{0}, \ldots, \theta_{T+1}$ is a state sequence and
+\begin{equation}
+  \label{equation:states}
+  P(\Theta, Y|Q)=a_{\theta_{0}\theta_{1}}\prod_{t=1}^{T}b_{\theta_{t}}(y_{t})a_{\theta_{t}\theta{t+1}}.
+\end{equation}
+In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit).
 
-\begin{itemize}
-\item every state is conditionally independent of all other states given the previous state
-\item every observation is conditionally independent of all other observations given the state that generated it
-\end{itemize}
+The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the iterative forward-backward algorithm. 
 
-Base phones are usually represented as continuous density HMMs, where 
 
+So far, we assumed single multivariate Gaussians for the output distribution:
+\begin{equation}
+  b_{i}(y)=\mathcal{N}(y, \mu{i}, \Sigma{i}).
+\end{equation}
+However, $b_{i}(y)$ is usuallly represented as a mixture of $M$ Gaussians:
+\begin{equation}
+  b_{i}(Y)=\sum_{k=1}^{M}w_{ik}\mathcal{N}(Y, \mu_{ik}, \Sigma_{ik}) \qquad (1 \leqslant i \leqslant N),
+\end{equation}
+where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix associated with state $S_{j}$ and mixture $k$, while $w_{ik}$ is the mixture weight:
+\begin{equation}
+w_{ik} \geqslant 0 \quad\text{and}\quad \mathlarger{\sum_{k=1}^{M}}w_{ik}=1.
+\end{equation}
+
+\cite{juang1985mixture}
+\cite{lu2013subspace}
 \cite{glass2003automatic}
+\cite{gales2008application}
 
 \subsection{Language models}
 \label{section:lm}
  In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$ \cite{rosenfeld2000two}. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
 \begin{equation}
-  P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i})
-  \nomenclature{$P(W)$}{Probability of a word sequence $W=\{w_{1}, \ldots, w_{n}\}$}
-  \nomenclature{$P(w_{i}|h_{i})$}{Probability of a word $w_{i}$ given its history $h_{i}$}
+  P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i}),
 \end{equation}
-where $h_{i}=\{w_{1}, \ldots, w_{i-1}\}$ is the word history for $w_{i}$, often reduced to equivalence class $\phi(h_{i})$:
+where $\gls{wordhistory}=\{w_{1}, \ldots, w_{i-1}\}$ is the word history for $w_{i}$, often reduced to equivalence class \gls{equivalenceclass}:
 \begin{equation}
-  P(w_{i}|h_{i})\approx P(w_{i}|\phi(h_{i}))
-  \nomenclature{$\phi(h_{i})$}{Equivalence class of word history $h_{i}$}
+  P(w_{i}|h_{i})\approx P(w_{i}|\phi(h_{i})).
 \end{equation}
 Good equivalence classes maximise information about the next word $w_{i}$ given its history, but also require a vast quantity of example sequences. The development of effective statistical language models is therefore limited by the availability of representative and machine readable text corpora.
 
@@ -174,4 +202,4 @@ Good equivalence classes maximise information about the next word $w_{i}$ given 
 
 \section{Outline}
 \label{section:outline}
-This dissertation presents the comparative analysis of morphosyntactic and semantic language models in the context of automatic speech recognition of Polish. It focuses mostly on $N$-gram models capturing language dependencies which occur in $N$-tuples of some particular modelling unit. Words and part-of speech (POS) tags \nomenclature{$POS tags$}{Part of speech tags}.
+This dissertation presents the comparative analysis of morphosyntactic and semantic language models in the context of automatic speech recognition of Polish. It focuses mostly on $N$-gram models capturing language dependencies which occur in $N$-tuples of some particular modelling unit.

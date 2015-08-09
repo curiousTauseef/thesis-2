@@ -7,13 +7,16 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{amssymb}
+\usepackage{relsize}
 \usetikzlibrary{arrows, positioning, calc, backgrounds}
 \usepackage{nomencl}
-\makenomenclature
+\usepackage[acronym, sanitize={name=false}, nonumberlist, nopostdot, nogroupskip]{glossaries}
 \lstloadlanguages{TeX}
 
 \DeclareMathOperator*{\argmax}{arg\, max}
 \newcommand\abs[1]{\left|#1\right|}
+\renewcommand*{\glsnamefont}[1]{\textmd{#1}}
+\renewcommand{\labelitemi}{$\bullet$}
 
 \author{Sebastian Dziadzio}
 \shortauthor{S. Dziadzio}
@@ -33,12 +36,15 @@
 \setlength{\skip\footins}{1cm}
 \setlength{\footskip}{2cm}
 \setcounter{secnumdepth}{4}
+\makeglossaries
 
 \begin{document}
 \titlepages
 
 \include{quotes}
-\printnomenclature
+\include{glossary}
+\printglossary[type=\acronymtype,title=Abbreviations]
+\printglossary[title=Nomenclature]
 \tableofcontents
 \include{chapter1}
 \include{chapter2}
