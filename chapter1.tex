@@ -125,8 +125,7 @@ where $Q$ is the particular sequence of pronunciations:
   P(Q|W)=\prod_{i=1}^{L}P(q^{w_{i}}|w_{i}).
 \end{equation}
 In practice, the number of alternative pronunciations for each word $w_{i}$ is small, which makes the summation \ref{equation:pronunciations} feasible. To calculate $P(Y|W)$, we represent each base phone $q$ by a \gls{hmm} of the form shown in Figure \ref{figure:hmm}, described by the following elements:
-
-\begin{description}
+\begin{itemize}
 \item $N$ -- number of states,
 \item $S=\{S_{1}, \ldots, S_{N}\}$ -- individual states,
 \item $\theta_{t}$ -- state at time t,
@@ -138,10 +137,18 @@ In practice, the number of alternative pronunciations for each word $w_{i}$ is s
   \begin{equation*}
     a_{ij}=P(\theta_{t+1}=S_{j}|\theta_{t}=S_{i}) \qquad (1 \leqslant i, j \leqslant N), 
   \end{equation*}
-\item $B=\{b_{i}(y)\}$ -- observation distribution associated with state $S_{i}$,
-\end{description}
+\item $B=\{b_{i}(y)\}$ -- observation distribution associated with state $S_{i}$.
+\end{itemize}
+Every time step, a \gls{hmm} makes a transition from its current states to one of its connected states, generating a feature vector according to the probability density function $b_{j}(y)$. For the majority of \gls{hmm}-based speech recognisers, the emitting density is modeled by mixture of $M$ Gaussians \cite{juang1985mixture}:
+\begin{equation}
+  b_{i}(y)=\sum_{k=1}^{M}w_{ik}\mathcal{N}(y, \mu_{ik}, \Sigma_{ik}) \qquad (1 \leqslant i \leqslant N),
+\end{equation}
+where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix associated with state $S_{j}$ and mixture $k$, while $w_{ik}$ is the mixture weight:
+\begin{equation}
+w_{ik} \geqslant 0 \quad\text{and}\quad \mathlarger{\sum_{k=1}^{M}}w_{ik}=1.
+\end{equation}
 
-Every time step, a \gls{hmm} makes a transition from its current states to one of its connected states, generating a feature vector according to the distribution associated with the state being entered. The model is therefore based on two important assumptions:
+The model is therefore based on two important assumptions:
 \begin{enumerate}
 \item \emph{The first-order Markov assumption --} the probability of a state $\theta_{t}$ at time $t$ is only dependent on the previous state $\theta_{t-1}$:
   \begin{equation}
@@ -152,8 +159,7 @@ Every time step, a \gls{hmm} makes a transition from its current states to one o
     P(y_{t}|y_{t-1}, \ldots, y_{1})=P(y_{t}|y_{t-1}).
   \end{equation}
 \end{enumerate}
-
-We can now return to Equation \ref{equation:pronunciations} and define $P(Y|Q)$ in terms of acoustic model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$:
+We can now return to Equation \ref{equation:pronunciations} and define $P(Y|Q)$ in terms of acoustic model parameters \cite{lu2013subspace}:
 \begin{equation}
   P(Y|Q)=\sum_{\Theta}P(\Theta, Y|Q),
 \end{equation}
@@ -162,28 +168,7 @@ where $\Theta=\theta_{0}, \ldots, \theta_{T+1}$ is a state sequence and
   \label{equation:states}
   P(\Theta, Y|Q)=a_{\theta_{0}\theta_{1}}\prod_{t=1}^{T}b_{\theta_{t}}(y_{t})a_{\theta_{t}\theta{t+1}}.
 \end{equation}
-In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit).
-
-The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the iterative forward-backward algorithm. 
-
-
-So far, we assumed single multivariate Gaussians for the output distribution:
-\begin{equation}
-  b_{i}(y)=\mathcal{N}(y, \mu{i}, \Sigma{i}).
-\end{equation}
-However, $b_{i}(y)$ is usuallly represented as a mixture of $M$ Gaussians:
-\begin{equation}
-  b_{i}(Y)=\sum_{k=1}^{M}w_{ik}\mathcal{N}(Y, \mu_{ik}, \Sigma_{ik}) \qquad (1 \leqslant i \leqslant N),
-\end{equation}
-where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix associated with state $S_{j}$ and mixture $k$, while $w_{ik}$ is the mixture weight:
-\begin{equation}
-w_{ik} \geqslant 0 \quad\text{and}\quad \mathlarger{\sum_{k=1}^{M}}w_{ik}=1.
-\end{equation}
-
-\cite{juang1985mixture}
-\cite{lu2013subspace}
-\cite{glass2003automatic}
-\cite{gales2008application}
+In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit). The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the forward-backward algorithm \cite{baum1970maximization}. Generally, it iteratively updates the model parameters by maximizing the lower bound of the log-likelihood function $log(P(Y|W))$. For a more detailed explanation, see \cite{gales2008application}.
 
 \subsection{Language models}
 \label{section:lm}
