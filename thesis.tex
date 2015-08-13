@@ -8,15 +8,46 @@
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{relsize}
-\usetikzlibrary{arrows, positioning, calc, backgrounds}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{nomencl}
 \usepackage[acronym, sanitize={name=false}, nonumberlist, nopostdot, nogroupskip]{glossaries}
-\lstloadlanguages{TeX}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{ragged2e}
+\usepackage[strict]{changepage}
+\usepackage[margin=1cm, font={small}]{caption}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows, positioning, calc, backgrounds}
+
+\tikzstyle{state}=[shape=circle,draw=black]
+\tikzstyle{observation}=[]
+\tikzstyle{lightedge}=[<-,dotted]
+\tikzstyle{mainstate}=[state]
+\tikzstyle{mainedge}=[<-, ultra thin, draw=grey]
+\pgfplotsset{
+  samples=50,
+  domain=-3:3,
+  no markers,
+  axis x line=bottom,
+  axis line style={->, ultra thin},
+  axis y line=left,
+  axis line style={->, ultra thin},
+  enlargelimits=upper,
+  xtick=\empty,
+  ytick=\empty
+}
 
 \DeclareMathOperator*{\argmax}{arg\, max}
 \newcommand\abs[1]{\left|#1\right|}
+\newcommand\gauss[2]{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}
 \renewcommand*{\glsnamefont}[1]{\textmd{#1}}
 \renewcommand{\labelitemi}{$\bullet$}
+\lstloadlanguages{TeX}
 
 \author{Sebastian Dziadzio}
 \shortauthor{S. Dziadzio}
