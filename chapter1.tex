@@ -1,4 +1,4 @@
-\chapter{Introduction}
+>\chapter{Introduction}
 \label{chapter:intro}
 
 \section{Automatic speech recognition}
@@ -23,7 +23,7 @@ $P(W)$ is estimated by the language model (see subsection \ref{subsection:lm}), 
 Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis are \glspl{mfcc} and \gls{lpc}.
 \begin{figure}[!ht]
   \centering
-    \begin{tikzpicture}[block/.style = {draw, rectangle, minimum width = 4cm, minimum height = 1cm, font = \small}]
+    \begin{tikzpicture}[block/.style = {minimum width = 4cm, minimum height = 1cm, font = \small}]
       \node [block] (preemphasis) {Preemphasis};nn
       \node [block, right = of preemphasis] (windowing) {Windowing};
       \node [block, right = of windowing] (dft) {DFT};
@@ -168,7 +168,11 @@ where $\Theta=\theta_{0}, \ldots, \theta_{T+1}$ is a state sequence and
   \label{equation:states}
   P(\Theta, Y|Q)=a_{\theta_{0}\theta_{1}}\prod_{t=1}^{T}b_{\theta_{t}}(y_{t})a_{\theta_{t}\theta{t+1}}.
 \end{equation}
-In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit). The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the forward-backward algorithm \cite{baum1970maximization}. Generally, it iteratively updates the model parameters by maximizing the lower bound of the log-likelihood function $log(P(Y|W))$. For a detailed explanation of the algorithm, see \cite{gales2008application}.
+In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit). The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the forward-backward algorithm \cite{baum1970maximization}. Generally, it iteratively updates the model parameters by maximizing the lower bound of the log-likelihood function $log(P(Y|W))$. For a detailed explanation of the algorithm, see \cite{rabiner1986introduction}.
+
+The described technique has an important shortcoming -- decomposing each vocabulary word into a sequence of independent units (monophones) completely ignores the context-dependent variation that exist in real speech. A common solution is to use a unique model for every triphone, i.e. phoneme in left and right context. This approach results in a data sparsity problem -- for $N$ base phones, there are $N^{3}$ potential triphones, which can be avoided by mapping the complete set of logical triphones $L$ to a reduced set of physical models $P$ by clustering and tying together the parameters in each cluster. The clustering is usually done at state-level using phonetically driven decision trees \cite{gales2008application}.
+
+\Glspl{hmm} remained a \emph{de facto} standard for acoustic modeling until the advent of \gls{dnn}, first successfully used for acoustic modelling in 2012, as a result of cooperation between Google, Microsoft, IBM, and the University of Toronto. According to Richard Rashid, former head of Microsoft Research, it was ``the most dramatic change in accuracy since 1979 \cite{markoff2012scientists}''. In \cite{hinton2012deep}, \glspl{dnn} with many hidden layers have been shown to outperform \glspl{gmm} on a variety of challenging speech recognition tasks, sometimes by a large margin. The unprecedented gains in error reduction were further confirmed in \cite{pan2012investigation}, where it is reported that \glspl{dnn} can consistently achieved about 25-30\% relative error reduction over the best discriminatively trained \glspl{gmm}.
 
 \subsection{Language models}
 \label{subsection:lm}
@@ -182,9 +186,23 @@ where $\gls{wordhistory}=\{w_{1}, \ldots, w_{i-1}\}$ is the word history for $w_
 \end{equation}
 Good equivalence classes maximise information about the next word $w_{i}$ given its history, but also require a vast quantity of example sequences. The development of effective statistical language models is therefore limited by the availability of representative and machine readable text corpora.
 
-\section{Polish vs. English}
+\section{Polish Language}
 \label{section:polish}
+\subsection{Introduction}
+Although \gls{asr} has been an active field of research for several decades, for a long time most of the effort has been focused on English. Many important techniques were developed as a result of research programmes financed by the American \gls{darpa} and involving companies and institutions like IBM, AT\&T Bell Labs, Institute for Defense Analysis, Princeton University, and CMU. In the nineties numerous ASR systems originally developed for English had been succesfully ported to other languages: French, German, Japanese, and Mandarin Chinese, among others \cite{besacier2014automatic}. Similarly, the recently introduced \glspl{dnn} models were first trained and benchmarked on English corpora, and later used for other languages \cite{hinton2012deep}. The examples above suggest that similar modeling assumptions can hold for various languages. However, highly inflected languages, such as Polish, still pose a formidable challenge for speech technology researchers, due to their complex grammar, rich inflection, and a large set of phonetically similar prefixes and suffixes. This section describes the features of Polish in the context of \gls{asr} and explains where the main problems arise and how can they can be tackled.
+\subsection{Slavic Languages}
+Polish is an Indo-European language used by about 40 million speakers in Poland and around the world.  It belongs to the Slavic group, containing about 20 languages and dialects spoken by over 400 million people in Central, Southern, and Eastern Europe, as well as in the Asian part of Russia \cite{karpov2012speech}. This family of languages is traditionally divided into three main branches:
+\begin{itemize}
+\item West Slavic -- Polish, Czech, and Slovak,
+\item South Slavic -- Serbian, Croatian, Bulgarian, Slovene, and Macedonian,
+\item East Slavic -- Russian, Ukrainian, and Bellarusian.
+\end{itemize}
+In the field of speech technology, research and development effort has been focused primarily on Czech \cite{nouza2010adapting, oparin2008morphological}, Polish \cite{zelasko2015linguistically, ziolko2011automatic}, Russian {\cite{karpov2012speech}}, and Slovak \cite{lojka2009finite}.
+\subsection{Inflection}
+Polish, like other Slavic languages, exhibits a very large degree of inflection. This means that lexical units modify their basic form depending on grammatical, morphological and contextual relations. Inflection helps to infer the grammatical category (number, case, aspect, etc.) of a word. Nouns, pronouns, adjectives, and numerals
 
+\subsection{Grammar}
+\subsection{Phonology}
 
 \section{Outline}
 \label{section:outline}
