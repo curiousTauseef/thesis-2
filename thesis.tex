@@ -20,6 +20,9 @@
 \usepackage{pgfplots}
 \usepackage{ragged2e}
 \usepackage{url}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{placeins}
 \usepackage[strict]{changepage}
 \usepackage[margin=1cm, font={small}]{caption}
 \usetikzlibrary{calc}
@@ -71,6 +74,7 @@
 \makeglossaries
 
 \begin{document}
+\renewcommand*{\contentsname}{Table of Contents}
 \titlepages
 
 \include{quotes}
@@ -78,6 +82,8 @@
 \printglossary[type=\acronymtype,title=Abbreviations]
 \printglossary[title=Nomenclature]
 \tableofcontents
+\listoffigures
+\listoftables
 \include{chapter1}
 \include{chapter2}
 \include{chapter3}

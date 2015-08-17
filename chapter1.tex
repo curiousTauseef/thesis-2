@@ -1,4 +1,4 @@
->\chapter{Introduction}
+\chapter{Introduction}
 \label{chapter:intro}
 
 \section{Automatic speech recognition}
@@ -111,7 +111,7 @@ After adding energy coefficients and time derivatives, we end up with a total of
 
 \subsection{Acoustic model}
 \label{subsection:acoustic}
-To estimate the posterior probability $P(Y|W)$ in Equation \ref{equation:bayesian}, we use an acoustic model, which represents the relationship between feature vector sequences and some linguistic units. Most acoustic models are based on Hidden Markov Models, although other techniques, such as neural networks, segmental models, and conditional random fields, have also been applied succesfully \cite{yu2009hidden, yu2008maximum, mohamed2012acoustic}. Considering the number of words in a typical language \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 is estimated as $1022000$.}, it is impractical to train a separate HMM for each word. For this reason, sub-word units are used, generally phoneme-sized. Each spoken word $w$ from sequence $W$ is decomposed into a sequence of $K_{w}$ basic sounds, called pronunciation:
+To estimate the posterior probability $P(Y|W)$ in Equation \ref{equation:bayesian}, we use an acoustic model, which represents the relationship between feature vector sequences and some linguistic units. Most acoustic models are based on Hidden Markov Models, although other techniques, such as neural networks, segmental models, and conditional random fields, have also been applied succesfully \cite{yu2009hidden, yu2008maximum, mohamed2012acoustic}. Considering the number of words in a typical language, it is impractical to train a separate HMM for each word. For this reason, sub-word units are used, generally phoneme-sized. Each spoken word $w$ from sequence $W$ is decomposed into a sequence of $K_{w}$ basic sounds, called pronunciation:
 \begin{equation}
   \gls{pronunciation}=q_{1}, \ldots, q_{K_{w}}.
 \end{equation}
@@ -150,11 +150,11 @@ where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix ass
 \end{itemize}
 Every time step, an \gls{hmm} makes a transition from its current state to one of its connected states, generating a feature vector according to the probability density function $b_{j}(y)$. Two important assumptions follow:
 \begin{enumerate}
-\item \emph{The first-order Markov assumption --} the probability of a state $\theta_{t}$ at time $t$ is only dependent on the previous state $\theta_{t-1}$:
+\item \textit{The first-order Markov assumption --} the probability of a state $\theta_{t}$ at time $t$ is only dependent on the previous state $\theta_{t-1}$:
   \begin{equation}
     P(\theta_{t}|\theta_{t-1}, \ldots, \theta_{1})=P(\theta_{t}|\theta_{t-1}).
   \end{equation}
-\item \emph{The output independence assumption --} every observation is conditionally independent of all other observations: 
+\item \textit{The output independence assumption --} every observation is conditionally independent of all other observations: 
   \begin{equation}
     P(y_{t}|y_{t-1}, \ldots, y_{1})=P(y_{t}|y_{t-1}).
   \end{equation}
@@ -172,11 +172,11 @@ In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (
 
 The described technique has an important shortcoming -- decomposing each vocabulary word into a sequence of independent units (monophones) completely ignores the context-dependent variation that exist in real speech. A common solution is to use a unique model for every triphone, i.e. phoneme in left and right context. This approach results in a data sparsity problem -- for $N$ base phones, there are $N^{3}$ potential triphones, which can be avoided by mapping the complete set of logical triphones $L$ to a reduced set of physical models $P$ by clustering and tying together the parameters in each cluster. The clustering is usually done at state-level using phonetically driven decision trees \cite{gales2008application}.
 
-\Glspl{hmm} remained a \emph{de facto} standard for acoustic modeling until the advent of \gls{dnn}, first successfully used for acoustic modelling in 2012, as a result of cooperation between Google, Microsoft, IBM, and the University of Toronto. According to Richard Rashid, former head of Microsoft Research, it was ``the most dramatic change in accuracy since 1979 \cite{markoff2012scientists}''. In \cite{hinton2012deep}, \glspl{dnn} with many hidden layers have been shown to outperform \glspl{gmm} on a variety of challenging speech recognition tasks, sometimes by a large margin. The unprecedented gains in error reduction were further confirmed in \cite{pan2012investigation}, where it is reported that \glspl{dnn} can consistently achieved about 25-30\% relative error reduction over the best discriminatively trained \glspl{gmm}.
+\Glspl{hmm} remained a \textit{de facto} standard for acoustic modeling until the advent of \gls{dnn}, first successfully used for acoustic modelling in 2012, as a result of cooperation between Google, Microsoft, IBM, and the University of Toronto. According to Richard Rashid, former head of Microsoft Research, it was ``the most dramatic change in accuracy since 1979 \cite{markoff2012scientists}''. In \cite{hinton2012deep}, \glspl{dnn} with many hidden layers have been shown to outperform \glspl{gmm} on a variety of challenging speech recognition tasks, sometimes by a large margin. The unprecedented gains in error reduction were further confirmed in \cite{pan2012investigation}, where it is reported that \glspl{dnn} can consistently achieved about 25-30\% relative error reduction over the best discriminatively trained \glspl{gmm}.
 
 \subsection{Language models}
 \label{subsection:lm}
- In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$ \cite{rosenfeld2000two}. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
+ In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
 \begin{equation}
   P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i}),
 \end{equation}
@@ -184,14 +184,14 @@ where $\gls{wordhistory}=\{w_{1}, \ldots, w_{i-1}\}$ is the word history for $w_
 \begin{equation}
   P(w_{i}|h_{i})\approx P(w_{i}|\phi(h_{i})).
 \end{equation}
-Good equivalence classes maximise information about the next word $w_{i}$ given its history, but also require a vast quantity of example sequences. The development of effective statistical language models is therefore limited by the availability of representative and machine readable text corpora.
+Good equivalence classes maximise information about the next word $w_{i}$ given its history, but also require a vast quantity of example sequences. The development of effective statistical language models is therefore limited by the availability of representative and machine readable text corpora \cite{rosenfeld2000two}.
 
 \section{Polish Language}
 \label{section:polish}
 \subsection{Introduction}
 Although \gls{asr} has been an active field of research for several decades, for a long time most of the effort has been focused on English. Many important techniques were developed as a result of research programmes financed by the American \gls{darpa} and involving companies and institutions like IBM, AT\&T Bell Labs, Institute for Defense Analysis, Princeton University, and CMU. In the nineties numerous ASR systems originally developed for English had been succesfully ported to other languages: French, German, Japanese, and Mandarin Chinese, among others \cite{besacier2014automatic}. Similarly, the recently introduced \glspl{dnn} models were first trained and benchmarked on English corpora, and later used for other languages \cite{hinton2012deep}. The examples above suggest that similar modeling assumptions can hold for various languages. However, highly inflected languages, such as Polish, still pose a formidable challenge for speech technology researchers, due to their complex grammar, rich inflection, and a large set of phonetically similar prefixes and suffixes. This section describes the features of Polish in the context of \gls{asr} and explains where the main problems arise and how can they can be tackled.
 \subsection{Slavic Languages}
-Polish is an Indo-European language used by about 40 million speakers in Poland and around the world.  It belongs to the Slavic group, containing about 20 languages and dialects spoken by over 400 million people in Central, Southern, and Eastern Europe, as well as in the Asian part of Russia \cite{karpov2012speech}. This family of languages is traditionally divided into three main branches:
+Polish is an Indo-European language used by about 40 million speakers in Poland and around the world. It belongs to the Slavic group, containing about 20 languages and dialects spoken by over 400 million people in Central, Southern, and Eastern Europe, as well as in the Asian part of Russia \cite{karpov2012speech}. This family of languages is traditionally divided into three main branches:
 \begin{itemize}
 \item West Slavic -- Polish, Czech, and Slovak,
 \item South Slavic -- Serbian, Croatian, Bulgarian, Slovene, and Macedonian,
@@ -199,7 +199,91 @@ Polish is an Indo-European language used by about 40 million speakers in Poland 
 \end{itemize}
 In the field of speech technology, research and development effort has been focused primarily on Czech \cite{nouza2010adapting, oparin2008morphological}, Polish \cite{zelasko2015linguistically, ziolko2011automatic}, Russian {\cite{karpov2012speech}}, and Slovak \cite{lojka2009finite}.
 \subsection{Inflection}
-Polish, like other Slavic languages, exhibits a very large degree of inflection. This means that lexical units modify their basic form depending on grammatical, morphological and contextual relations. Inflection helps to infer the grammatical category (number, case, aspect, etc.) of a word. Nouns, pronouns, adjectives, and numerals
+Polish, like other Slavic languages, exhibits a very large degree of inflection. This means that a lexical unit (lexeme) modifies its basic form (lemma) depending on grammatical, morphological, and contextual relations. Grammatical classes, e.g. nouns, adjectives, adverbs, have an associated set of grammatical categories, such as number, case, or aspect. Major grammatical categories and their values are:
+
+\begin{itemize}
+\item number -- singular, plural,
+\item case -- nominative, genitive, dative, accusative, instrumental, locative, vocative,
+\item gender -- human masculine, animate masculine, inanimate masculine, feminine, neuter,
+\item person -- first, second, third,
+\item degree -- positive, comparative, superlative,
+\item aspect -- imperfective, perfective,
+\item negation -- affirmative, negative.
+\end{itemize}
+
+For a given class, a grammatical category can be morphological (all lexemes from that class are subject to inflection with respect to that category), or lexical (for each lexeme belonging to that class, all forms of that lexeme have the same value of that category, although that value differs across lexemes). For example, a noun changes its orthographic and phonetic form with respect to number and case, but its gender does not change, as shown in Table \ref{table:declination}. Similarly, Table \ref{table:conjugation} shows that a verb in past tense is subject to conjugation with respect to person, gender, and number, but its aspect is a fixed property.
+
+%% \begin{table}[h!]
+%%   \begin{center}
+%%     \caption{Inflection of the inanimate masculine noun \emph{sygnał} (signal) with respect to case and number.}
+%%     \label{table:declination}
+%%     \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
+%%       & singular & plural \\
+%%       \midrule
+%%       nominative & sygnał & sygnały \\
+%%       genitive & sygnału & sygnałów \\
+%%       dative & sygnałowi & sygnałom \\
+%%       accusative & sygnał & sygnały \\
+%%       instrumental & sygnałem & sygnałami \\
+%%       locative & sygnale & sygnałach \\
+%%       vocative & sygnale & sygnały \\
+%%     \end{tabular*}
+%%   \end{center}
+%% \end{table}
+\begin{table}[h!]
+  \begin{center}
+    \caption{Inflection of the feminine noun \textit{mowa} (speech) with respect to case and number.}
+    \label{table:declination}
+    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
+      & singular & plural \\
+      \midrule
+      nominative & mowa & mowy \\
+      genitive & mowy & mów \\
+      dative & mowie & mowom \\
+      accusative & mowę & mowy \\
+      instrumental & mową & mowami \\
+      locative & mowie & mowach \\
+      vocative & mowo & mowy \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \caption{Conjugation of the verb \textit{rozpoznawać} (recognize) in past tense and perfective aspect, with respect to number, person (first, second, third), and gender (masculine, feminine, neuter)}
+  \label{table:conjugation}
+    \centering    \subcaption{singular}
+    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}llll}
+      & first & second & third \\
+      \midrule
+      masculine & rozpoznałem & rozpoznałeś & rozpoznał \\
+      feminine & rozpoznałam & rozpoznałaś & rozpoznała \\
+      neuter & \multicolumn{1}{c}{-} & \multicolumn{1}{c}{-} & rozpoznało \\
+    \end{tabular*}
+    \bigskip  
+    \centering
+    \subcaption{plural}
+    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}llll}
+      & first & second & third \\
+      \midrule
+      masculine & rozpoznaliśmy & rozpoznaliście & rozpoznali \\
+      feminine & rozpoznałyśmy & rozpoznałyście & rozpoznały \\
+      neuter & rozpoznałyśmy & rozpoznałyście & rozpoznały \\
+    \end{tabular*}
+\end{table}
+Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:animate}). In case of verbs or adjectives, the difference is even more pronounced. The morphology of Polish is far more complex than what we have seen so far. New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the numbers of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, and even a vocabulary on the order of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
+
+The most straighforward strategy of reducing the \gls{oov} rate is to limit the lexicon to a set of most frequent word forms. It can be done by simply creating the word lexicon from words that occured at least $N$ times in the training corpus. The size of the lexicon can be controlled to some extent by the value of $N$.
+\begin{table}[!ht]
+  \caption{Comparison of the noun \textit{student} (student) in English and its inflected forms in Polish}
+    \label{table:animate}
+    \centering
+    \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lll}
+      English & Polish \\
+      \midrule
+      student, students & \multicolumn{2}{p{.8\linewidth}}{\textbf{masculine}: student, studenta, studentowi, studentem, studencie, studenci, studentów, studentom, studentami, studentach} \\
+                        & \multicolumn{2}{p{.8\linewidth}}{\textbf{feminine}: studentka, studentki, studentce, studentkę, studentką, studentko, studentki, studentek, studentkom, studentkami, studentkach} \\
+    \end{tabular*}
+\end{table}
 
 \subsection{Grammar}
 \subsection{Phonology}
