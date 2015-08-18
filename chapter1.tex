@@ -272,7 +272,7 @@ For a given class, a grammatical category can be morphological (all lexemes from
 \end{table}
 Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:animate}). In case of verbs or adjectives, the difference is even more pronounced. The morphology of Polish is far more complex than what we have seen so far. New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the numbers of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, and even a vocabulary on the order of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
 
-The most straighforward strategy of reducing the \gls{oov} rate is to limit the lexicon to a set of most frequent word forms. It can be done by simply creating the word lexicon from words that occured at least $N$ times in the training corpus. The size of the lexicon can be controlled to some extent by the value of $N$.
+One straightforward strategy of reducing the \gls{oov} rate is to use frequent lemmas as the basic unit of the lexicon and then derive inflected forms using a morphological generator. Another approach is to limit the lexicon to a set of most frequent inflected forms. It can be done simply by creating the word lexicon from words that occured at least $N$ times in the training corpus. In \cite{nouza2010challenges} it is reported that in case of Czech the second strategy results in better coverage, even with smaller lexicons. It can be further refined by adding a small set of frequent multi-word sequences. This technique has been shown to improve recognition and reduce \gls{oov} rates, although it requires the formulation of automated procedures for finding candidate sequences \cite{kolorenc2006multi}.
 \begin{table}[!ht]
   \caption{Comparison of the noun \textit{student} (student) in English and its inflected forms in Polish}
     \label{table:animate}
@@ -286,6 +286,23 @@ The most straighforward strategy of reducing the \gls{oov} rate is to limit the 
 \end{table}
 
 \subsection{Grammar}
+One of the distinguishing grammatical features of Slavic languages is the relatively free word order in sentences. English imposes strict constraints on the order of words, because with its limited inflection, it is the only way of encoding grammatical information. Changing the word order from ``John saw Amy'' to ``Amy saw John'' swaps the subject with the object and therefore completely alters the meaning. In Slavic languages, the role of the word in the sentence can be easily infered from its grammatical category (primarily case \cite{pohl2013using}), so the same grammatical structure can be expressed with different permutations of the words. Each word ordering in Table \ref{table:permutations} is a valid sentence, although some would be preferred stylistically in certain contexts. Changing the order also introduces a slight difference in emphasis. The free word order comes at a price of very strong grammatical agreement between parts of a sentence. The subject must agree in gender, person, and number with the verb. An adjective has to match the noun it describes in terms of gender, number, and case. Most verbo-nominal collocations impose constraints on the case of the noun.
+\begin{table}[!ht]
+  \caption{Unconstrained word order in Polish.}
+    \label{table:permutations}
+    \centering
+    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
+      English & Polish \\
+      \midrule
+      a cat is chasing a bird & kot goni ptaka \\
+                              & kot ptaka goni \\
+                              & ptaka goni kot \\
+                              & ptaka kot goni \\
+                              & goni kot ptaka \\
+                              & goni ptaka kot \\
+    \end{tabular*}
+\end{table}
+
 \subsection{Phonology}
 
 \section{Outline}
