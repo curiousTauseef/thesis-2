@@ -221,7 +221,7 @@ For a given class, a grammatical category can be morphological (all lexemes from
 %%       & singular & plural \\
 %%       \midrule
 %%       nominative & sygnał & sygnały \\
-%%       genitive & sygnału & sygnałów \\
+%%       genitive & sygnału & sygnał�łw \\
 %%       dative & sygnałowi & sygnałom \\
 %%       accusative & sygnał & sygnały \\
 %%       instrumental & sygnałem & sygnałami \\
@@ -272,7 +272,7 @@ For a given class, a grammatical category can be morphological (all lexemes from
 \end{table}
 Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:animate}). In case of verbs or adjectives, the difference is even more pronounced. The morphology of Polish is far more complex than what we have seen so far. New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the numbers of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, and even a vocabulary on the order of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
 
-One straightforward strategy of reducing the \gls{oov} rate is to use frequent lemmas as the basic unit of the lexicon and then derive inflected forms using a morphological generator. Another approach is to limit the lexicon to a set of most frequent inflected forms. It can be done simply by creating the word lexicon from words that occured at least $N$ times in the training corpus. In \cite{nouza2010challenges} it is reported that in case of Czech the second strategy results in better coverage, even with smaller lexicons. It can be further refined by adding a small set of frequent multi-word sequences. This technique has been shown to improve recognition and reduce \gls{oov} rates, although it requires the formulation of automated procedures for finding candidate sequences \cite{kolorenc2006multi}.
+The most straighforward strategy of reducing the \gls{oov} rate is to limit the lexicon to a set of most frequent word forms. It can be done by simply creating the word lexicon from words that occured at least $N$ times in the training corpus. The size of the lexicon can be controlled to some extent by the value of $N$.
 \begin{table}[!ht]
   \caption{Comparison of the noun \textit{student} (student) in English and its inflected forms in Polish}
     \label{table:animate}
@@ -286,24 +286,95 @@ One straightforward strategy of reducing the \gls{oov} rate is to use frequent l
 \end{table}
 
 \subsection{Grammar}
-One of the distinguishing grammatical features of Slavic languages is the relatively free word order in sentences. English imposes strict constraints on the order of words, because with its limited inflection, it is the only way of encoding grammatical information. Changing the word order from ``John saw Amy'' to ``Amy saw John'' swaps the subject with the object and therefore completely alters the meaning. In Slavic languages, the role of the word in the sentence can be easily infered from its grammatical category (primarily case \cite{pohl2013using}), so the same grammatical structure can be expressed with different permutations of the words. Each word ordering in Table \ref{table:permutations} is a valid sentence, although some would be preferred stylistically in certain contexts. Changing the order also introduces a slight difference in emphasis. The free word order comes at a price of very strong grammatical agreement between parts of a sentence. The subject must agree in gender, person, and number with the verb. An adjective has to match the noun it describes in terms of gender, number, and case. Most verbo-nominal collocations impose constraints on the case of the noun.
-\begin{table}[!ht]
-  \caption{Unconstrained word order in Polish.}
-    \label{table:permutations}
-    \centering
-    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
-      English & Polish \\
+\subsection{Phonology}
+The vowel system consists of six oral monophthongs and two nasal diphthongs. Table \ref{table:oral} presents the oral vowels, their orthographic transcription, and corresponding \gls{ipa} symbols.
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Polish oral vowels \cite{gussmann2007phonology}}
+    \label{table:oral}
+    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lll}
+      Polish & IPA & articulatory features\footnote{See \ref{appendix:articulation} for details.} \\
       \midrule
-      a cat is chasing a bird & kot goni ptaka \\
-                              & kot ptaka goni \\
-                              & ptaka goni kot \\
-                              & ptaka kot goni \\
-                              & goni kot ptaka \\
-                              & goni ptaka kot \\
+      a & \textipa{a}  & front, open\\
+      e & \textipa{E}  & front, half-open\\
+      i & \textipa{i}  & front, close\\
+      o & \textipa{O}  & back, half-open, round\\
+      u/ó & \textipa{u}  & back, high, round\\
+      y & \textipa{1}  & front, half-close, retracted\\
     \end{tabular*}
+  \end{center}
 \end{table}
 
-\subsection{Phonology}
+The nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a mid-vowel followed by a nasalised labio-velar or palatal glide (/\textipa{E\super{\~ w}}/, /\textipa{E \super{\~ j}}/, /\textipa{O \super{\~ w}}/), or as a combination of an oral vowel and a nasal consonant, as shown in Table \ref{table:nasal}. From the \gls{asr} perspective, the Polish consonant system is far more complex, mostly due to the distinction between the "rustling" laminal retroflex sounds~(sz,~z,~cz,~dz), the corresponding "humming" alveolo-palatals~(s,~z,~c,~dz), and "hissing" alveolars~(s,~z,~c,~dz). 
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Polish nasal vowels \cite{gussmann2007phonology}}
+    \label{table:nasal}
+    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lllll}
+      Polish & IPA & example \\
+      \midrule
+      ę & \textipa{E \super{\~w}} & gęsty /\textipa{gE\super{\~w}st1}/ (thick)\\
+        &  \textipa{E \super{\~j}} & gęś /\textipa{gE\super{\~j}C}/ (goose)\\
+        &  \textipa{En} & wędka /\textipa{vEntka}/ (rod)\\
+        &  \textipa{E\textltailn} & sędzia /\textipa{sE\textltailn d\textctz a}/ (judge)\\
+        &  \textipa{Em} & tępy /\textipa{tEmp1}/ (blunt)\\
+      ą & \textipa{O \super{\~w}} & wąs /\textipa{wO\super{\~w}s}/ (moustache)\\
+        &  \textipa{ON} & bąk /\textipa{bONk}/ (bumblebee)\\
+        &  \textipa{O\textltailn} & wziąć /\textipa{v\textctz O\textltailn tC}/ (to take)\\
+        &  \textipa{On} & wątroba /\textipa{vOntrOba}/ (liver)\\
+        &  \textipa{Om} & kąpiel /\textipa{kOmp\super ijel}/ (bath)\\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Polish consonants \cite{gussmann2007phonology}}
+    \label{table:consonants}
+    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lllll}
+      Polish & IPA & example \\
+      \midrule
+      b & \textipa{b} & \textit{bar} /\textipa{bar}/ (bar)\\
+      c & \textipa{\t{ts}} & \textit{co} /\textipa{\t{ts}O}/ (what)\\
+      ć/c(i) & \textipa{\t{tC}} & \textit{ćma} /\textipa{\t{tC}ma}/ (moth), \textit{ciało} /\textipa{\t{tC}awO}/ (body)\\
+      d & \textipa{d} & \textit{dom} /\textipa{dOm}/ (home)\\
+      dz & \textipa{\t{dz}} & \textit{dzwon} /\textipa{\t{dz}vOn}/ (bell)\\
+      dź/dz(i) & \textipa{\t{d\textctz}} & \textit{dźwig} /\textipa{\t{d\textctz}vik}/ (lift), \textit{dzień} /\textipa{\t{d\textctz}e\textltailn}/ (day)\\
+      dż & \textipa{\t{dZ}} & \textit{dżem} /\textipa{\t{dZ}Em}/ (jam)\\
+      f & \textipa{f} & \textit{fan} /\textipa{fan}/ (fan)\\
+      g & \textipa{g} & \textit{gol} /\textipa{gOl}/ (goal)\\
+      g(i) & \textipa{g\super{i}} & \textit{magia} /\textipa{mag\super{i}a}/ (magic)\\
+      h/ch & \textipa{x} & \textit{hak} /\textipa{xak}/ (hook), \textit{cham} /xam/ (boor)\\
+           & \textipa{G} & \textit{niechby} /\textipa{nieGb1}/, \textit{Bohdan} /\textipa{bOGdan}/\\
+      h(i)/ch(i) & \textipa{x\super{i}} & \textit{hit} /\textipa{x\super{i}it}/ (hit), \textit{chichot} /\textipa{x\super{i}ixOt}/ (giggle)\\
+      j & \textipa{j} & \textit{jak} /\textipa{jak}/ (how)\\
+      k & \textipa{k} & \textit{kat} /\textipa{kat}/ (executioner)\\
+      k(i) & \textipa{k\super{i}} & \textit{kiedy} /\textipa{k\super{i}jEd1}/ (when)\\
+      l & \textipa{l} & \textit{lot} /\textipa{lOt}/ (flight)\\
+      ł & \textipa{w} & \textit{łoś} /\textipa{wOC}/ (moose)\\
+      m & \textipa{m} & \textit{mapa} /\textipa{mapa}/ (map)\\
+      m(i) & \textipa{m\super{i}} & \textit{miód} /\textipa{m\super{i}jut}/ (honey)\\
+      n & \textipa{n} & \textit{nos} /\textipa{nOs}/ (nose)\\
+      ń/n(i) & \textipa{\textltailn} & \textit{koń} /\textipa{kO\textltailn}/ (horse), \textit{nie} /\textipa{\textltailn E}/ (no)\\
+      p & \textipa{p} & \textit{park} /\textipa{park}/ (park)\\
+      r & \textipa{r} & \textit{rap} /\textipa{rap}/ (rap)\\
+      s & \textipa{s} & \textit{suma} /\textipa{suma}/ (sum)\\
+      sz & \textipa{S} & \textit{szum} /\textipa{Sum}/ (noise)\\
+      ś/s(i) & \textipa{C} & \textit{śruba} /\textipa{Cruba}/ (screw), \textit{siano} /\textipa{Cano}/ (hay)\\
+      t & \textipa{t} & \textit{tak} /\textipa{tak}/ (yes)\\
+      w & \textipa{v} & \textit{wór} /\textipa{vur}/ (bag)\\
+      z & \textipa{z} & \textit{zero} /\textipa{zErO}/ (zero)\\
+      ź/z(i) & \textipa{\textctz} & \textit{źrebak} /\textipa{\textctz rEbak}/ (foal), \textit{zima} /\textipa{\textctz ima}/ (winter)\\
+      ż/rz & \textipa{Z} & \textit{żal} /\textipa{Zal}/ (sorrow), \textit{rząd} /\textipa{ZOnt}/ (government)\\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+
+
+Letter <i> can denote a vowel /i/, as in \textit{igla} /\textipa{igwa}/ (needle), have a purely orthographic function of marking the palatalization of preceding consonant when followed by a vowel, as in \textit{cieplo} /\textipa{tCepwo}/(heat), or do both at the same time, for example in \textit{cichy} /\textipa{tCixy}/ (silent). It can also denote a consonant /j/, as in \textit{hiena} /\textipa{xjEna}/, or a combination of /j/ and /i/, for example in \textit{naiwny} /\textipa{najivn1}/ (naïve). The vowel /u/ has two spellings: <ó> and <u>. There is no difference in articulation between them, although they cannot be used interchangeably, because <ó> used to denote prolonged /o/ and is still distinguished in script, despite the vowel shift from long /o/ to short /u/.
 
 \section{Outline}
 \label{section:outline}
