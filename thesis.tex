@@ -29,6 +29,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows, positioning, calc, backgrounds}
 \usepackage{appendix}
+\usepackage{tabularx}
 
 \tikzstyle{state}=[shape=circle,draw=black]
 \tikzstyle{observation}=[]
@@ -54,6 +55,9 @@
 \renewcommand*{\glsnamefont}[1]{\textmd{#1}}
 \renewcommand{\labelitemi}{$\bullet$}
 \lstloadlanguages{TeX}
+
+\newcolumntype{b}{X}
+\newcolumntype{s}{>{\hsize=.3\hsize}X}
 
 \author{Sebastian Dziadzio}
 \shortauthor{S. Dziadzio}
