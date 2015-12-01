@@ -1,5 +1,4 @@
 \documentclass[en, 11pt]{aghdpl}
-\usepackage{tipa}
 \usepackage{amsmath}
 \usepackage{epigraph}
 \usepackage[english]{babel}
@@ -30,6 +29,8 @@
 \usetikzlibrary{arrows, positioning, calc, backgrounds}
 \usepackage{appendix}
 \usepackage{tabularx}
+\usepackage{tipa}
+\usepackage{threeparttable}
 
 \tikzstyle{state}=[shape=circle,draw=black]
 \tikzstyle{observation}=[]
@@ -56,8 +57,8 @@
 \renewcommand{\labelitemi}{$\bullet$}
 \lstloadlanguages{TeX}
 
-\newcolumntype{b}{X}
-\newcolumntype{s}{>{\hsize=.3\hsize}X}
+%% \newcolumntype{b}{X}
+%% \newcolumntype{s}{>{\hsize=.3\hsize}X}
 
 \author{Sebastian Dziadzio}
 \shortauthor{S. Dziadzio}
@@ -98,7 +99,7 @@
 
 \begin{appendices}
   \chapter{Appendix A}
-  \label{articulation}
+  \label{appendix:articulation}
 \end{appendices}
 
 \bibliographystyle{acm}

@@ -212,23 +212,6 @@ Polish, like other Slavic languages, exhibits a large degree of inflection. This
 \end{itemize}
 For a given class, a grammatical category can be morphological (all lexemes from that class are subject to inflection with respect to that category), or lexical (for each lexeme belonging to that class, all forms of that lexeme have the same value of that category, although that value differs across lexemes). For example, a noun changes its orthographic and phonetic form with respect to number and case, but its gender does not change, as shown in Table \ref{table:declination}. Similarly, Table \ref{table:conjugation} shows that a verb in past tense is subject to conjugation with respect to person, gender, and number, but its aspect is a fixed property.
 
-%% \begin{table}[h!]
-%%   \begin{center}
-%%     \caption{Inflection of the inanimate masculine noun \emph{sygnał} (signal) with respect to case and number.}
-%%     \label{table:declination}
-%%     \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
-%%       & singular & plural \\
-%%       \midrule
-%%       nominative & sygnał & sygnały \\
-%%       genitive & sygnału & sygnałów \\
-%%       dative & sygnałowi & sygnałom \\
-%%       accusative & sygnał & sygnały \\
-%%       instrumental & sygnałem & sygnałami \\
-%%       locative & sygnale & sygnałach \\
-%%       vocative & sygnale & sygnały \\
-%%     \end{tabular*}
-%%   \end{center}
-%% \end{table}
 \begin{table}[h!]
   \begin{center}
     \caption{Inflection of the feminine noun \textit{mowa} (speech) with respect to case and number.}
@@ -269,62 +252,69 @@ For a given class, a grammatical category can be morphological (all lexemes from
       neuter & rozpoznałyśmy & rozpoznałyście & rozpoznały \\
     \end{tabular*}
 \end{table}
-Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:animate}). In case of verbs or adjectives, the difference is even more pronounced (see Table \ref{table:verb}). New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the number of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, while even a vocabulary of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
+Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:noun}). In case of verbs or adjectives, the difference is even more pronounced (see Table \ref{table:verb}). New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the number of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, while even a vocabulary of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
 
 The most straighforward strategy of reducing the \gls{oov} rate is to limit the lexicon to a set of most frequent word forms. It can be done by simply creating the word lexicon from words that occured at least $N$ times in the training corpus. The size of the lexicon can be controlled by the value of $N$.
 \begin{table}[!ht]
-  \caption{Comparison of the noun \textit{student} (student) in English and its inflected forms in Polish}
-    \label{table:vertb}
+  \caption{The noun \textit{student} (student) in English and its inflected forms in Polish}
+    \label{table:noun}
     \centering
-    \begin{tabularx}{\linewidth}{@{}sb@{}}
+    \begin{tabularx}{.8\linewidth}{@{}p{.2\textwidth}Xp{.6\textwidth}X@{}}
       English & Polish\\
       \hline
-      student, students & \textbf{masculine}: student, studenta, studentowi, studentem, studencie, studenci, studentów, studentom, studentami, studentach\\
+      \raggedright student, students & \textbf{masculine}: student, studenta, studentowi, studentem, studencie, studenci, studentów, studentom, studentami, studentach\\
                         & \textbf{feminine}: studentka, studentki, studentce, studentkę, studentką, studentko, studentki, studentek, studentkom, studentkami, studentkach\\
     \end{tabularx}
 \end{table}
 
 \begin{table}[!ht]
-  \caption{Comparison of the verb \textit{być} (to be) in English and its inflected forms in Polish}
-    \label{table:vertb}
+  \caption{The verb \textit{być} (to be) in English and its inflected forms in Polish}
+    \label{table:verb}
     \centering
-    \begin{tabularx}{\linewidth}{@{}p{.2\textwidth}Xp{.8\textwidth}X@{}}
+    \begin{tabularx}{.8\linewidth}{@{}p{.2\textwidth}Xp{.6\textwidth}X@{}}
       English & Polish\\
       \hline
       \raggedright be, being, been, am, are, is, was, were & jestem, jesteś, jest, jesteśmy, jesteście, są, byłem, byłam, byłeś, byłaś, był, była, było, byliśmy, byłyśmy, byliście, byłyście, byli, były, będę, będziesz, będzie, będziemy, będziecie, będą, byłbym, byłabym, byłbyś, byłabyś, byłby, byłaby, byłoby, bylibyśmy, byłybyśmy, bylibyście, byłybyście, byliby, byłyby, bądź, bądźmy, bądźcie, będący, będąc\\
     \end{tabularx}
 \end{table}
 
-\subsection{Grammar}
-\subsection{Phonology}
-The vowel system consists of six oral monophthongs and two nasal diphthongs. Table \ref{table:oral} presents the oral vowels -- their orthographic transcription, corresponding \gls{ipa} symbols, and articulatory features.
+\FloatBarrier
+\subsection{Word order}
+From the \gls{asr} perspective, the most problematic grammatical feature of Polish and other Slavic language, is the relatively free word order in sentences.Thanks to rich morphology, the subject, verb, and adjectives may appear at almost arbitrary places. The role of a certain word in the sentence can be inferred from its inflection, as there is strong grammatical agreement between the parts of a sentence. The subject of a sentence must agree in gender, person, number, and case with all its modifiers and the verb \footnote{Although verbs are not subject to conjugation with respect to cases, a verb constrains the case of the subject, forming a predicate expression called verbonominal collocation\cite{vetulani2007towards}. See Table \ref{table:agreement}}
 
-\begin{table}[h!]
-  \begin{center}
-    \caption{Polish oral vowels \cite{gussmann2007phonology}}
-    \label{table:oral}
-    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lll}
-      Polish & IPA & articulatory features\footnote{See \ref{appendix:articulation} for details.} \\
-      \midrule
-      a & \textipa{a}  & front, open\\
-      e & \textipa{E}  & front, half-open\\
-      i & \textipa{i}  & front, close\\
-      o & \textipa{O}  & back, half-open, round\\
-      u/ó & \textipa{u}  & back, high, round\\
-      y & \textipa{1}  & front, half-close, retracted\\
-    \end{tabular*}
-  \end{center}
+\begin{table}[!ht]
+  \caption{An example of grammatical agreement}
+    \label{table:agreement}
+    \centering
+    \begin{tabularx}{.8\linewidth}{@{}p{.4\textwidth}Xp{.4\textwidth}X@{}}
+      English & Polish\\
+      \hline
+      I see a strange woman & Widzę dziwn\textbf{ą} kobiet\textbf{ę}\\
+      I don't see a strange woman & Nie widzę dziwn\textbf{ej} kobiet\textbf{y}\\
+    \end{tabularx}
 \end{table}
 
-The nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a mid-vowel followed by a nasalised labio-velar or palatal glide (/\textipa{E\super{\~ w}}/, /\textipa{E \super{\~ j}}/, /\textipa{O \super{\~ w}}/), or as a combination of an oral vowel and a nasal consonant, as shown in Table \ref{table:nasal}. Letter <i> can denote a vowel /i/, as in \textit{igla} /\textipa{igwa}/ (needle), have a purely orthographic function of marking the palatalization of preceding consonant when followed by a vowel, as in \textit{cieplo} /\textipa{tCepwo}/(heat), or do both at the same time, for example in \textit{cichy} /\textipa{tCixy}/ (silent). It can also denote a consonant /j/, as in \textit{hiena} /\textipa{xjEna}/, or a combination of /j/ and /i/, for example in \textit{naiwny} /\textipa{najivn1}/ (naïve). The vowel /u/ has two spellings: <ó> and <u>. There is no difference in articulation between them, although they cannot be used interchangeably, because <ó> used to denote prolonged /o/ and is still distinguished in script, despite the vowel shift from long /o/ to short /u/.
+\subsection{Phonology}
+The vowel system consists of six oral monophthongs and two nasal diphthongs, presented in Table \ref{table:vowel} (see Appendix \ref{appendix:articulation} for details). Several commenta are in place here:
+\begin{itemize}
+\item The nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a mid-vowel followed by a nasalised labio-velar or palatal glide (/\textipa{E\super{\~ w}}/, /\textipa{E \super{\~ j}}/, /\textipa{O \super{\~ w}}/), or as a combination of an oral vowel and a nasal consonant.
+\item Letter <i> can denote a vowel /i/, as in \textit{igła} /\textipa{igwa}/ (needle), have a purely orthographic function of marking the palatalization of preceding consonant when followed by a vowel, as in \textit{cieplo} /\textipa{\t{tC}EpwO}/(heat), or do both at the same time, for example in \textit{cichy} /\textipa{\t{tC}ix1}/ (silent). It can also denote a consonant /j/, as in \textit{hiena} /\textipa{xjEna}/, or a combination of /j/ and /i/, for example in \textit{naiwny} /\textipa{najivn1}/ (naïve).
+\item The vowel /u/ has two spellings: <ó> and <u>. Although there is no difference in articulation, they cannot be used interchangeably. It is a relic of the vowel length system, which is still present in Czech and Slovak, but has disappeared from Polish. Letter <ó> used to denote prolonged /o/ and is still distinguished in script, despite the vowel shift from long /o/ to short /u/. Similarly, <á> and <é> used to denote prolonged /\textipa{a:}/ and /\textipa{E:}/, but became disused.
+\end{itemize}
 
 \begin{table}[h!]
   \begin{center}
-    \caption{Polish nasal vowels \cite{gussmann2007phonology}}
-    \label{table:nasal}
-    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lll}
-      Polish & IPA & example \\
+    \caption{Polish vowels.}
+    \label{table:vowel}
+    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
+      Polish & IPA & example\\
       \midrule
+      a & \textipa{a}  & \textit{atak} /\textipa{atak}/ (attack)\\
+      e & \textipa{E}  & \textit{era} /\textipa{Era}/ (era)\\
+      i & \textipa{i}  & \textit{igła} /\textipa{igwa}/ (needle)\\
+      o & \textipa{O}  & \textit{oko} /\textipa{OkO}/ (eye)\\
+      u/ó & \textipa{u} & \textit{ucho} /\textipa{uxO}/ (ear), \textit{ósmy} /\textipa{usm1}/ (eighth)\\
+      y & \textipa{1}   & \textit{rym} /\textipa{r1m}/ (rhyme)\\
       ę & \textipa{E \super{\~w}} & gęsty /\textipa{gE\super{\~w}st1}/ (thick)\\
         &  \textipa{E \super{\~j}} & gęś /\textipa{gE\super{\~j}C}/ (goose)\\
         &  \textipa{En} & wędka /\textipa{vEntka}/ (rod)\\
@@ -339,25 +329,47 @@ The nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a m
   \end{center}
 \end{table}
 
+\FloatBarrier
+The Polish consonant system is far more complex, at least from the \gls{asr} perspective, mostly due to the distinction between the "rustling" laminal retroflex sounds~(sz,~ż,~cz,~dz), the corresponding "humming" alveolo-palatals~(ś,~ź,~ć,~dź), and "hissing" alveolars~(s,~z,~c,~dz). Table \ref{table:consonants} presents Polish consonants -- their orthographic transcription, corresponding \gls{ipa} symbols, examples, and English approximations \cite{gussmann2007phonology}. Several comments should be made:
+
+\begin{itemize}
+\item The sound /\textipa{\:z}/ can be written either as <ż>, as in \textit{może} /\textipa{mO\:zE}/ (he/she can) or <rz>, as in \textit{morze} /\textipa{mO\:zE}/ (sea). However, <rz> can also denote a combination of /\textipa{r}/ and /\textipa{z}/, e.g. \textit{zamarzać} /\textipa{zamarza\t{tC}}/ (to freeze).
+
+\item The sound /\textipa{x}/ is rendered orthographically either as <ch> or <h>. It has strongest friction before consonants, weaker friction before vowels and weakest friction intervocalically, where it may be realized as glottal /\textipa{h}/. It also has a voiced allophone /\textipa{G}/ that occurs whenever /\textipa{x}/ is followed by a voiced obstruent, as in \textit{niechby} (may it).
+
+\item The phoneme /\textipa{n}/ has a velar allophone \textipa{N}, which occurs before velar consonants, as in \textit{bank} /\textipa{baNk}/ (bank).
+
+\item The  affricatives /\textipa{\t{t\:s} \t{d\:z}}/ are written with digraphs <cz~dż>. In contrast, transitions /t\:s d\:z/ are usually denoted by trigraphs <trz> and <drz>, e.g. \textit{trzoda} /\textipa{t\:sOda}/ (flock), \textit{drzewo} /\textipa{d\:zEvO}/ (tree), with some rare exceptions, like \textit{nadżerka} /\textipa{nad\:zErka}/ (laceration).
+
+\item The alveolo-palatals /\textipa{C~\textctz~\t{tC}~\t{d\textctz}~\textltailn}/ are rendered <ś~ź~ć~dź~ń> pre-consonantally and word-finally. However, they are spelled with multigraphs <si~zi~ci~dzi~ni> before a vowel. There are some exceptions, especially in loanwords, e.g. \textit{sinus} /\textipa{sinus}/ (sine), \textit{siwert} /\textipa{sivert}/ (sievert).
+
+\item The retroflex fricatives and affricates /\textipa{\:s~\:z~\t{t\:s}~\t{t\:z}}/ are sometimes transcribed as palato-alveolar consonants /\textipa{S~Z~\t{tS}~\t{tZ}}/ \cite{jassem2003polish}.
+
+\item The phonemes /\textipa{k\super{i}}/ and /\textipa{g\super{i}}/ are less commonly transcribed as /\textipa{c}/ and /\textipa{\textbardotlessj}/.
+
+  
+\end{itemize}
+
 \begin{table}[h!]
-  \begin{center}
-    \caption{Polish consonants \cite{gussmann2007phonology}}
-    \label{table:consonants}
-    \begin{tabular}{@{} llll @{}}
+  \centering
+  \caption{Polish consonants}
+  \label{table:consonants}
+  \begin{threeparttable}
+  \begin{tabular}{@{} llll @{}}
       Polish & IPA & example & English approximation\\
       \midrule
       b & \textipa{b} & \textit{bar} /\textipa{bar}/ (bar) & \textbf{b}ar\\
       c & \textipa{\t{ts}} & \textit{co} /\textipa{\t{ts}O}/ (what) & ca\textbf{ts}\\
-      ć/c(i) & \textipa{\t{tC}} & \textit{ćma} /\textipa{\t{tC}ma}/ (moth), \textit{ciało} /\textipa{\t{tC}awO}/ (body) & --\\
+      ć/c(i) & \textipa{\t{tC}} & \textit{ćma} /\textipa{\t{tC}ma}/ (moth), \textit{ciało} /\textipa{\t{tC}awO}/ (body) & \textbf{ch}eer\tnote{*}\\
+      cz & \textipa{\t{t\:s}} & \textit{czar} /\textipa{\t{t\:s}ar}/ (spell) & \textbf{ch}ild\tnote{*}\\
       d & \textipa{d} & \textit{dom} /\textipa{dOm}/ (home) & \textbf{d}og\\
       dz & \textipa{\t{dz}} & \textit{dzwon} /\textipa{\t{dz}vOn}/ (bell) & be\textbf{ds}\\
-      dź/dz(i) & \textipa{\t{d\textctz}} & \textit{dźwig} /\textipa{\t{d\textctz}vik}/ (lift), \textit{dzień} /\textipa{\t{d\textctz}e\textltailn}/ (day) & --\\
-      dż & \textipa{\t{dZ}} & \textit{dżem} /\textipa{\t{dZ}Em}/ (jam) & \textbf{j}ug\\
+      dź/dz(i) & \textipa{\t{d\textctz}} & \textit{dźwig} /\textipa{\t{d\textctz}vik}/ (lift), \textit{dzień} /\textipa{\t{d\textctz}e\textltailn}/ (day) & \textbf{j}eep\tnote{*}\\
+      dż & \textipa{\t{d\:z}} & \textit{dżem} /\textipa{\t{d\:z}Em}/ (jam) & \textbf{j}ug\tnote{*}\\
       f & \textipa{f} & \textit{fan} /\textipa{fan}/ (fan) & \textbf{f}an\\
       g & \textipa{g} & \textit{gol} /\textipa{gOl}/ (goal) & \textbf{g}irl\\
       g(i) & \textipa{g\super{i}} & \textit{magia} /\textipa{mag\super{i}a}/ (magic) & ar\textbf{g}ue\\
       h/ch & \textipa{x} & \textit{hak} /\textipa{xak}/ (hook), \textit{cham} /xam/ (boor) & \textbf{h}ope\\
-           & \textipa{G} & \textit{niechby} /\textipa{nieGb1}/, \textit{Bohdan} /\textipa{bOGdan}/ & --\\
       h(i)/ch(i) & \textipa{x\super{i}} & \textit{hit} /\textipa{x\super{i}it}/ (hit), \textit{chichot} /\textipa{x\super{i}ixOt}/ (giggle) & \textbf{h}ue\\
       j & \textipa{j} & \textit{jak} /\textipa{jak}/ (how) & \textbf{y}es\\
       k & \textipa{k} & \textit{kat} /\textipa{kat}/ (executioner) & s\textbf{c}am\\
@@ -371,27 +383,21 @@ The nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a m
       p & \textipa{p} & \textit{park} /\textipa{park}/ (park) & \textbf{p}ut\\
       r & \textipa{r} & \textit{rap} /\textipa{rap}/ (rap) & --\\
       s & \textipa{s} & \textit{suma} /\textipa{suma}/ (sum) & \textbf{s}ong\\
-      sz & \textipa{S} & \textit{szum} /\textipa{Sum}/ (noise) & \textbf{sh}ore\\
-      ś/s(i) & \textipa{C} & \textit{śruba} /\textipa{Cruba}/ (screw), \textit{siano} /\textipa{Cano}/ (hay) & --\\
+      ś/s(i) & \textipa{C} & \textit{śruba} /\textipa{Cruba}/ (screw), \textit{siano} /\textipa{Cano}/ (hay) & \textbf{sh}e\tnote{*}\\
+      sz & \textipa{\:s} & \textit{szum} /\textipa{\:sum}/ (noise) & \textbf{sh}ore\tnote{*}\\
       t & \textipa{t} & \textit{tak} /\textipa{tak}/ (yes) & \textbf{t}op\\
       w & \textipa{v} & \textit{wór} /\textipa{vur}/ (bag) & \textbf{v}an\\
       z & \textipa{z} & \textit{zero} /\textipa{zErO}/ (zero) & \textbf{z}ebra\\
-      ź/z(i) & \textipa{\textctz} & \textit{źrebak} /\textipa{\textctz rEbak}/ (foal), \textit{zima} /\textipa{\textctz ima}/ (winter) & --\\
-      ż/rz & \textipa{Z} & \textit{żal} /\textipa{Zal}/ (sorrow), \textit{rząd} /\textipa{ZOnt}/ (government) & vi\textbf{si}on\\
-    \end{tabular}
-  \end{center}
+      ź/z(i) & \textipa{\textctz} & \textit{źrebak} /\textipa{\textctz rEbak}/ (foal), \textit{zima} /\textipa{\textctz ima}/ (winter) & vi\textbf{si}on\tnote{*}\\
+      ż/rz & \textipa{\:z} & \textit{żal} /\textipa{\:zal}/ (sorrow), \textit{rząd} /\textipa{\:zOnt}/ (government) & a\textbf{z}ure\tnote{*}\\
+  \end{tabular}
+  \begin{tablenotes}
+  \item[*] Both the laminal retroflex sounds /\textipa{\:s~\:z~\t{t\:s}~\t{t\:z}}/ and corresponding alveolo-palatals /\textipa{C~\textctz~\t{tC}~\t{t\textctz}}/ sound similar to the English palato-alveolar consonants /\textipa{S~Z~\t{tS}~\t{tZ}}/, but are distinct sounds in Polish.
+  \end{tablenotes}
+  \end{threeparttable}
 \end{table}
 
-
-From the \gls{asr} perspective, the Polish consonant system is far more complex, mostly due to the distinction between the "rustling" laminal retroflex sounds~(sz,~z,~cz,~dz), the corresponding "humming" alveolo-palatals~(s,~z,~c,~dz), and "hissing" alveolars~(s,~z,~c,~dz). Although the orthography is highly phonemic, there are a few inconsistencies:
-
-\begin{enumerate}
-\item The sound /\textipa{Z}/ can be written either as <ż>, e.g. \textit{może} /\textipa{mOZE}/ (he/she can) or <rz>, as in \textit{morze} /\textipa{mOZE}/ (sea). However, in some cases, <rz> denotes simply a combination of /\textipa{r}/ and /\textipa{z}/, e.g. \textit{zamarzać} /\textipa{zamarza\t{tC}}/ (to freeze).
-\item The sound /\textipa{x}/ is rendered orthographically either as <ch> or <h>. The same symbols may also represent phoneme /\textipa{G}/, as shown in Table \ref{table:consonants}.
-\item The  affricatives /\textipa{\t{dz} \t{tS} \t{dZ}}/ are written with digraphs <dz cz dż>. In contrast, transitions /tS dZ/ are usually denoted by trigraphs <trz> and <drz>, e.g. \textit{trzoda} /\textipa{tSOda}/ (flock), \textit{drzewo} /\textipa{dZEvO}/ (tree), with some rare exceptions, like \textit{nadżerka} /\textipa{nadZErka}/ (laceration).
-  \item The alveolo-palatals /\textipa{C \textctz \t{tC} \t{d\textctz} \textltailn}/ are rendered <ś ź ć dź ń> pre-consonantally and word-finally. However, they are spelled with multigraphs <si zi ci dzi ni> before a vowel. There are some exceptions, especially in loanwords, e.g. \textit{sinus} /\textipa{sinus}/ (sine), \textit{siwert} /\textipa{sivert}/ (sievert).
-  \end{enumerate}
-
+\FloatBarrier
 \section{Outline}
 \label{section:outline}
 This dissertation presents the comparative analysis of morphosyntactic and semantic language models in the context of automatic speech recognition of Polish. It focuses mostly on $N$-gram models capturing language dependencies which occur in $N$-tuples of some particular modelling unit.
