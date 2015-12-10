@@ -280,7 +280,7 @@ The most straighforward strategy of reducing the \gls{oov} rate is to limit the 
 
 \FloatBarrier
 \subsection{Word order}
-From the \gls{asr} perspective, the most problematic grammatical feature of Polish and other Slavic language, is the relatively free word order in sentences.Thanks to rich morphology, the subject, verb, and adjectives may appear at almost arbitrary places. The role of a certain word in the sentence can be inferred from its inflection, as there is strong grammatical agreement between the parts of a sentence. The subject of a sentence must agree in gender, person, number, and case with all its modifiers and the verb \footnote{Although verbs are not subject to conjugation with respect to cases, a verb constrains the case of the subject, forming a predicate expression called verbonominal collocation\cite{vetulani2007towards}. See Table \ref{table:agreement}}
+From the \gls{asr} perspective, the most problematic grammatical feature of Polish and other Slavic language, is the relatively free word order in sentences.Thanks to rich morphology, the subject, verb, and adjectives may appear at almost arbitrary places. The role of a certain word in the sentence can be inferred from its inflection, as there is strong grammatical agreement between the parts of a sentence. The subject of a sentence must agree in gender, person, number, and case with all its modifiers and the verb \footnote{Although verbs are not subject to conjugation with respect to cases, a verb constrains the case of the subject, forming a predicate expression called verbonominal collocation\cite{vetulani2007towards}. See Table \ref{table:agreement}.}. Therefore, the agreement relation often does not fit the left-to-right direction of language processing and frequently binds words which are not immediate neighbours in the sentence. Because of this, n-gram models for Slavic languages will never be as efficient as in case of English, which imposes strict constraints on the relative order of words in a sentence.
 
 \begin{table}[!ht]
   \caption{An example of grammatical agreement}
@@ -289,10 +289,12 @@ From the \gls{asr} perspective, the most problematic grammatical feature of Poli
     \begin{tabularx}{.8\linewidth}{@{}p{.4\textwidth}Xp{.4\textwidth}X@{}}
       English & Polish\\
       \hline
-      I see a strange woman & Widzę dziwn\textbf{ą} kobiet\textbf{ę}\\
-      I don't see a strange woman & Nie widzę dziwn\textbf{ej} kobiet\textbf{y}\\
+      I see an intelligent woman & Widzę inteligentn\textbf{ą} kobiet\textbf{ę}\\
+      I don't see an intelligent woman & Nie widzę inteligentn\textbf{ej} kobiet\textbf{y}\\
     \end{tabularx}
 \end{table}
+
+The mechanisms of grammatical agreement are too complex to be formalised into a set of machine-processable rules. A more common approach is using class-based n-gram models instead of word-based models. First, a list of classes is defined, usually based on grammatical classes and categories. Each word from the training corpus is then replaced by the coresponding class, and an n-gram model is trained. The number of classes is significantly lower than the size of the lexicon, so these kind of models are less prone to data sparsity problems and usually do not require smoothing (see Section \ref{section:class}).
 
 \subsection{Phonology}
 The vowel system consists of six oral monophthongs and two nasal diphthongs, presented in Table \ref{table:vowel} (see Appendix \ref{appendix:articulation} for details). Several commenta are in place here:
@@ -400,4 +402,4 @@ The Polish consonant system is far more complex, at least from the \gls{asr} per
 \FloatBarrier
 \section{Outline}
 \label{section:outline}
-This dissertation presents the comparative analysis of morphosyntactic and semantic language models in the context of automatic speech recognition of Polish. It focuses mostly on $N$-gram models capturing language dependencies which occur in $N$-tuples of some particular modelling unit.
+This dissertation presents the comparative analysis of morphosyntactic and semantic language models in the context of automatic speech recognition of Polish. It focuses mostly on $N$-gram models, which capture language dependencies which occur in $N$-tuples of some particular modelling unit, and neural probabilistic language models, capable of learning a distributed representation of words, thus
