@@ -1,0 +1,56 @@
+\begin{figure}[!ht, margin=1cm]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % states
+    \node[state] (s1) at (0,2) {$S_1$};
+    \node[state] (s2) at (2,2) {$S_2$}
+    edge [<-] node[auto,swap] {$a_{12}$} (s1)
+    edge [loop above] node[auto] {$a_{22}$} ();
+    \node[state] (s3) at (4,2) {$S_3$}
+    edge [<-] node[auto, swap] {$a_{23}$} (s2)
+    edge [loop above] node[auto] {$a_{33}$}()
+    edge [<-, bend left] node[auto] {$a_{13}$}(s1);
+    \node[state] (s4) at (6,2) {$S_4$}
+    edge [<-] node[auto, swap] {$a_{34}$} (s3)
+    edge [loop above] node[auto] {$a_{44}$}()
+    edge [<-, bend left] node[auto] {$a_{24}$}(s2);
+    \node[state] (s5) at (8,2) {$S_5$}
+    edge [<-] node[auto, swap] {$a_{45}$} (s4)
+    edge [<-, bend left] node[auto] {$a_{35}$}(s3);
+    %gaussians
+    \node(gauss1) at ($(s2)-(0, 2.5cm)$) {$b_{2}(y)$};
+    \begin{axis} [height=2.5cm, width=3cm, at={($(s2)-(0, 2cm)$)}, very thin, anchor=south]
+      \addplot [smooth] {0.4*\gauss{-1}{0.3}+0.2*\gauss{0}{0.6}+0.4\gauss{1}{0.4}};
+    \end{axis}
+    \node(gauss2) at ($(s3)-(0, 2.5cm)$) {$b_{3}(y)$};
+    \begin{axis} [height=2.5cm, width=3cm, at={($(s3)-(0, 2cm)$)}, very thin, anchor=south]
+      \addplot [smooth] {0.3*\gauss{-1}{0.2}+0.3*\gauss{0}{0.4}+0.4*\gauss{1}{0.2}};
+    \end{axis}
+    \node(gauss3) at ($(s4)-(0, 2.5cm)$) {$b_{4}(y)$};
+    \begin{axis} [height=2.5cm, width=3cm, at={($(s4)-(0, 2cm)$)}, very thin, anchor=south]
+      \addplot [smooth] {0.4*\gauss{-1}{0.4}+0.6*\gauss{1}{0.3}};
+    \end{axis}
+    % observations
+    \node[observation] (y1) at (1,-2) {$y_1$}
+    edge [lightedge] node[auto] {} (gauss1);
+    \node[observation] (y2) at (2,-2) {$y_2$}
+    edge [lightedge] node[auto] {} (gauss1);
+    \node[observation] (y3) at (3,-2) {$y_3$}
+    edge [lightedge] node[auto] {} (gauss2);
+    \node[observation] (y4) at (4,-2) {$y_4$}
+    edge [lightedge] node[auto] {} (gauss2);
+    \node[observation] (y5) at (5,-2) {$y_5$}
+    edge [lightedge] node[auto] {} (gauss3);
+    \node[observation] (y6) at (6,-2) {$y_6$}
+    edge [lightedge] node[auto] {} (gauss3);
+    \node[observation] (y7) at (7,-2) {$y_7$}
+    edge [lightedge] node[auto] {} (gauss3);
+  \end{tikzpicture}
+  \caption{An HMM with five states.}
+  \label{figure:hmm}
+  \begin{adjustwidth}{2cm}{2cm}
+  \justify
+  \small
+  $S_{1}$ and $S_{5}$ are non-emitting entry and exit states, $a_{ij}$ denotes the probability of transition from state $S_{i}$ to $S_{j}$, $b_{i}$ is the probability density function associated with state $S_{i}$, and $Y=[y_{1}, \ldots, y_{7}]$ is the observation sequence. The depicted \gls{hmm} is an example of a Bakis model, which allows self-transitions, transitions to adjacent states, and skipping of individual states within a sequence. It is able to capture temporal extensions and reductions of the signal, while keeping the number of parameters low in comparison with more flexible topologies, such as left-to-right and ergodic \cite{fink2008markov}.
+\end{adjustwidth}
+  \end{figure}
