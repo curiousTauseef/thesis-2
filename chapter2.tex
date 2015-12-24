@@ -1,9 +1,22 @@
 \chapter{Statistical language models}
 \label{chapter:lm}
-Modeling language lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
+Modelling language lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
 
 \section{N-gram models}
+In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
+\begin{equation}
+	P(w_{1}, \dots, w_{n})=\prod_{i=1}^{n}P(w_{i}|w_{1},\dots,w_{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
+\end{equation}
+However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an $n$-gram model. An $n$-gram is simply a sequence of $n$ words -- an $n$-gram of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The $n$-gram model is a Markov chain of order $n-1$, which means that it approximates the probability of a word given all the previous words with the conditional probability of the word given $n-1$ preceding words:
+\begin{equation}
+	P(w_{i}|w_{1},\dots,w_{i-1})\approx P(w_{i}|w_{i-n+1},\dots,w_{i-1})
+\end{equation}
+For example, consider the following sequence:
+\begin{center}
+\texttt{open the pod bay doors hal}  
+\end{center}
 \subsection{Word n-grams}
+
 \subsection{Class n-grams}
 \label{subsection:class}
 \subsection{Skip-grams}

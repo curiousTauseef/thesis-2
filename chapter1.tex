@@ -178,6 +178,7 @@ The described technique has an important shortcoming -- decomposing each vocabul
 \label{subsection:lm}
  In a Bayesian framework presented in equation \ref{equation:bayesian}, the language model estimates the a priori likelihood by assigning probability $P(W)$ to each word sequence $W=\{w_{1}, \ldots, w_{n}\}$ such that $\sum_{W}P(W)=1$. Since the search is usually performed unidirectionally, $P(W)$ can be formulated as a chain rule:
 \begin{equation}
+\label{equation:chain}
   P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i}),
 \end{equation}
 where $\gls{wordhistory}=\{w_{1}, \ldots, w_{i-1}\}$ is the word history for $w_{i}$, often reduced to equivalence class \gls{equivalenceclass}:
