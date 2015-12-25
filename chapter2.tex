@@ -1,8 +1,9 @@
 \chapter{Statistical language models}
 \label{chapter:lm}
-Modelling language lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
-
+Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
+In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the $n$-gram model, which is still one of the most important tools in speech and language processing. Section \ref{section:ann} presents connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
+\label{section:ngrams}
 In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
 \begin{equation}
 	P(w_{1}, \dots, w_{n})=\prod_{i=1}^{n}P(w_{i}|w_{1},\dots,w_{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
@@ -22,7 +23,7 @@ For example, consider the following sequence:
 \subsection{Skip-grams}
 
 \section{Neural network models}
-
+\label{section:ann}
 \section{Evaluation of language models}
 \label{section:evaluation}
 
