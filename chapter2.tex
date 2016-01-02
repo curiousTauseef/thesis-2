@@ -1,7 +1,8 @@
 \chapter{Statistical language models}
 \label{chapter:lm}
 Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
-In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the $n$-gram model, which is still one of the most important tools in speech and language processing. Section \ref{section:ann} presents connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
+
+In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the $n$-gram model, which is still one of the most important tools in speech and language processing. Section \ref{section:ann} presents the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
 \label{section:ngrams}
 In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
@@ -14,10 +15,19 @@ However, there is no way of computing the probability of a word given a long his
 \end{equation}
 For example, consider the following sequence:
 \begin{center}
-\texttt{open the pod bay doors hal}  
+\texttt{open the pod bay doors}  
 \end{center}
+We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, for example, we have:
+\begin{equation}
+	P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
+\end{equation}
+The probability of the entire sequence can be therefore estimated as follows:
+\begin{multline}
+	P(\texttt{open the pod bay door hal}) \approx \\
+	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
+\end{multline}
+where <s> and </s> are start-of sentence and end-of-sentence tokens respectively.
 \subsection{Word n-grams}
-
 \subsection{Class n-grams}
 \label{subsection:class}
 \subsection{Skip-grams}
