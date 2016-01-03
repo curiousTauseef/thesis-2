@@ -2,18 +2,19 @@
 \label{chapter:lm}
 Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
 
-In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the $n$-gram model, which is still one of the most important tools in speech and language processing. Section \ref{section:ann} presents the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
+In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the word $n$-gram model, which is still one of the most important tools in speech and language processing. It also presents several smoothing techniques. Section \ref{section:ann} is dedicated to the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
 \label{section:ngrams}
-In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
+In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words (or other modelling units) into a product of conditional probabilities:
 \begin{equation}
 	P(w_{1}, \dots, w_{n})=\prod_{i=1}^{n}P(w_{i}|w_{1},\dots,w_{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
 \end{equation}
-However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an $n$-gram model. An $n$-gram is simply a sequence of $n$ words -- an $n$-gram of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The $n$-gram model is a Markov chain of order $n-1$, which means that it approximates the probability of a word given all the previous words with the conditional probability of the word given $n-1$ preceding words:
+However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an $n$-gram model. An $n$-gram is simply a sequence of $n$ words -- an $n$-gram of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The $n$-gram model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
 \begin{equation}
 	P(w_{i}|w_{1},\dots,w_{i-1})\approx P(w_{i}|w_{i-n+1},\dots,w_{i-1})
 \end{equation}
-For example, consider the following sequence:
+\subsection{Word n-grams}
+The $n$-gram can be interpreted as a Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible. In case of word $n$-gram models, states are simply words. For example, consider the following sequence:
 \begin{center}
 \texttt{open the pod bay doors}  
 \end{center}
@@ -21,16 +22,16 @@ We would like to estimate the probability of next word being \texttt{hal}. Using
 \begin{equation}
 	P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
 \end{equation}
-The probability of the entire sequence can be therefore estimated as follows:
+Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence:
 \begin{multline}
 	P(\texttt{open the pod bay door hal}) \approx \\
 	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
 \end{multline}
-where <s> and </s> are start-of sentence and end-of-sentence tokens respectively.
-\subsection{Word n-grams}
+where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
 \subsection{Class n-grams}
 \label{subsection:class}
-\subsection{Skip-grams}
+So far, we used plain words as our basic modelling unit. There are several disadvantages of this approach.
+\subsection{Smoothing}
 
 \section{Neural network models}
 \label{section:ann}
