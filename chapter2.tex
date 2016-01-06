@@ -28,15 +28,11 @@ Truncating the history to $n-1$ units drastically reduces the number of free par
 	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}).
 \end{multline}
 where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
-There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid tri-grams, e.g:
-\begin{centering}
-	\texttt{yoda sentence here}<++>
-\end{centering}
-\subsection{Class n-grams}
-\label{subsection:class}
-So far, we used plain words as our basic modelling unit. There are several disadvantages of this approach.
-\subsection{Maximum Likelihood Estimation and Smoothing}
-
+There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid $n$-grams, when the $n$ is small. Take this quote from Yoda as an example:
+\begin{center}
+	\texttt{that face you make look I so old to young eyes.}
+\end{center}
+		A bigram model would quite likely assign a relatively high probability to this phrase, because each pair of consecutive words is plausible. Using a trigram model would probably yield better results, but at a considerable cost - for a lexicon of 50 000 words, switching from bigram to trigram model introduces more than one hundred trillions potential parameters!
 \section{Neural network models}
 \label{section:ann}
 \section{Evaluation of language models}
