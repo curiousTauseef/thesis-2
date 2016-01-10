@@ -32,7 +32,9 @@ There are several disadvantages of word-based $n$-gram models. The first one is 
 \begin{center}
 	\texttt{that face you make look I so old to young eyes.}
 \end{center}
-		A bigram model would quite likely assign a relatively high probability to this phrase, because each pair of consecutive words is plausible. Using a trigram model would probably yield better results, but at a considerable cost - for a lexicon of 50 000 words, switching from bigram to trigram model introduces more than one hundred trillions potential parameters!
+A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
+In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram model introduces more than one hundred trillions potential parameters! This is another important drawback of word-based models. There will always be a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storage of higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
+Another drawback of word-based $n$-grams is that theyk 
 \section{Neural network models}
 \label{section:ann}
 \section{Evaluation of language models}
