@@ -12,4 +12,6 @@
 *.cls#
 *.sh~
 *.bbl
+*.swp
+*.swo
 output
