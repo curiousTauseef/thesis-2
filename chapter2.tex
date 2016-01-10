@@ -13,8 +13,9 @@ However, there is no way of computing the probability of a word given a long his
 \begin{equation}
 	P(w_{i}|w_{1},\dots,w_{i-1})\approx P(w_{i}|w_{i-n+1},\dots,w_{i-1})
 \end{equation}
+The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 \subsection{Word n-grams}
-The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible. In case of word $n$-gram models, states are simply words. For example, consider the following sequence:
+So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such POS tags. In case of word $n$-gram models, states are simply words. For example, consider the following sequence:
 \begin{center}
 \texttt{open the pod bay doors}  
 \end{center}
