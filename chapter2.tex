@@ -34,10 +34,13 @@ There are several disadvantages of word-based $n$-gram models. The first one is 
 \end{center}
 A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
 In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! There is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
-Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being semantically equivalent. Consider the following two sequences:
+Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 \begin{center}
-	\texttt{}
+	\texttt{a brilliant american mathematician who graduated from}
+	\texttt{a brilliant american mathematician who graduated quite recently from}.
 \end{center}
+From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different, even by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
+Word-based bigram and trigram models are still commonly used in speech recognition systems, because they strike a fine balance between effectiveness and simplicity.
 \subsection{Class-based $n$-gram models}
 \section{Neural network models}
 \label{section:ann}
