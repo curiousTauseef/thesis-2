@@ -30,15 +30,15 @@ Truncating the history to $n-1$ units drastically reduces the number of free par
 where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
 There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid $n$-grams, when the $n$ is small. Take this quote from Yoda as an example:
 \begin{center}
-	\texttt{that face you make look I so old to young eyes.}
+	\texttt{look I so old to young eyes.}
 \end{center}
 A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
 In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! There is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
-Another issue with word-based $n$-grams is that the truncation of word history leads to unintuitive or unconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order. Consider the following sequence:
+Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being semantically equivalent. Consider the following two sequences:
 \begin{center}
 	\texttt{}
 \end{center}
-
+\subsection{Class-based $n$-gram models}
 \section{Neural network models}
 \label{section:ann}
 \section{Evaluation of language models}
