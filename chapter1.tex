@@ -21,16 +21,17 @@ $P(W)$ is estimated by the language model (see subsection \ref{subsection:lm}), 
 \subsection{Feature extraction}
 \label{subsection:features}
 Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis are \glspl{mfcc} and \gls{lpc}.
+
 \begin{figure}[!ht]
   \centering
-    \begin{tikzpicture}[block/.style = {minimum width = 4cm, minimum height = 1cm, font = \small}]
-      \node [block] (preemphasis) {Preemphasis};nn
-      \node [block, right = of preemphasis] (windowing) {Windowing};
-      \node [block, right = of windowing] (dft) {DFT};
+    \begin{tikzpicture}[block/.style = {minimum width = 4cm, font = \small}]
+      \node [block] (preemphasis) {Preemphasis};
+      \node [block, below = of preemphasis] (windowing) {Windowing};
+      \node [block, below = of windowing] (dft) {DFT};
       \node [block, below = of dft] (melfilter) {Mel Filters};
       \node [block, below = of melfilter] (log) {Logarithm};
-      \node [block, left = of log] (dct) {DCT};
-      \node [block, left = of dct] (delta) {Delta Coefficients};
+      \node [block, below = of log] (dct) {DCT};
+      \node [block, below = of dct] (delta) {Delta Coefficients};
       \path[draw,->]
       (preemphasis) edge (windowing)
       (windowing) edge (dft)
@@ -42,7 +43,6 @@ Speech is a non-stationary process, so to represent it as a succession of discre
     \caption{Calculating \gls{mfcc}}
     \label{figure:mfcc}
 \end{figure}
-
 The algorithm for calculating \glspl{mfcc} is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
 \begin{equation}
 H(z)=1-\frac{a}{z},
