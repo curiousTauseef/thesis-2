@@ -15,7 +15,7 @@ However, there is no way of computing the probability of a word given a long his
 \end{equation}
 The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 \subsection{Word n-grams}
-So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models allow to straightforwardly prune word lattices described in section \ref{subsection:lm} by eliminating improbable edges. For example, consider the following sequence:
+So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider the following sequence:
 \begin{center}
 \texttt{open the pod bay doors}  
 \end{center}
@@ -26,7 +26,7 @@ We would like to estimate the probability of next word being \texttt{hal}. Using
 Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence:
 \begin{multline}
 	P(\texttt{open the pod bay door hal}) \approx \\
-	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}).
+	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}),
 \end{multline}
 where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
 There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid $n$-grams, when the $n$ is small. Take this quote from Yoda as an example:
@@ -34,14 +34,15 @@ There are several disadvantages of word-based $n$-gram models. The first one is 
 	\texttt{look I so old to young eyes.}
 \end{center}
 A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
-In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! There is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
+In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! Several techniques of dealing with the \gls{oov} words are available (see Section \ref{subsection:smoothing}), but there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
 Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 \begin{center}
-	\texttt{a brilliant american mathematician who graduated from}
+	\texttt{a brilliant american mathematician who graduated from} \\
 	\texttt{a brilliant american mathematician who graduated quite recently from}.
 \end{center}
-From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different, even by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
-Word-based bigram and trigram models are still commonly used in speech recognition systems, because they strike a fine balance between effectiveness and simplicity.
+From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different, even by a trigram word model \cite{whittaker2000statistical}. Furthermore, in the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
+
+Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified because and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
 \section{Neural network models}
 \label{section:ann}
