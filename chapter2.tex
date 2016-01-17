@@ -15,28 +15,27 @@ However, there is no way of computing the probability of a word given a long his
 \end{equation}
 The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 
-Another way to look at the $n$-gram is to use the notion of equivalence class, already introduced in Section \ref{subsection:lm}. In \cite{jelinek1997statistical}, language modelling is defined as the task of finding the best history classification function:
+Another way to look at the $n$-gram is to use the notion of history equivalence class, already introduced in Section \ref{subsection:lm}. Since it is impossible to obtain a probability estimate for every imaginable word history, we can classify word histories into equivalence classes. Indeed, in \cite{jelinek1997statistical}, language modelling is defined as the task of finding the best history classification function:
 \begin{equation}
 	\Phi:h_{i}\mapsto\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})
 \end{equation}
-In case of $n$-gram models, the history classification function $\Phi$ is the truncation of word history to the last $n-1$ elements:
+An ideal equivalence In case of $n$-gram models, the history classification function $\Phi$ limits the word history to the last $n-1$ elements:
 \begin{equation}
 	\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
 \end{equation}
-In an $n$-gram model, two word histories are equivalent if their last $n-1$ elements are identical.
+Two word histories are therefore equivalent if their last $n-1$ elements are identical.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
-The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\phi(h_{i})=\{w_{i-n+1}, \dots, w_{i-1}\}$ is the count of the $n$-gram $\{w_{i-n+1}, \dots, w_{i}\}$ normalized by the count of all $n$-grams sharing the prefix $h_{i}$:
+The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\phi(h_{i})=w_{i-n+1}, \dots, w_{i-1}$ is the count of the $n$-gram $w_{i-(n-1)}, \dots, w_{i}$ normalized by the count of all $n$-grams sharing the prefix $h_{i}$:
 \begin{equation}
 	\label{equation:mle}
-	p(w_{i}|w_{i-n+1}, \dots, w_{i-1})=\frac{c(w_{i-n+1}, \dots, w_{i-1}, w_{i})}{\sum_{w}c(w_{i-n+1}, \dots, w_{i-1}, w)},
+	p(w_{i}|w_{i-n+1}, \dots, w_{i-1})=\frac{c(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\sum_{w}c(w_{i-(n-1)}, \dots, w_{i-1}, w)},
 \end{equation}
-where $c(w_{1}, \dots, w_{i})$ denotes the observed frequency, i.e. the number of times sequence $\{w_{1}, \dots, w_{i}\}$ occured in the corpus. the sum in the denominator is equal simply to the frequency of all  $n-1$-grams of the form $\{w_{i-n+1}, \dots, w_{i-1}\}$. we can therefore simplify equation \ref{equation:mle}:
+where $c(w_{1}, \dots, w_{i})$ denotes the observed frequency, i.e. the number of times sequence $w_{1}, \dots, w_{i}$ occured in the corpus. the sum in the denominator is equal simply to the frequency of all  $n-1$-grams of the form $w_{i-n+1}, \dots, w_{i-1}$. we can therefore simplify equation \ref{equation:mle}:
 \begin{equation}
 	\label{equation:mle2}
 	P(w_{i}|w_{i-n+1}, \dots, w_{i-1})=\frac{C(w_{i-n+1}, \dots, w_{i-1}, w_{i})}{C(w_{i-n+1}, \dots, w_{i-1})}
 \end{equation}
-
 
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider the following sequence:
