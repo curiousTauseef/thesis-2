@@ -23,7 +23,7 @@ Finding an optimal history classification function is the matter of striking a f
 \begin{equation}
 	\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
 \end{equation}
-Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased -- higher order $n$-grams can take advantage of broader context and capture more complicated word relationships, but are more expensive in terms of time and memory.
+Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased~--~higher order $n$-grams typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
 The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\phi(h_{i})=w_{i-n+1}, \dots, w_{i-1}$ is the count of the $n$-gram $w_{i-(n-1)}, \dots, w_{i}$ normalized by the count of all $n$-grams sharing the prefix $h_{i}$:
@@ -61,9 +61,9 @@ In the above example, using a trigram model would probably yield better results,
 Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 \begin{center}
 	\texttt{a brilliant american mathematician who graduated from} \\
-	\texttt{a brilliant american mathematician who graduated quite recently from}.
+	\texttt{a brilliant american mathematician who graduated recently from}.
 \end{center}
-From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different, even by a trigram word model \cite{whittaker2000statistical}. Furthermore, in the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
+From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different even by a trigram word model \cite{whittaker2000statistical}. Furthermore, in the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
 
 Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified because and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
@@ -71,3 +71,11 @@ Although word-based $n$-gram language models have been outperformed by deep neur
 \label{section:ann}
 \section{Evaluation of language models}
 \label{section:evaluation}
+\section{Evaluation of language models}
+\label{section:evaluation}
+\subsection{Perplexity}
+\label{subsection:perplexity}
+\subsection{WERR}
+\label{subsection:werr}
+\subsection{Shannon Method}
+\label{subsection:perplexity}
