@@ -15,15 +15,15 @@ However, there is no way of computing the probability of a word given a long his
 \end{equation}
 The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 
-Another way to look at the $n$-gram model is to use the notion of history equivalence class, introduced in Section \ref{subsection:lm}. For practical reasons it is impossible to obtain a probability estimate for every imaginable word history, but the number of parameters can be significantly reduced by classifying word histories into equivalence classes. Indeed, in \cite{jelinek1997statistical}, language modelling is defined as the task of finding the best history classification function:
+Another way to look at the $n$-gram model is through the notion of history equivalence class, introduced in Section \ref{subsection:lm}. As indicated previously, it is impossible to obtain a probability estimate for every imaginable word history, but the number of parameters can be reduced by classifying word histories into equivalence classes. Indeed, in \cite{jelinek1997statistical}, language modelling is defined as the task of finding the best history classification function:
 \begin{equation}
 	\Phi:h_{i}\mapsto\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})
 \end{equation}
-An ideal equivalence In case of $n$-gram models, the history classification function $\Phi$ limits the word history to the last $n-1$ elements:
+Finding an optimal history classification function is the matter of striking a fine balance between its predictive power and complexity. To be a useful predictor, an equivalence class has to maximise the information about next word, while minimising the dimensionality of the resulting model. In case of $n$-gram models, the history classification function $\Phi$ simply limits the word history to the last $n-1$ elements:
 \begin{equation}
 	\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
 \end{equation}
-Two word histories are therefore equivalent if their last $n-1$ elements are identical.
+Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased -- higher order $n$-grams can take advantage of broader context and capture more complicated word relationships, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
 The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\phi(h_{i})=w_{i-n+1}, \dots, w_{i-1}$ is the count of the $n$-gram $w_{i-(n-1)}, \dots, w_{i}$ normalized by the count of all $n$-grams sharing the prefix $h_{i}$:
