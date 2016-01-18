@@ -21,21 +21,45 @@ Another way to look at the $n$-gram model is through the notion of history equiv
 \end{equation}
 Finding an optimal history classification function is the matter of striking a fine balance between its predictive power and complexity. To be a useful predictor, an equivalence class has to maximise the information about next word, while minimising the dimensionality of the resulting model. In case of $n$-gram models, the history classification function $\Phi$ simply limits the word history to the last $n-1$ elements:
 \begin{equation}
-	\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
+	\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
 \end{equation}
 Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased~--~higher order $n$-grams typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
-The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\phi(h_{i})=w_{i-n+1}, \dots, w_{i-1}$ is the count of the $n$-gram $w_{i-(n-1)}, \dots, w_{i}$ normalized by the count of all $n$-grams sharing the prefix $h_{i}$:
+The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-(n-1)}, \dots, w_{i-1}$ is the observed frequency of the $n$-gram $w_{i-(n-1)}, \dots, w_{i-1}, w_{i}$ normalised by the sum of observed frequencies of all $n$-grams sharing the same history:
 \begin{equation}
 	\label{equation:mle}
-	p(w_{i}|w_{i-n+1}, \dots, w_{i-1})=\frac{c(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\sum_{w}c(w_{i-(n-1)}, \dots, w_{i-1}, w)},
+	p(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)}.
 \end{equation}
-where $c(w_{1}, \dots, w_{i})$ denotes the observed frequency, i.e. the number of times sequence $w_{1}, \dots, w_{i}$ occured in the corpus. the sum in the denominator is equal simply to the frequency of all  $n-1$-grams of the form $w_{i-n+1}, \dots, w_{i-1}$. we can therefore simplify equation \ref{equation:mle}:
+Note that the sum in the denominator is equal simply to $C(\varphi_{i})$, so the formula in Equation \ref{equation:mle} can be more intuitively understood as the proportion of cases in which a particular equivalent word history $\varphi_{i}$ is followed by the word $w_{i}$:
 \begin{equation}
 	\label{equation:mle2}
-	P(w_{i}|w_{i-n+1}, \dots, w_{i-1})=\frac{C(w_{i-n+1}, \dots, w_{i-1}, w_{i})}{C(w_{i-n+1}, \dots, w_{i-1})}
+	P(w_{i}|\varphi_{i})=\frac{C(\varphi_{i}, w_{i})}{C(\varphi_{i})}.
 \end{equation}
+This ratio is called a relative frequency. In the special case of unigram probability it can be calculated as the count of the particular word $w_{i}$ normalised by the size of the corpus:
+\begin{equation}
+	\label{equation:mle2}
+	P(w_{i})=\frac{C(w_{i})}{\sum_{w}C(w)}.
+\end{equation}
+Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four sentences from Monty Python's famous spam sketch.
+\begin{table}[h!]
+	\caption{Calculating bigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}}
+	\label{table:mle}
+	\texttt{%
+		\begin{tabular}{c}
+			<s> egg bacon and spam </s> \\
+			<s> egg bacon sausage and spam </s> \\
+			<s> spam bacon sausage and spam </s> \\
+			<s> spam egg spam spam bacon and spam </s> \\
+			\\
+		\end{tabular}}
+		\centering
+		\begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
+			$P(\texttt{bacon}|\texttt{spam})=\frac{2}{8}$ & rozpoznaliście & rozpoznali \\
+			rozpoznałyśmy & rozpoznałyście & rozpoznały \\
+			rozpoznałyśmy & rozpoznałyście & rozpoznały \\
+		\end{tabular*}
+\end{table}
 
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider the following sequence:
@@ -52,7 +76,7 @@ Truncating the history to $n-1$ units drastically reduces the number of free par
 	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}),
 \end{multline}
 where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
-There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid $n$-grams, when the $n$ is small. Take this quote from Yoda as an example:
+There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short $n$-grams. Take this quote from Yoda as an example:
 \begin{center}
 	\texttt{look I so old to young eyes.}
 \end{center}
