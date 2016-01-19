@@ -41,9 +41,9 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\label{equation:mle2}
 	P(w_{i})=\frac{C(w_{i})}{\sum_{w}C(w)}.
 \end{equation}
-Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four sentences from Monty Python's famous spam sketch.
+Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four sentences from Monty Python's notorious spam sketch.
 \begin{table}[h!]
-	\caption{Calculating bigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}}
+	\caption{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}}
 	\label{table:mle}
 	\texttt{%
 		\begin{tabular}{c}
@@ -55,14 +55,14 @@ Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four
 		\end{tabular}}
 		\centering
 		\begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
-			$P(\texttt{bacon}|\texttt{spam})=\frac{2}{8}$ & rozpoznaliście & rozpoznali \\
-			rozpoznałyśmy & rozpoznałyście & rozpoznały \\
-			rozpoznałyśmy & rozpoznałyście & rozpoznały \\
+			$P(\texttt{bacon}|\texttt{spam})=\frac{2}{8}$ & $P(\texttt{spam}|\texttt{spam})=\frac{1}{8}$ & $P(\texttt{and}|\texttt{egg bacon})=\frac{1}{2}$  \\
+			$P(\texttt{bacon}|\texttt{egg})=\frac{2}{3}$  & $P(\texttt{spam}|\texttt{<s>})=\frac{2}{4}$ & $P(\texttt{egg}|\texttt{bacon and})=0$ \\
+			$P(\texttt{bacon}|\texttt{<s>})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 \end{table}
 
 \subsection{Word n-grams}
-So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider the following sequence:
+So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
 \texttt{open the pod bay doors}  
 \end{center}
