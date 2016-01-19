@@ -41,7 +41,6 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\label{equation:mle2}
 	P(w_{i})=\frac{C(w_{i})}{\sum_{w}C(w)}.
 \end{equation}
-Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four sentences from Monty Python's notorious spam sketch.
 \begin{table}[h!]
 	\caption{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}}
 	\label{table:mle}
@@ -60,7 +59,7 @@ Table \ref{table:mle} shows an example of applying \gls{mle} on a corpus of four
 			$P(\texttt{bacon}|\texttt{<s>})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 \end{table}
-
+Inspecting the Table \ref{table:mle}, which shows an example of applying \gls{mle} on a corpus of four sentences from Monty Python's notorious spam sketch, reveals a major problem. Note that some probability estimates are equal to one and, even worse, some are zeros. This means that because of the chain rule, the model will asign a zero probability to any sequence containing an $n-gram$ which does not occurr in the corpus! Analogously, using such a model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. This is a consequence of data sparsity -- the corpus is too small for the model to properly generalise. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora.
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
