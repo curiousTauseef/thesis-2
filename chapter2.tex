@@ -66,10 +66,12 @@ Table \ref{table:mle} shows an example of calculating $n$-gram probabilities usi
 There are also probability estimates equal to one, so using such a model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. This is a consequence of data sparsity -- the corpus is too small for the model to generalise. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of dealing with it by shifting some of the probability mass from frequent to previously unseen items. This process is called smoothing or discounting and is described in Section \ref{subsection:smoothing}. 
 
 Another conclusion one can draw from Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing \cite{dziadzio2015comparison}. 
+\subsection{smoothing}
+\label{subsection:smoothing}
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
-\texttt{open the pod bay doors}  
+	\texttt{<s> open the pod bay doors </s>}
 \end{center}
 We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, we get:
 \begin{equation}
@@ -83,7 +85,7 @@ Truncating the history to $n-1$ units drastically reduces the number of free par
 where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
 There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short $n$-grams. Take this quote from Yoda as an example:
 \begin{center}
-	\texttt{look I so old to young eyes.}
+	\texttt{<s> look I so old to young eyes </s>}
 \end{center}
 A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
 In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! Several techniques of dealing with the \gls{oov} words are available (see Section \ref{subsection:smoothing}), but there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
@@ -98,8 +100,6 @@ Although word-based $n$-gram language models have been outperformed by deep neur
 \subsection{Class-based $n$-gram models}
 \section{Neural network models}
 \label{section:ann}
-\section{Evaluation of language models}
-\label{section:evaluation}
 \section{Evaluation of language models}
 \label{section:evaluation}
 \subsection{Perplexity}
