@@ -7,6 +7,7 @@ In this chapter, a thorough introduction to statistical language modelling is gi
 \label{section:ngrams}
 In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
 \begin{equation}
+	\label{equation:chain}
 	P(w_{1}, \dots, w_{n})=\prod_{i=1}^{n}P(w_{i}|w_{1},\dots,w_{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
 \end{equation}
 However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an $n$-gram model. An $n$-gram is simply a sequence of $n$ words (or other modelling units) -- an $n$-gram of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The $n$-gram model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
@@ -71,18 +72,17 @@ Another conclusion one can draw from Table \ref{table:mle} is that the model is 
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
-	\texttt{<s> open the pod bay doors </s>}
+	\texttt{open the pod bay doors}
 \end{center}
 We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, we get:
 \begin{equation}
 	P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
 \end{equation}
-Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence:
+Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
 \begin{multline}
-	P(\texttt{open the pod bay door hal}) \approx \\
-	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}),
+	P(\texttt{<s> open the pod bay door hal </s>}) \approx \\
+	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
 \end{multline}
-where <s> and </s> are start-of sentence and end-of-sentence markers respectively.
 There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short $n$-grams. Take this quote from Yoda as an example:
 \begin{center}
 	\texttt{<s> look I so old to young eyes </s>}
