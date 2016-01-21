@@ -60,14 +60,14 @@ This ratio is called a relative frequency. In the special case of unigram probab
 			$P(\texttt{bacon}|\texttt{and})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 \end{table}
-Table \ref{table:mle} shows an example of calculating $n$-gram probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to zero. Consequently, because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context! This includes one of the previous lines of the sketch:
+Table \ref{table:mle} shows an example of calculating $n$-gram probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
 \begin{equation}
 	P(\texttt{<s> egg and bacon </s>})=0 \Leftarrow P(\texttt{bacon}|\texttt{and})=0
 \end{equation}
-There are also probability estimates equal to one, so using such a model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. This is a consequence of data sparsity -- the corpus is too small for the model to generalise. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of dealing with it by shifting some of the probability mass from frequent to previously unseen items. This process is called smoothing or discounting and is described in Section \ref{subsection:smoothing}. 
+Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
 
-Another conclusion one can draw from Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing \cite{dziadzio2015comparison}. 
-\subsection{smoothing}
+Another conclusion one can draw from Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
+\subsection{Smoothing}
 \label{subsection:smoothing}
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
@@ -107,4 +107,3 @@ Although word-based $n$-gram language models have been outperformed by deep neur
 \subsection{WERR}
 \label{subsection:werr}
 \subsection{Shannon Method}
-\label{subsection:perplexity}
