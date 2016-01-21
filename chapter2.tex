@@ -66,9 +66,12 @@ Table \ref{table:mle} shows an example of calculating $n$-gram probabilities usi
 \end{equation}
 Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
 
+Another issue to consider are unknown words. In \gls{lvcsr} applications, \gls{oov} words are inevitable, so modern \gls{asr} system usually have some mechanisms of identifying them.
 Another conclusion one can draw from Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
+Two practical remarks are also in place.
 \subsection{Smoothing}
 \label{subsection:smoothing}
+
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
