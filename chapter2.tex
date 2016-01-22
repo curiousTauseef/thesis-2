@@ -1,6 +1,6 @@
 \chapter{Statistical language models}
 \label{chapter:lm}
-Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of statistical language models is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
+Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of \glspl{lm} is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
 
 In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the word $n$-gram model, which is still one of the most important tools in speech and language processing. It also presents several smoothing techniques. Section \ref{section:ann} is dedicated to the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
@@ -43,7 +43,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	P(w_{i})=\frac{C(w_{i})}{\sum_{w}C(w)}.
 \end{equation}
 \begin{table}[h!]
-	\caption{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}}
+	\caption{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}. The \texttt{<s>} and \texttt{</s>} tags denote the beginning and the end of the sentence.}
 	\label{table:mle}
 	\texttt{%
 		\begin{tabular}{c}
@@ -66,13 +66,19 @@ Table \ref{table:mle} shows an example of calculating $n$-gram probabilities usi
 \end{equation}
 Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
 
-Another issue to consider are unknown words. In \gls{lvcsr} applications, \gls{oov} words are inevitable, so modern \gls{asr} system usually have some mechanisms of identifying them.
-Another conclusion one can draw from Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
-Two practical remarks are also in place.
+Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
+
+Another conclusion that can be drawn from the example in Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
 \subsection{Smoothing}
 \label{subsection:smoothing}
+Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. There are many smoothing techniques, but the description will be limited to those used in the experimental part.
 
+The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
+\begin{equation}
+	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)},
+\end{equation}
 \subsection{Word n-grams}
+where $V$ is the vocabulary.
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
 	\texttt{open the pod bay doors}
@@ -91,13 +97,13 @@ There are several disadvantages of word-based $n$-gram models. The first one is 
 	\texttt{<s> look I so old to young eyes </s>}
 \end{center}
 A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
-In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! Several techniques of dealing with the \gls{oov} words are available (see Section \ref{subsection:smoothing}), but there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
+In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
 Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 \begin{center}
 	\texttt{a brilliant american mathematician who graduated from} \\
 	\texttt{a brilliant american mathematician who graduated recently from}.
 \end{center}
-From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different even by a trigram word model \cite{whittaker2000statistical}. Furthermore, in the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
+From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
 
 Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified because and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
