@@ -75,8 +75,9 @@ Smoothing is a way of dealing with the zero probability problem. In principle, i
 
 The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
 \begin{equation}
-	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)},
+	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i}}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w})},
 \end{equation}
+This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz smoothing and Chen and Goodman's modified Knesser-Ney smoothing is used.
 \subsection{Word n-grams}
 where $V$ is the vocabulary.
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
