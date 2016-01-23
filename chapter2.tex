@@ -71,13 +71,36 @@ Zero probability is one problem, but there is also an issue of words that do not
 Another conclusion that can be drawn from the example in Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
 \subsection{Smoothing}
 \label{subsection:smoothing}
-Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. There are many smoothing techniques, but the description will be limited to those used in the experimental part.
-
-The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
+Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
 \begin{equation}
-	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i}}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w})},
+	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i}}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)}.
 \end{equation}
-This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz smoothing and Chen and Goodman's modified Knesser-Ney smoothing is used.
+This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
+
+Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of $n$-grams that occur $c$ times using the counts of $n$-grams that occur $c+1$ times -- in particular, to estimate the probability of unseen $n$-grams using the singleton counts. Let $N_{c}$ denote the number of $n$-grams that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+\begin{equation}
+	\hat{c}=(c+1)\frac{N_{c+1}}{N_{c}}.
+\end{equation}
+The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an $n$-gram $\alpha$ with $c$ counts:
+\begin{equation}
+	P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{N}, 
+\end{equation}
+where:
+\begin{equation}
+	N=\sum_{c}cN_{c}.
+\end{equation}
+The problem with using plain Good-Turing estimates for discounting is that $N_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
+\begin{equation}
+	C_{\textsc{katz}}(w_{i-1}, w_{i})=
+	\begin{cases}
+		d_{c}c & \text{if } c>0 \\
+		\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
+	\end{cases}
+\end{equation}
+where $d_{c}$ is the discount ratio. The back-off weight alpha is chosen so that $\sum_{w}C_{\textsc{katz}}(w_{i-1}, w)=\sum_{w}C_{\textsc{mle}}(w_{i-1}, w)$:
+\begin{equation}
+	\alpha(w_{i-1})=\frac{1-\sum_{w: C(w_{i-1}, w)>0}P_{\textsc{katz}}(w|w_{i-1})}{1-\sum_{w: C(w_{i-1}, w)>0}P_{\textsc{mle}}(w|w_{i-1})}
+\end{equation}
 \subsection{Word n-grams}
 where $V$ is the vocabulary.
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
