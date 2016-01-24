@@ -5,32 +5,32 @@ Language modelling lies at the core of many natural language processing tasks, s
 In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the word $n$-gram model, which is still one of the most important tools in speech and language processing. It also presents several smoothing techniques. Section \ref{section:ann} is dedicated to the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
 \label{section:ngrams}
-In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities:
+In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities. Let $w_{1}^{\textsc{n}}$ denote $w_{1}, \dots, w_{\textsc{n}}$. The chain rule can be formulated as
 \begin{equation}
 	\label{equation:chain}
-	P(w_{1}, \dots, w_{n})=\prod_{i=1}^{n}P(w_{i}|w_{1},\dots,w_{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
+	P(w_{1}^{\textsc{n}})=\prod_{i=1}^{n}P(w_{i}|w_{1}^{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i})
 \end{equation}
 However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an $n$-gram model. An $n$-gram is simply a sequence of $n$ words (or other modelling units) -- an $n$-gram of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The $n$-gram model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
 \begin{equation}
-	P(w_{i}|w_{1},\dots,w_{i-1})\approx P(w_{i}|w_{i-(n-1)},\dots,w_{i-1})
+	P(w_{i}|w_{1}^{i-1})\approx P(w_{i}|w_{i-n+1}^{i-1})
 \end{equation}
 The $n$-gram can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the $n$-gram models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 
 Another way to look at the $n$-gram model is through the notion of history equivalence class, introduced in Section \ref{subsection:lm}. As indicated previously, it is impossible to obtain a probability estimate for every imaginable word history, but the number of parameters can be reduced by classifying word histories into equivalence classes. Indeed, in \cite{jelinek1997statistical}, language modelling is defined as the task of finding the best history classification function:
 \begin{equation}
-	\Phi:h_{i}\mapsto\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})
+	\Phi:h_{i}\mapsto\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}^{i-1})
 \end{equation}
 Finding an optimal history classification function is the matter of striking a fine balance between its predictive power and complexity. To be a useful predictor, an equivalence class has to maximise the information about next word, while minimising the dimensionality of the resulting model. In case of $n$-gram models, the history classification function $\Phi$ simply limits the word history to the last $n-1$ elements:
 \begin{equation}
-	\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}, \dots, w_{i-1})=w_{i-(n-1)}, \dots, w_{i-1}
+	\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}^{i-1})=w_{i-n+1}^{i-1}
 \end{equation}
 Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased~--~higher order $n$-grams typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
-The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-(n-1)}, \dots, w_{i-1}$ is the observed frequency of the $n$-gram $w_{i-(n-1)}, \dots, w_{i-1}, w_{i}$ normalised by the sum of observed frequencies of all $n$-grams sharing the same history:
+The most common technique of estimating the $n$-gram probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the $n$-gram probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the $n$-gram $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all $n$-grams sharing the same history:
 \begin{equation}
 	\label{equation:mle}
-	p(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i})}{\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)}.
+	p(w_{i}|w_{i-n+1}^{i-1})=\frac{C(w_{i-n+1}^{i})}{\sum_{w_{i}}C(w_{i-n+1}^{i})}.
 \end{equation}
 Note that the sum in the denominator is equal simply to $C(\varphi_{i})$, so the formula in Equation \ref{equation:mle} can be more intuitively understood as the proportion of cases in which a particular equivalent word history $\varphi_{i}$ is followed by the word $w_{i}$:
 \begin{equation}
@@ -73,80 +73,129 @@ Another conclusion that can be drawn from the example in Table \ref{table:mle} i
 \label{subsection:smoothing}
 Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
 \begin{equation}
-	P_{add}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\frac{\delta+C(w_{i-(n-1)}, \dots, w_{i-1}, w_{i}}{\delta|V|+\sum_{w}C(w_{i-(n-1)}, \dots, w_{i-1}, w)}.
+	P_{add}(w_{i}|w_{i-n+1}^{i-1})=\frac{\delta+C(w_{i-n+1}^{i})}{\delta|V|+\sum_{w_{i}}C(w_{i-n+1}^{i})}.
 \end{equation}
 This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
 \subsubsection*{Katz smoothing}
-Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of $n$-grams that occur $c$ times using the counts of $n$-grams that occur $c+1$ times -- in particular, to estimate the probability of unseen $n$-grams using the singleton counts. Let $N_{c}$ denote the number of $n$-grams that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of $n$-grams that occur $c$ times using the counts of $n$-grams that occur $c+1$ times -- in particular, to estimate the probability of unseen $n$-grams using the singleton counts. Let $n_{c}$ denote the number of $n$-grams that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 \begin{equation}
-	\hat{c}=(c+1)\frac{N_{c+1}}{N_{c}}.
+	\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 \end{equation}
 In particular, the total number of counts that should be assigned to bigrams with zero counts is equal to the number of singletons:
 \begin{equation}
 	\label{equation:good-turing}
-	\hat{0}N_{0}=(0+1)\frac{N_{1}}{N_{0}}=N_{1}
+	\hat{0}n_{0}=(0+1)\frac{n_{1}}{n_{0}}=n_{1}
 \end{equation}
 The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an $n$-gram $\alpha$ with $c$ counts:
 \begin{equation}
-	P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cN_{c}}.
+	P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 \end{equation}
 
-The problem with using plain Good-Turing estimates for discounting is that $N_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
+The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
 \begin{equation}
 	C_{\textsc{katz}}(w_{i-1}, w_{i})=
 	\begin{cases}
 		d_{c}c & \text{if } c>0 \\
-		\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
+		\gamma(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
 	\end{cases}
 \end{equation}
-where $d_{c}$ is the discount ratio. The back-off weight $\alpha$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w}C_{\textsc{katz}}(w_{i-1}, w)=\sum_{w}C(w_{i-1}, w)$:
+where $d_{c}$ is the discount ratio. The back-off weight $\gamma$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
 \begin{equation}
-	\alpha(w_{i-1})=\frac{1-\sum_{w: C(w_{i-1}, w)>0}P_{\textsc{katz}}(w|w_{i-1})}{\sum_{w: C(w_{i-1}, w)=0}P_{\textsc{mle}}(w)}.
+	\gamma(w_{i-1})=\frac{1-\sum_{w_{i}: C(w_{i-1}, w_{i})>0}P_{\textsc{katz}}(w_{i}|w_{i-1})}{\sum_{w_{i}: C(w_{i-1}, w_{i})=0}P_{\textsc{mle}}(w_{i})}.
 \end{equation}
 The updated probability estimate can be computed from corrected count by normalisation:
 \begin{equation}
-	P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w}C_{\textsc{katz}}(w_{i-1}, w)}
+	P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}
 \end{equation}
 The discount coefficient $d_{c}$ depends on the the $n$-gram count $c$. Counts larger than some arbitrary treshold $k$ are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
 \begin{equation}
-	1-d_{c}=\mu(1-\frac{\hat{c}}{r}).
+	1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
 	\label{equation:constraint1}
 \end{equation}
 Furthermore, the total number of counts discounted in the global bigram distribution should be equal to the total number of counts that should be assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:good-turing}):
 \begin{equation}
-	\sum_{c}N_{c}(1-d_{c})c=N_{1}.
+	\sum_{c}n_{c}(1-d_{c})c=n_{1}.
 	\label{equation:constraint2}
 \end{equation}
 The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by
 \begin{equation}
-	d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)N_{k+1}}{N_{1}}}{1-\frac{(k+1)N_{k+1}}{N_{1}}}
+	d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}
 	\label{equation:dc}
 \end{equation}
-Katz smoothing for higher-order $n$-gram is defined recursively. It is best illustrated using the trigram example from \cite{whittaker2000statistical}. The updated trigram probability of a word $w_{i}$ given the truncated history $\varphi=w_{i-2}, w_{i-1}$ is given by
+Katz smoothing for higher-order $n$-gram is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
 \begin{equation}
-	\hat{P}(w_{i}|w_{i-2}, w_{i-1})=
+	P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
 	\begin{cases}
-		\frac{C(w_{i-2}, w_{i-1}, w_{i})}{C(w_{i-2}, w_{i-1})}& \text{if }C(w_{i-2}, w_{i-1}, w_{i})\\
-		d_{C(w_{i-2}, w_{i-1}, w_{i})}\cdot \frac{C(w_{i-2}, w_{i-1}, w_{i})}{C(w_{i-2}, w_{i-1})}& \text{if } 1\leq C(w_{i-2}, w_{i-1}, w_{i})\leq k\\
-		\alpha(w_{i-2}, w_{i-1})\cdot \hat{P}(w_{i}|w_{i-1})& \text{if } C(w_{i-2}, w_{i-1}, w_{i})=0,
+		\frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if }C(w_{i-n+1}^{i}) > k\\
+		d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } 1\leq C(w_{i-n+1}^{i})\leq k\\
+		\gamma(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
 	\end{cases}
 \end{equation}
 where:
 \begin{equation}
-	\alpha(w_{i-2}, w_{i-1})=\frac{1-\sum_{w:C(w_{i-2}, w_{i-1}, w)>0}\hat{P}(w|w_{i-2}, w_{i-1})}{1-\sum_{w:C(w_{i-2}, w_{i-1}, w)>0}\hat{P}(w|w_{i-1})}.
+	\gamma(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 \end{equation}
 \subsubsection*{Kneser-Ney smoothing}
 The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
-\begin{multline}
-	P_{\textsc{abs}}(w_{i}|w_{i-(n-1)}, \dots, w_{i-1})=\\
-	\frac{max\{C(w_{i-(n-1)}, \dots, w_{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-(n-1)}, \dots, w_{i})}+(1-\lambda_{w_{i-(n-1)}, \dots, w_{i}})P_{\textsc{abs}}(w_{i}|w_{i-(n-2)}, \dots, w_{i-1}).
-\end{multline}
-To make the probability sum to 1, the following condition must be met:
 \begin{equation}
-	1-\lambda_{w_{i-(n-1)}, \dots, w_{i-1}}=\frac{\delta}{\sum_{w}C(w_{i-(n-1)}, \dots, w)}C_{1+}(w_{i-(n-1)}, \dots, \bullet),
+	P_{\textsc{abs}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})P_{\textsc{abs}}(w_{i}|w_{i-n+2}^{i-1}).
 \end{equation}
-where $C_{1+}(w_{i-(n-1)}, \dots, w_{i-1}, \bullet)$ denotes, following the convention from \cite{chen1999empirical}, the number of unique words that follow the history $w_{i-(n-1)}, \dots, w_{i-1}$. 
-The idea behind Kneser-Ney smoothing is that the lower-order model is only necessary when the count is small or zero in the higher-order model.
+The parameter $\lambda$ is taken so that the resulting distribution sums to one:
+\begin{equation}
+	1-\lambda_{w_{i-n+1}^{i-1}}=\frac{\delta}{\sum_{w_{i}}C(w_{i-n+1}^{i})}N_{1+}(w_{i-n+1}^{i-1}~\bullet).
+\end{equation}
+The expression $N_{1+}(\varphi~\bullet)$, denotes the number of unique words that follow the history $\varphi$:
+\begin{equation}
+	N_{1+}(w_{i-n+1}^{i-1}~\bullet)=|\{w_{i}:C(w_{i-n+1}^{i}) > 0\}.
+\end{equation}
+The parameter $\delta$ is chosen using held-out estimation. In \cite{ney1994structuring}, it is estimated as 
+\begin{equation}
+	\delta=\frac{n_{1}}{n_{1}+2n_{2}}.
+\end{equation}
+The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurences of the word, but the number of words it follows:
+\begin{equation}
+	P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)}
+	\label{equation:kneser-ney}
+\end{equation}
+where $N_{1+}(\bullet~w_{i})$ is the number of different words that precede $w_{i}$ in the training data and $N_{1+}(\bullet~\bullet)$ is the number of unique bigrams with nonzero count:
+\begin{equation}
+	N_{1+}(\bullet~w_{i})=|{w_{i-1}:C(w_{i-1}, w_{i})>0}|
+\end{equation}
+\begin{equation}
+	N_{1+}(\bullet~\bullet)=|{(w_{i-1}, w_{i}):C(w_{i-1}, w_{i})>0}|
+\end{equation}
+The general formula for the unmodified Kneser-Ney smoothing is
+\begin{equation}
+	P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})\frac{N_{1+}(\bullet~w_{i-n+2}^{i})}{N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)},
+\end{equation}
+where:
+\begin{equation}
+	N_{1+}(\bullet~w_{i-n+2}^{i})=|{w_{i-n+1}:C(w_{i-n+1}^{i})>0}|,
+\end{equation}
+\begin{equation}
+	N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)=|{w_{i-n+1, w_{i}}:C(w_{i-n+1}^{i})>0}|.
+\end{equation}
+The Chen and Goodman's modification of the original Kneser-Ney algorithm uses three different discount values, $\delta_{1}$, $\delta_{2}$, $\delta_{3}$, that are applied to $n$-grams with one, two, and three or more counts, respectively \cite{chen1996empirical}. While estimating $P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})$, the parameter $\delta$ simply becomes a function of $C(w_{i-n+1}^{i-1})$: 
+\begin{equation}
+	D(c)=	
+	\begin{cases}
+		0 & \text{if } c=0\\
+		\delta_{1} & \text{if } c=1\\
+		\delta_{2} & \text{if } c=2\\
+		\delta_{3+} & \text{if } c\geq3\\
+	\end{cases}
+\end{equation}
+The distribution must still sum to one, so the new value of $\gamma$ is
+\begin{equation}
+	\gamma(w_{i-n+1}^{i-n})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-n}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-n}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-n}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
+\end{equation}
+The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for $n$-grams with one or two counts is different from the optimal average discount for $n$-grams with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
+\begin{equation}
+	Y=\frac{n_{1}}{n_{1}+2n_{2}}
+	\delta_{1}=1-2Y\frac{n_{2}}{n_{1}}
+	\delta_{2}=2-3Y\frac{n_{3}}{n_{2}}
+	\delta_{3+}=3-4Y\frac{n_{4}}{n_{3}}
+\end{equation}<++>
 \subsection{Word n-grams}
 So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 \begin{center}
