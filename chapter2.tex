@@ -225,12 +225,16 @@ From the point of view of predicting the next word, these two histories are very
 
 Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
-Class-based models address the problem mentioned at the end of the previous section. Since word equivalence class is essentially a set of words, using it as the modelling unit reduces the number of parameters. Consequently, the model is smaller and its parameters are more accurately estimated, because most classes are well represented in the corpus. Class-based $n$-gram models are constructed analogously to word-based models, but words are mapped to equivalence classes. The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \textit{ign} token described in Section \ref{subsection:mle}. A word either appears in the vocabulary or not, so the mapping is unambiguous. An example of a probabilistic mapping are classes based on \gls{pos} tags.
+Class-based models address the problem mentioned at the end of the previous section. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. Using classes as the modelling unit reduces the number of parameters, because the number of classes is always smaller than the number of words. An $n$-gram model with $C$ classes has $V-C$ word emission parameters $P(w_{i}|c_{i})$ and $C^{n}-1$ independent $n$-gram parameters of the form $P(c_{i}|c_{i-n+1}^{i-1})$. Consequently, the model is smaller and its parameters are more accurately estimated, because most classes are well represented in the corpus. Class-based $n$-gram models are constructed analogously to word-based models, but words are mapped to equivalence classes. The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{ign} token described in Section \ref{subsection:mle}. A word either appears in the vocabulary or not, so the mapping is unambiguous: 
 \begin{equation}
 	C:w\mapsto C(w).
 	\label{equation:deterministic_class}
 \end{equation}
-
+The probability of a word $w_{i}$ given its history $w_{i}^{i-1}$ can be calculated as the product of word emission probability and class $n$-gram probability:
+\begin{equation}
+	P_{class}(w_{i}|w_{i}^{i-1})=P_{0}(w_{i}|c)P(c_{i}|c)
+	\label{equation:classngram}
+\end{equation}
 \section{Neural network models}
 \label{section:ann}
 \section{Evaluation of language models}
