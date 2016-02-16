@@ -225,15 +225,21 @@ From the point of view of predicting the next word, these two histories are very
 
 Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
-Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters of the form $P(w_{i}|c_{i})$ and $C^{n}-1$ independent $n$-gram parameters of the form $P(c_{i}|c_{i-n+1}^{i-1})$. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes. The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{ign} token described in Section \ref{subsection:mle}. A word either appears in the vocabulary or not, so the mapping is unambiguous: 
+Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters of the form $P(w_{i}|c_{i})$ and $C^{n}-1$ independent $n$-gram parameters of the form $P(c_{i}|c_{i-n+1}^{i-1})$ \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
 \begin{equation}
 	\pi:w_{i}\mapsto c_{i}.
 	\label{equation:deterministic_class}
 \end{equation}
+The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because depending on the context, the same word can belong to different grammatical categories. 
 The probability of a word $w_{i}$ given its history $w_{i}^{i-1}$ can be calculated as the product of word emission probability and class $n$-gram probability:
 \begin{equation}
 	P_{class}(w_{i}|w_{i}^{i-1})=P_{0}(w_{i}|c)P(c_{i}|c)
 	\label{equation:classngram}
+\end{equation}
+The class $n$-gram probabilities can be estimated using \gls{mle} calculated from the corpus. The word emission probability is often dropped, but can be otherwise estimated as:
+\begin{equation}
+	P(w_{i}|c_{i})=\frac{C(w_{i})}{C(c_{i})}
+	\label{equation:emission_probability}
 \end{equation}
 \section{Neural network models}
 \label{section:ann}
