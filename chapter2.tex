@@ -227,32 +227,28 @@ Although word-based $n$-gram language models have been outperformed by deep neur
 \subsection{Class-based $n$-gram models}
 Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters of the form $P(w_{i}|c_{i})$ and $C^{n}-1$ independent $n$-gram parameters of the form $P(c_{i}|c_{i-n+1}^{i-1})$ \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
 \begin{equation}
-	\pi:w_{i}\mapsto c_{i}.
+	\pi:w_{i}\mapsto \pi(w_{i}).
 	\label{equation:deterministic_class}
 \end{equation}
-The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because depending on the context, the same word can belong to different grammatical categories. 
-The probability of a word $w_{i}$ given its history $w_{i-n+1}^{i-1}$ can be calculated as the product of word emission probability and class $n$-gram probability:
+The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
+In case of a deterministic mapping, the probability of a word given its history can be calculated as the product of the probability of a particular word given its class (word emission probability) and the probability of a certain class given a history of $n-1$ classes:
 \begin{equation}
-	P_{\textsc{class}}(w_{i}|w_{i}^{i-1})=P_{0}(w_{i}|c_{i})P(c_{i}|c_{i-n+1}^{i-1})
+	P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}))P_{1}(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
 	\label{equation:classngram}
 \end{equation}
-where:
-\begin{equation*}
-	\begin{aligned}
-	c_{i}&=\pi(w_{i}) \\
-	c_{i-n+1}^{i-1}&=\pi(w_{i-n+1}), \dots, \pi(w_{i-1}).
-\end{aligned}
-\end{equation*}
-The class $n$-gram probabilities can be estimated using \gls{mle} calculated from the corpus. The word emission probability is often dropped, but can be otherwise estimated as:
+The class $n$-gram probabilities can be calculated from the corpus using \gls{mle}, similarly to word $n$-gram probabilities. Note that a history equivalence class can be used in the The word emission probability is often dropped, but can be otherwise estimated as the relative frequency of the form:
 \begin{equation}
-	P(w_{i}|c_{i})=\frac{C(w_{i})}{C(c_{i})}
+	P(w_{i}|c_{i})=\frac{C(w_{i})}{C(\pi(w_{i}))}
 	\label{equation:emission_probability}
 \end{equation}
+In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the posible realisations \cite{ney1994structuring}.
+The methods for finding the class mapping function fall roughly into two categories -- knowledge-based and data-driven. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The data-driven clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The class-based models used in this work are deterministic, knowledge-based morphosyntactic models.
 \section{Neural network models}
 \label{section:ann}
 \section{Evaluation of language models}
 \label{section:evaluation}
 \subsection{Perplexity}
+
 \label{subsection:perplexity}
 \subsection{WERR}
 \label{subsection:werr}
