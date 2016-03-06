@@ -9,12 +9,11 @@
 \newacronym{dct}{DCT}{Discrete Cosine Transform}
 \newacronym{pos}{POS}{Part of Speech}
 \newacronym{dnn}{DNN}{Deep Neural Networks}
-\newacronym{darpa}{DARPA}{Defense Advanced Research Projects Agency}
 \newacronym{oov}{OOV}{Out of Vocabulary}
 \newacronym{lm}{LM}{Language Model}
 \newacronym{ipa}{IPA}{International Phonetic Alphabet}
 \newacronym{nkjp}{NKJP}{Narodowy Korpus Języka Polskiego, The National Corpus of Polish}
-\newacronym{werr}{WERR}{Word Error Reduction Rate}   
+\newacronym{werr}{WERR}{Word Error Rate Reduction}   
 \newacronym{concraft}{Concraft-pl}{}
 \newacronym{srilm}{SRILM}{Stanford Research Institute Language Modeling Toolkit}   
 \newacronym{nntoolkit}{Feature-Augmented Recurrent Neural Network Toolkit}{}   
@@ -44,9 +43,14 @@
   sort={f}
 }
 
-
 \newglossaryentry{pronunciation}{
   name={\ensuremath{q^{w}}},
   description={Pronunciation of word $w$},
   sort={q}
+}
+
+\newglossaryentry{mapping}{
+	name={\ensuremath{\pi(w_{i})}},
+  description={Class mapping function},
+  sort={p}
 }

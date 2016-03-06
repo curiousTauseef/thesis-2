@@ -225,9 +225,9 @@ From the point of view of predicting the next word, these two histories are very
 
 Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
 \subsection{Class-based $n$-gram models}
-Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters of the form $P(w_{i}|c_{i})$ and $C^{n}-1$ independent $n$-gram parameters of the form $P(c_{i}|c_{i-n+1}^{i-1})$ \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
+Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters and $C^{n}-1$ independent $n$-gram parameters \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
 \begin{equation}
-	\pi:w_{i}\mapsto \pi(w_{i}).
+	\pi:w_{i}\mapsto \gls{mapping}
 	\label{equation:deterministic_class}
 \end{equation}
 The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
@@ -247,10 +247,19 @@ The methods for finding the class mapping function fall roughly into two categor
 \label{section:ann}
 \section{Evaluation of language models}
 \label{section:evaluation}
-The best way to evaluate a language model in the context of automatic speech recognition is to simply incorporate it in an existing \gls{asr} system and measure the performance. This approach, known as extrinsic evaluation, is the only way to know whether a particular model will actually improve the recognition rates. However, it requires
+The best way to evaluate a language model in the context of automatic speech recognition is to simply incorporate it in an existing \gls{asr} system and measure the performance. This approach, known as extrinsic evaluation, is the only way to know whether a particular model will actually improve the recognition rates, but it can be time-consuming, as it requires running the entire system multiple times \cite{jurafsky2000speech}. Moreover, the recognition task is a very complex one, so there are a lot of factors that can affect the performance of the model. It is therefore more practical to use an intrinsic evaluation metric, such as perplexity, which enables to quickly and objectively measure the quality of a model in an application-agnostic manner. This section describes the evaluation methods used in the experimental part.
 \subsection{Entropy and perplexity}
 \label{subsection:perplexity}
-
+Perplexity is the most common intrinsic metric of language model quality. It can be derived from the notion of entropy. In information theory, an information source is defined as a device which emits symbols from a finite set $V$. Entropy can be intuitively understood as the measure of unpredictability or information content. For an information source independently emitting symbols $x$ with probability $P(x)$ it is defined as:
+\begin{equation}
+	H=-\sum_{x}P(X)\log_{2}P(x).
+	\label{equation:entropy}
+\end{equation}
+Entropy is maximised when all emission probabilities are equal, that is $P(x)=1/|V|$.
+In case of language, the symbols are not emitted independently, so the entropy is given by:
+\begin{equation}
+	H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
+\end{equation}
 \subsection{WERR}
 \label{subsection:werr}
 \subsection{Shannon Method}
