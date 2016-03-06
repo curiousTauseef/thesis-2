@@ -255,8 +255,8 @@ Perplexity is the most common intrinsic metric of language model quality. It can
 	H=-\sum_{x}P(X)\log_{2}P(x).
 	\label{equation:entropy}
 \end{equation}
-Entropy is maximised when all emission probabilities are equal, that is $P(x)=1/|V|$.
-In case of language, the symbols are not emitted independently, so the entropy is given by:
+Entropy is maximised when all emission probabilities are equal, that is when $P(x)=1/|V|$.
+A language model can be treated as an information source producing sequences of words (or other modelling units) $w_{i}^{n}$ with probability $P(w_{1}^{n})$, where each token $w_{i}$ is taken from a vocabulary $V$. Because the symbols are not emitted independently, the entropy is given by:
 \begin{equation}
 	H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
 \end{equation}
