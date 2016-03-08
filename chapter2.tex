@@ -261,12 +261,17 @@ Language can be treated as an information source producing sequences of words (o
 	H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
 	\label{equation:genentropy}
 \end{equation}
-	Assuming that language is an ergodic process (that is, it is possible to deduce its statistical properties from a sufficiently long random sample), than for a sufficiently large $n$, entropy can be approximated by
+	Assuming that language is an ergodic process (that is, it is possible to deduce its statistical properties from a sufficiently long random sample), than for a large $n$, entropy can be approximated by
 	\begin{equation}
 		H\approx-\frac{1}{n}\log_{2}P(w_{1}, \dots, w_{n}).
 		\label{equation:approxentropy}
 	\end{equation}
-	The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data. There is no way to calculate the exact probability of a word sequence, so the language model probability estimate $\hat{P}(w_{1}^{n})$ is used instead.  
+	The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data. There is no way to calculate the exact probability of a word sequence, so the language model probability estimate $\hat{P}(w_{1}, \dots, w_{n})$ is used instead:
+	\begin{equation}
+		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}^{n}),
+		\label{equation:entropymodel}
+	\end{equation}
+	where $w_{1}{n}$ is a sufficiently long, previously unseen sequence called the test text. The probability estimates can never be better than the actual estimates, so $H$ is the lower bound for $\hat{H}$, therefore the.
 \subsection{WERR}
 \label{subsection:werr}
 \subsection{Shannon Method}
