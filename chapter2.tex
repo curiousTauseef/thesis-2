@@ -266,12 +266,12 @@ The Shannon-McMillan-Breiman theorem states that assuming that language is a sta
 		H\approx\lim_{n\to\infty}-\frac{1}{n}\log_{2}P(w_{1}, \dots, w_{n}).
 		\label{equation:approxentropy}
 	\end{equation}
-	The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data. There is no way to calculate the exact probability of a word sequence, so the language model probability estimate $\hat{P}(w_{1}, \dots, w_{n})$ is used instead:
+	The exact probability of a word sequence is unknown, so it is more practical to use the notion of cross-entropy, which enables to replace the actual probability $P$ with the language model probability estimate $\hat{P}$. The sequences are generated according to the actual probability distribution, but the probability estimates are used for the log summation:
 	\begin{equation}
 		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}, \dots, w_{n}),
 		\label{equation:entropymodel}
 	\end{equation}
-	where $w_{1}, \dots, w_{n}$ is a sufficiently long, previously unseen sequence called the test text.
+	where $w_{1}, \dots, w_{n}$ is a sufficiently long, previously unseen sequence called the test text. The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data.
 \subsection{WERR}
 \label{subsection:werr}
 \subsection{Shannon Method}
