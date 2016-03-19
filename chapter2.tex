@@ -59,219 +59,228 @@ This ratio is called a relative frequency. In the special case of unigram probab
 			$P(\texttt{bacon}|\texttt{egg})=\frac{2}{3}$  & $P(\texttt{spam}|\texttt{<s>})=\frac{2}{4}$ & $P(\texttt{egg}|\texttt{bacon and})=0$ \\
 			$P(\texttt{bacon}|\texttt{and})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
-\end{table}
-Table \ref{table:mle} shows an example of calculating $n$-gram probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
-\begin{equation}
-	P(\texttt{<s> egg and bacon </s>})=0 \Leftarrow P(\texttt{bacon}|\texttt{and})=0
-\end{equation}
-Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
-
-Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
-
-Another conclusion that can be drawn from the example in Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
-\subsection{Smoothing}
-\label{subsection:smoothing}
-Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
-\begin{equation}
-	P_{add}(w_{i}|w_{i-n+1}^{i-1})=\frac{\delta+C(w_{i-n+1}^{i})}{\delta|V|+\sum_{w_{i}}C(w_{i-n+1}^{i})}.
-\end{equation}
-This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
-\subsubsection*{Katz smoothing}
-Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of $n$-grams that occur $c$ times using the counts of $n$-grams that occur $c+1$ times -- in particular, to estimate the probability of unseen $n$-grams using the singleton counts. Let $n_{c}$ denote the number of $n$-grams that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
-\begin{equation}
-	\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
-\end{equation}
-In particular, the total number of counts that should be assigned to bigrams with zero counts is equal to the number of singletons:
-\begin{equation}
-	\label{equation:good-turing}
-	\hat{0}n_{0}=(0+1)\frac{n_{1}}{n_{0}}=n_{1}
-\end{equation}
-The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an $n$-gram $\alpha$ with $c$ counts:
-\begin{equation}
-	P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cn_{c}}.
-\end{equation}
-
-The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
-\begin{equation}
-	C_{\textsc{katz}}(w_{i-1}, w_{i})=
-	\begin{cases}
-		d_{c}c & \text{if } c>0 \\
-		\gamma(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
-	\end{cases}
-\end{equation}
-where $d_{c}$ is the discount ratio. The back-off weight $\gamma$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
-\begin{equation}
-	\gamma(w_{i-1})=\frac{1-\sum_{w_{i}: C(w_{i-1}, w_{i})>0}P_{\textsc{katz}}(w_{i}|w_{i-1})}{\sum_{w_{i}: C(w_{i-1}, w_{i})=0}P_{\textsc{mle}}(w_{i})}.
-\end{equation}
-The updated probability estimate can be computed from corrected count by normalisation:
-\begin{equation}
-	P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}
-\end{equation}
-The discount coefficient $d_{c}$ depends on the the $n$-gram count $c$. Counts larger than some arbitrary treshold $k$ are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
-\begin{equation}
-	1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
-	\label{equation:constraint1}
-\end{equation}
-Furthermore, the total number of counts discounted in the global bigram distribution should be equal to the total number of counts that should be assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:good-turing}):
-\begin{equation}
-	\sum_{c}n_{c}(1-d_{c})c=n_{1}.
-	\label{equation:constraint2}
-\end{equation}
-The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by
-\begin{equation}
-	d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}
-	\label{equation:dc}
-\end{equation}
-Katz smoothing for higher-order $n$-gram is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
-\begin{equation}
-	P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
-	\begin{cases}
-		\frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if }C(w_{i-n+1}^{i}) > k\\
-		d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } 1\leq C(w_{i-n+1}^{i})\leq k\\
-		\gamma(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
-	\end{cases}
-\end{equation}
-where:
-\begin{equation}
-	\gamma(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
-\end{equation}
-\subsubsection*{Kneser-Ney smoothing}
-The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
-\begin{equation}
-	P_{\textsc{abs}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})P_{\textsc{abs}}(w_{i}|w_{i-n+2}^{i-1}).
-\end{equation}
-The parameter $\lambda$ is taken so that the resulting distribution sums to one:
-\begin{equation}
-	1-\lambda_{w_{i-n+1}^{i-1}}=\frac{\delta}{\sum_{w_{i}}C(w_{i-n+1}^{i})}N_{1+}(w_{i-n+1}^{i-1}~\bullet).
-\end{equation}
-The expression $N_{1+}(\varphi~\bullet)$, denotes the number of unique words that follow the history $\varphi$:
-\begin{equation}
-	N_{1+}(w_{i-n+1}^{i-1}~\bullet)=|\{w_{i}:C(w_{i-n+1}^{i}) > 0\}.
-\end{equation}
-The parameter $\delta$ is chosen using held-out estimation. In \cite{ney1994structuring}, it is estimated as 
-\begin{equation}
-	\delta=\frac{n_{1}}{n_{1}+2n_{2}}.
-\end{equation}
-The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurences of the word, but the number of words it follows:
-\begin{equation}
-	P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)}
-	\label{equation:kneser-ney}
-\end{equation}
-where $N_{1+}(\bullet~w_{i})$ is the number of different words that precede $w_{i}$ in the training data and $N_{1+}(\bullet~\bullet)$ is the number of unique bigrams with nonzero count:
-\begin{equation}
-	N_{1+}(\bullet~w_{i})=|{w_{i-1}:C(w_{i-1}, w_{i})>0}|
-\end{equation}
-\begin{equation}
-	N_{1+}(\bullet~\bullet)=|{(w_{i-1}, w_{i}):C(w_{i-1}, w_{i})>0}|
-\end{equation}
-The general formula for the unmodified Kneser-Ney smoothing is
-\begin{equation}
-	P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})\frac{N_{1+}(\bullet~w_{i-n+2}^{i})}{N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)},
-\end{equation}
-where:
-\begin{equation}
-	N_{1+}(\bullet~w_{i-n+2}^{i})=|{w_{i-n+1}:C(w_{i-n+1}^{i})>0}|,
-\end{equation}
-\begin{equation}
-	N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)=|{w_{i-n+1, w_{i}}:C(w_{i-n+1}^{i})>0}|.
-\end{equation}
-The Chen and Goodman's modification of the original Kneser-Ney algorithm uses three different discount values, $\delta_{1}$, $\delta_{2}$, $\delta_{3}$, that are applied to $n$-grams with one, two, and three or more counts, respectively \cite{chen1996empirical}. While estimating $P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})$, the parameter $\delta$ simply becomes a function of $C(w_{i-n+1}^{i-1})$: 
-\begin{equation}
-	D(c)=	
-	\begin{cases}
-		0 & \text{if } c=0\\
-		\delta_{1} & \text{if } c=1\\
-		\delta_{2} & \text{if } c=2\\
-		\delta_{3+} & \text{if } c\geq3\\
-	\end{cases}
-\end{equation}
-The distribution must still sum to one, so the new value of $\gamma$ is
-\begin{equation}
-	\gamma(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
-\end{equation}
-The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for $n$-grams with one or two counts is different from the optimal average discount for $n$-grams with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
-\begin{align}
-	Y&=\frac{n_{1}}{n_{1}+2n_{2}} \nonumber\\ 
-	\delta_{1}&=1-2Y\frac{n_{2}}{n_{1}} \nonumber\\
-	\delta_{2}&=2-3Y\frac{n_{3}}{n_{2}} \nonumber\\
-	\delta_{3+}&=3-4Y\frac{n_{4}}{n_{3}}.
-\end{align}
-\subsection{Word n-grams}
-So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
-\begin{center}
-	\texttt{open the pod bay doors}
-\end{center}
-We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, we get:
-\begin{equation}
-	P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
-\end{equation}
-Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
-\begin{multline}
-	P(\texttt{<s> open the pod bay door hal </s>}) \approx \\
-	\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
-\end{multline}
-There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short $n$-grams. Take this quote from Yoda as an example:
-\begin{center}
-	\texttt{<s> look I so old to young eyes </s>}
-\end{center}
-A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
-In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
-Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
-\begin{center}
-	\texttt{a brilliant american mathematician who graduated from} \\
-	\texttt{a brilliant american mathematician who graduated recently from}.
-\end{center}
-From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
-
-Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
-\subsection{Class-based $n$-gram models}
-Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters and $C^{n}-1$ independent $n$-gram parameters \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
-\begin{equation}
-	\pi:w_{i}\mapsto \gls{mapping}
-	\label{equation:deterministic_class}
-\end{equation}
-The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
-In case of a deterministic mapping, the probability of a word given its history can be calculated as the product of the probability of a particular word given its class (word emission probability) and the probability of a certain class given a history of $n-1$ classes:
-\begin{equation}
-	P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}))P_{1}(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
-	\label{equation:classngram}
-\end{equation}
-The class $n$-gram probabilities can be calculated from the corpus using \gls{mle}, similarly to word $n$-gram probabilities. Note that a history equivalence class can be used in the The word emission probability is often dropped, but can be otherwise estimated as the relative frequency of the form:
-\begin{equation}
-	P(w_{i}|c_{i})=\frac{C(w_{i})}{C(\pi(w_{i}))}
-	\label{equation:emission_probability}
-\end{equation}
-In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the posible realisations \cite{ney1994structuring}.
-The methods for finding the class mapping function fall roughly into two categories -- knowledge-based and data-driven. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The data-driven clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The class-based models used in this work are deterministic, knowledge-based morphosyntactic models.
-\section{Neural network models}
-\label{section:ann}
-\section{Evaluation of language models}
-\label{section:evaluation}
-The best way to evaluate a language model in the context of automatic speech recognition is to simply incorporate it in an existing \gls{asr} system and measure the performance. This approach, known as extrinsic evaluation, is the only way to know whether a particular model will actually improve the recognition rates, but it can be time-consuming, as it requires running the entire system multiple times \cite{jurafsky2000speech}. Moreover, the recognition task is a very complex one, so there are a lot of factors that can affect the performance of the model. It is therefore more practical to use an intrinsic evaluation metric, such as perplexity, which enables to quickly and objectively measure the quality of a model in an application-agnostic manner. This section describes the evaluation methods used in the experimental part.
-\subsection{Entropy and perplexity}
-\label{subsection:perplexity}
-Perplexity is the most common intrinsic metric of language model quality. It can be derived from the notion of entropy. In information theory, an information source is defined as a device which emits symbols from a finite set $V$. Entropy of an information source can be intuitively understood as the measure of its unpredictability or information content, expressed in bits. For an information source independently emitting symbols $x$ with probability $P(x)$ it is defined as:
-\begin{equation}
-	H=-\sum_{x}P(X)\log_{2}P(x).
-	\label{equation:entropy}
-\end{equation}
-An important conclusion following from equation \ref{equation:entropy} is that entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
-Language can be treated as an information source producing sequences of modelling units $w_{1}, \dots, w_{n}$ with probability $P(w_{1}, \dots, w_{n})$, where each token $w_{i}$ is taken from a vocabulary $V$. Because the symbols are not emitted independently, the notion of per-word entropy is introduced:
-\begin{equation}
-	H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
-	\label{equation:genentropy}
-\end{equation}
-The Shannon-McMillan-Breiman theorem states that assuming that language is a stationary and ergodic process, it is possible to use on long sequence in the equation \ref{equation:genentropy} instead of the summation over all possible sequences \cite{algoet1988sandwich}. The intuition here is that a very long sequence will contain most of the shorter sequences and their frequencies will correspond to their probabilities \cite{jurafsky2000speech}. The per-word entropy can therefore be approximated by:
+	\end{table}
+	Table \ref{table:mle} shows an example of calculating $n$-gram probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
 	\begin{equation}
-		H\approx\lim_{n\to\infty}-\frac{1}{n}\log_{2}P(w_{1}, \dots, w_{n}).
+		P(\texttt{<s> egg and bacon </s>})=0 \Leftarrow P(\texttt{bacon}|\texttt{and})=0
+	\end{equation}
+	Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
+
+	Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
+
+	Another conclusion that can be drawn from the example in Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
+	\subsection{Smoothing}
+	\label{subsection:smoothing}
+	Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every $n$-gram count, where typically $0 < \delta \leq 1$:
+	\begin{equation}
+		P_{add}(w_{i}|w_{i-n+1}^{i-1})=\frac{\delta+C(w_{i-n+1}^{i})}{\delta|V|+\sum_{w_{i}}C(w_{i-n+1}^{i})}.
+	\end{equation}
+	This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
+	\subsubsection*{Katz smoothing}
+	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of $n$-grams that occur $c$ times using the counts of $n$-grams that occur $c+1$ times -- in particular, to estimate the probability of unseen $n$-grams using the singleton counts. Let $n_{c}$ denote the number of $n$-grams that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+	\begin{equation}
+		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
+	\end{equation}
+	In particular, the total number of counts that should be assigned to bigrams with zero counts is equal to the number of singletons:
+	\begin{equation}
+		\label{equation:good-turing}
+		\hat{0}n_{0}=(0+1)\frac{n_{1}}{n_{0}}=n_{1}
+	\end{equation}
+	The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an $n$-gram $\alpha$ with $c$ counts:
+	\begin{equation}
+		P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+	\end{equation}
+
+	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
+	\begin{equation}
+		C_{\textsc{katz}}(w_{i-1}, w_{i})=
+		\begin{cases}
+			d_{c}c & \text{if } c>0 \\
+			\gamma(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
+		\end{cases}
+	\end{equation}
+	where $d_{c}$ is the discount ratio. The back-off weight $\gamma$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
+	\begin{equation}
+		\gamma(w_{i-1})=\frac{1-\sum_{w_{i}: C(w_{i-1}, w_{i})>0}P_{\textsc{katz}}(w_{i}|w_{i-1})}{\sum_{w_{i}: C(w_{i-1}, w_{i})=0}P_{\textsc{mle}}(w_{i})}.
+	\end{equation}
+	The updated probability estimate can be computed from corrected count by normalisation:
+	\begin{equation}
+		P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}
+	\end{equation}
+	The discount coefficient $d_{c}$ depends on the the $n$-gram count $c$. Counts larger than some arbitrary treshold $k$ are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
+	\begin{equation}
+		1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
+		\label{equation:constraint1}
+	\end{equation}
+	Furthermore, the total number of counts discounted in the global bigram distribution should be equal to the total number of counts that should be assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:good-turing}):
+	\begin{equation}
+		\sum_{c}n_{c}(1-d_{c})c=n_{1}.
+		\label{equation:constraint2}
+	\end{equation}
+	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by
+	\begin{equation}
+		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}
+		\label{equation:dc}
+	\end{equation}
+	Katz smoothing for higher-order $n$-gram is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
+	\begin{equation}
+		P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
+		\begin{cases}
+			\frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if }C(w_{i-n+1}^{i}) > k\\
+			d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } 1\leq C(w_{i-n+1}^{i})\leq k\\
+			\gamma(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
+		\end{cases}
+	\end{equation}
+	where:
+	\begin{equation}
+		\gamma(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
+	\end{equation}
+	\subsubsection*{Kneser-Ney smoothing}
+	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
+	\begin{equation}
+		P_{\textsc{abs}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})P_{\textsc{abs}}(w_{i}|w_{i-n+2}^{i-1}).
+	\end{equation}
+	The parameter $\lambda$ is taken so that the resulting distribution sums to one:
+	\begin{equation}
+		1-\lambda_{w_{i-n+1}^{i-1}}=\frac{\delta}{\sum_{w_{i}}C(w_{i-n+1}^{i})}N_{1+}(w_{i-n+1}^{i-1}~\bullet).
+	\end{equation}
+	The expression $N_{1+}(\varphi~\bullet)$, denotes the number of unique words that follow the history $\varphi$:
+	\begin{equation}
+		N_{1+}(w_{i-n+1}^{i-1}~\bullet)=|\{w_{i}:C(w_{i-n+1}^{i}) > 0\}.
+	\end{equation}
+	The parameter $\delta$ is chosen using held-out estimation. In \cite{ney1994structuring}, it is estimated as 
+	\begin{equation}
+		\delta=\frac{n_{1}}{n_{1}+2n_{2}}.
+	\end{equation}
+	The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurences of the word, but the number of words it follows:
+	\begin{equation}
+		P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)}
+		\label{equation:kneser-ney}
+	\end{equation}
+	where $N_{1+}(\bullet~w_{i})$ is the number of different words that precede $w_{i}$ in the training data and $N_{1+}(\bullet~\bullet)$ is the number of unique bigrams with nonzero count:
+	\begin{equation}
+		N_{1+}(\bullet~w_{i})=|{w_{i-1}:C(w_{i-1}, w_{i})>0}|
+	\end{equation}
+	\begin{equation}
+		N_{1+}(\bullet~\bullet)=|{(w_{i-1}, w_{i}):C(w_{i-1}, w_{i})>0}|
+	\end{equation}
+	The general formula for the unmodified Kneser-Ney smoothing is
+	\begin{equation}
+		P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})= \frac{max\{C(w_{i-n+1}^{i})-\delta, 0\}}{\sum_{w_{i}}C(w_{i-n+1}^{i})}+(1-\lambda_{w_{i-n+1}^{i}})\frac{N_{1+}(\bullet~w_{i-n+2}^{i})}{N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)},
+	\end{equation}
+	where:
+	\begin{equation}
+		N_{1+}(\bullet~w_{i-n+2}^{i})=|{w_{i-n+1}:C(w_{i-n+1}^{i})>0}|,
+	\end{equation}
+	\begin{equation}
+		N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)=|{w_{i-n+1, w_{i}}:C(w_{i-n+1}^{i})>0}|.
+	\end{equation}
+	The Chen and Goodman's modification of the original Kneser-Ney algorithm uses three different discount values, $\delta_{1}$, $\delta_{2}$, $\delta_{3}$, that are applied to $n$-grams with one, two, and three or more counts, respectively \cite{chen1996empirical}. While estimating $P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})$, the parameter $\delta$ simply becomes a function of $C(w_{i-n+1}^{i-1})$: 
+	\begin{equation}
+		D(c)=	
+		\begin{cases}
+			0 & \text{if } c=0\\
+			\delta_{1} & \text{if } c=1\\
+			\delta_{2} & \text{if } c=2\\
+			\delta_{3+} & \text{if } c\geq3\\
+		\end{cases}
+	\end{equation}
+	The distribution must still sum to one, so the new value of $\gamma$ is
+	\begin{equation}
+		\gamma(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
+	\end{equation}
+	The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for $n$-grams with one or two counts is different from the optimal average discount for $n$-grams with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
+	\begin{align}
+		Y&=\frac{n_{1}}{n_{1}+2n_{2}} \nonumber\\ 
+		\delta_{1}&=1-2Y\frac{n_{2}}{n_{1}} \nonumber\\
+		\delta_{2}&=2-3Y\frac{n_{3}}{n_{2}} \nonumber\\
+		\delta_{3+}&=3-4Y\frac{n_{4}}{n_{3}}.
+	\end{align}
+	\subsection{Word n-grams}
+	So far, while describing the $n$-gram models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, $n$-grams can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
+	\begin{center}
+		\texttt{open the pod bay doors}
+	\end{center}
+	We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, we get:
+	\begin{equation}
+		P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
+	\end{equation}
+	Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
+	\begin{multline}
+		P(\texttt{<s> open the pod bay door hal </s>}) \approx \\
+		\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
+	\end{multline}
+	There are several disadvantages of word-based $n$-gram models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based $n$-grams may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short $n$-grams. Take this quote from Yoda as an example:
+	\begin{center}
+		\texttt{<s> look I so old to young eyes </s>}
+	\end{center}
+	A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
+	In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word $n$-grams can be simply infeasible due to data sparsity and memory constraints.
+	Another issue with word-based $n$-grams is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
+	\begin{center}
+		\texttt{a brilliant american mathematician who graduated from} \\
+		\texttt{a brilliant american mathematician who graduated recently from}.
+	\end{center}
+	From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
+
+	Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
+	\subsection{Class-based $n$-gram models}
+	Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters and $C^{n}-1$ independent $n$-gram parameters \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
+	\begin{equation}
+		\pi:w_{i}\mapsto \gls{mapping}
+		\label{equation:deterministic_class}
+	\end{equation}
+	The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
+	In case of a deterministic mapping, the probability of a word given its history can be calculated as the product of the probability of a particular word given its class (word emission probability) and the probability of a certain class given a history of $n-1$ classes:
+	\begin{equation}
+		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}))P_{1}(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
+		\label{equation:classngram}
+	\end{equation}
+	The class $n$-gram probabilities can be calculated from the corpus using \gls{mle}, similarly to word $n$-gram probabilities. Note that a history equivalence class can be used in the The word emission probability is often dropped, but can be otherwise estimated as the relative frequency of the form:
+	\begin{equation}
+		P(w_{i}|c_{i})=\frac{C(w_{i})}{C(\pi(w_{i}))}
+		\label{equation:emission_probability}
+	\end{equation}
+	In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the posible realisations \cite{ney1994structuring}.
+	The methods for finding the class mapping function fall roughly into two categories -- knowledge-based and data-driven. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The data-driven clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The class-based models used in this work are deterministic, knowledge-based morphosyntactic models.
+	\section{Neural network models}
+	\label{section:ann}
+	\section{Evaluation of language models}
+	\label{section:evaluation}
+	The best way to evaluate a language model in the context of automatic speech recognition is to simply incorporate it in an existing \gls{asr} system and measure the performance. This approach, known as extrinsic evaluation, is the only way to know whether a particular model will actually improve the recognition rates, but it can be time-consuming, as it requires running the entire system multiple times \cite{jurafsky2000speech}. Moreover, the recognition task is a very complex one, so there are a lot of factors that can affect the performance of the model. It is therefore more practical to use an intrinsic evaluation metric, such as perplexity, which enables to quickly and objectively measure the quality of a model in an application-agnostic manner. This section describes the evaluation methods used in the experimental part.
+	\subsection{Entropy and perplexity}
+	\label{subsection:perplexity}
+	Perplexity is the most common intrinsic metric of language model quality. It can be derived from the notion of entropy. In information theory, an information source is defined as a device which emits symbols from a finite set $V$. Entropy of an information source can be intuitively understood as the measure of its unpredictability or information content, expressed in bits. For an information source independently emitting symbols $x$ with probability $P(x)$ it is defined as:
+	\begin{equation}
+		H=-\sum_{x}P(X)\log_{2}P(x).
+		\label{equation:entropy}
+	\end{equation}
+	An important conclusion following from equation \ref{equation:entropy} is that entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
+	Language can be treated as an information source producing sequences of modelling units $w_{1}, \dots, w_{n}$ with probability $P(w_{1}, \dots, w_{n})$, where each token $w_{i}$ is taken from a vocabulary $V$. Because the symbols are not emitted independently, the notion of per-word entropy is introduced:
+	\begin{equation}
+		H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
+		\label{equation:genentropy}
+	\end{equation}
+	The Shannon-McMillan-Breiman theorem states that assuming that language is a stationary and ergodic process, it is possible to use on long sequence in the equation \ref{equation:genentropy} instead of the summation over all possible sequences \cite{algoet1988sandwich}. The intuition here is that a very long sequence will contain most of the shorter sequences and their frequencies will correspond to their probabilities \cite{jurafsky2000speech}. The per-word entropy can therefore be approximated by:
+	\begin{equation}
+		\gls{entropy}\approx\lim_{n\to\infty}-\frac{1}{n}\log_{2}P(w_{1}, \dots, w_{n}).
 		\label{equation:approxentropy}
 	\end{equation}
-	The exact probability of a word sequence is unknown, so it is more practical to use the notion of cross-entropy, which enables to replace the actual probability $P$ with the language model probability estimate $\hat{P}$. The sequences are generated according to the actual probability distribution, but the probability estimates are used for the log summation:
+	The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data. However, the exact probability of a word sequence is unknown, so it is more practical to use the notion of cross-entropy, which enables to replace the actual probability $P(w_{1}, \dots, w_{n})$ with the language model probability estimate $\hat{P}(w_{1}, \dots, w_{n})$. The sequences are generated according to the actual probability distribution, but the probability estimates are used for the log summation:
 	\begin{equation}
-		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}, \dots, w_{n}),
+		\gls{crossentropy}=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}\hat{P}(w_{1}, \dots, w_{n}).
+		\label{equation:genentropy}
+	\end{equation}
+	Cross-entropy can be approximated similarly as per-word entropy, using the Shannon-McMillan-Breiman theorem:
+	\begin{equation}
+		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}, \dots, w_{n})
 		\label{equation:entropymodel}
 	\end{equation}
-	where $w_{1}, \dots, w_{n}$ is a sufficiently long, previously unseen sequence called the test text. The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data.
-\subsection{WERR}
-\label{subsection:werr}
-\subsection{Shannon Method}
+	The difference between the entropy $H$ and cross-entropy $\hat{H}$ is a measure of the accuracy of a model. Since the true entropy is always less than or equal to the cross-entropy, a model with a lower cross-entropy is a better representation of the language. Perplexity of the model $\hat{P}$ on a test text $W=w_{1}, \dots, w_{n}$ is formally defined as the exponentiation of the cross-entropy:
+	\begin{equation}
+		PP=\sqrt[n]{\frac{1}{P(w_{1}, \dots, w_{n})}}=\sqrt[n]{\prod_{i=1}^{n}\frac{1}{P(w_{i}|w_{1}, \dots, w_{i-1})}}
+		\label{equation:perplexity}
+	\end{equation}
+	\subsection{WERR}
+	\label{subsection:werr}
+	\subsection{Shannon Method}
