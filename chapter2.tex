@@ -281,7 +281,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		PP=\sqrt[n]{\frac{1}{P(w_{1}, \dots, w_{n})}}=\sqrt[n]{\prod_{i=1}^{n}\frac{1}{P(w_{i}|w_{1}, \dots, w_{i-1})}}
 		\label{equation:perplexity}
 	\end{equation}
-	A model with a perplexity of $2^{H}$ is as confused on test data as if it had to choose uniformly and independently from a set of $2^{H}$ words.
+	Perplexity is equivalent to the weighted average branching factor of a language. A model with a perplexity of $2^{H}$ is as confused while predicting the next word as if it had to choose uniformly and independently from a set of $2^{H}$ words.
 	\subsection{WERR}
 	\label{subsection:werr}
 	\subsection{Shannon Method}
