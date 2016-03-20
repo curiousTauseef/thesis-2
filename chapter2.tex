@@ -252,7 +252,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\label{subsection:perplexity}
 	Perplexity is the most common intrinsic metric of language model quality. It can be derived from the notion of entropy. In information theory, an information source is defined as a device which emits symbols from a finite set $V$. Entropy of an information source can be intuitively understood as the measure of its unpredictability or information content, expressed in bits. For an information source independently emitting symbols $x$ with probability $P(x)$ it is defined as
 	\begin{equation}
-		H=-\sum_{x}P(X)\log_{2}P(x).
+		H=-\sum_{x}P(x)\log_{2}P(x).
 		\label{equation:entropy}
 	\end{equation}
 	From equation \ref{equation:entropy} it follows that entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
@@ -261,12 +261,12 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
 		\label{equation:genentropy}
 	\end{equation}
-	The Shannon-McMillan-Breiman theorem states that if language is a stationary and ergodic process, it is possible to use one long sequence in the equation \ref{equation:genentropy} instead of the summation over all possible sequences \cite{algoet1988sandwich}. The assumption here is that a very long sequence will contain most of the shorter sequences and their frequencies will correspond to their probabilities \cite{jurafsky2000speech}. The per-word entropy can therefore be approximated by:
+	The Shannon-McMillan-Breiman theorem states that in case of a stationary and ergodic process, it is possible to use one long sequence in the equation \ref{equation:genentropy} instead of the summation over all possible sequences \cite{algoet1988sandwich}. The assumption here is that a very long sequence will contain most of the shorter sequences and their frequencies will correspond to their probabilities \cite{jurafsky2000speech}. The per-word entropy can therefore be approximated by:
 	\begin{equation}
 		\gls{entropy}\approx\lim_{n\to\infty}-\frac{1}{n}\log_{2}P(w_{1}, \dots, w_{n}).
 		\label{equation:approxentropy}
 	\end{equation}
-	The quantity in equation \ref{equation:approxentropy} is the average amount of bits that are required to specify a word. The higher the entropy, the more difficult it is for the recogniser to determine a word from acoustic data. Considering the definition of entropy as a measure of information content, the However, the exact probability of a word sequence is unknown, so it is more practical to use the notion of cross-entropy, which enables to replace the actual probability $P(w_{1}, \dots, w_{n})$ with the language model probability estimate $\hat{P}(w_{1}, \dots, w_{n})$. The sequences are generated according to the actual probability distribution, but the probability estimates are used for the log summation:
+	However, the exact probability of a word sequence is unknown, so it is more practical to use the notion of cross-entropy, which enables to replace the actual probability $P(w_{1}, \dots, w_{n})$ with the language model probability estimate $\hat{P}(w_{1}, \dots, w_{n})$. The sequences are generated according to the actual probability distribution, but the probability estimates are used for the log summation:
 	\begin{equation}
 		\gls{crossentropy}=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}\hat{P}(w_{1}, \dots, w_{n}).
 		\label{equation:crossentropy}
@@ -276,11 +276,12 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}, \dots, w_{n}).
 		\label{equation:entropymodel}
 	\end{equation}
-	The difference between the entropy $H$ and cross-entropy $\hat{H}$ is a measure of the accuracy of a model. Since the true entropy is always less than or equal to the cross-entropy, a model with a lower cross-entropy is a better representation of the language. Perplexity of the model $\hat{P}$ on a test text $W=w_{1}, \dots, w_{n}$ is formally defined as the exponentiation of the cross-entropy:
+	The quantity in equation \ref{equation:entropymodel} can be thought of as the average amount of bits that are required to specify a word. The difference between the entropy $H$ and cross-entropy $\hat{H}$ is a measure of the accuracy of a model. Since the true entropy is always less than or equal to the cross-entropy, a model with a lower cross-entropy is a better representation of the language. Perplexity of the model $\hat{P}$ on a test text $W=w_{1}, \dots, w_{n}$ is formally defined as the exponentiation of the cross-entropy:
 	\begin{equation}
 		PP=\sqrt[n]{\frac{1}{P(w_{1}, \dots, w_{n})}}=\sqrt[n]{\prod_{i=1}^{n}\frac{1}{P(w_{i}|w_{1}, \dots, w_{i-1})}}
 		\label{equation:perplexity}
 	\end{equation}
+	A model with a perplexity of $2^{H}$ is as confused on test data as if it had to choose uniformly and independently from a set of $2^{H}$ words.
 	\subsection{WERR}
 	\label{subsection:werr}
 	\subsection{Shannon Method}
