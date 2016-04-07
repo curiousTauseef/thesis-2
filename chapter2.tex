@@ -256,6 +256,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\label{equation:entropy}
 	\end{equation}
 	Entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
+
 	Language can be treated as an information source producing sequences of modelling units $w_{1}, \dots, w_{n}$ with probability $P(w_{1}, \dots, w_{n})$, where each token $w_{i}$ is taken from a vocabulary $V$. Because the symbols are not emitted independently, the notion of per-word entropy is used:
 	\begin{equation}
 		H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
@@ -271,7 +272,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\gls{crossentropy}=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}\hat{P}(w_{1}, \dots, w_{n}).
 		\label{equation:crossentropy}
 	\end{equation}
-	Cross-entropy can be approximated similarly as per-word entropy, using the Shannon-McMillan-Breiman theorem:
+	Cross-entropy can be approximated similarly to per-word entropy, using the Shannon-McMillan-Breiman theorem:
 	\begin{equation}
 		\hat{H}=-\frac{1}{n}\log_{2}\hat{P}(w_{1}, \dots, w_{n}).
 		\label{equation:entropymodel}
@@ -283,7 +284,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\end{equation}
 	Perplexity is equivalent to the weighted average branching factor of a language. A model with a perplexity of $2^{H}$ is as confused while predicting the next word as if there were on average $2^{H}$ equally probable words.
 
-Perplexity is 
+	Despite its popularity as a measure of language model quality, perplexity is a rather poor method of estimating the actual performance of a language model in an \gls{asr} task. A model with lower perplexity is, in some sense, a better representation of the language, but there is no guarantee it will translate to high recognition accuracy. The main reason behind this is that perplexity does not take into account the acoustic similarities between words, which are crucial in the speech recognition process. A model able to accurately discriminate between acoustically similar words often performs better, even if its perplexity is relatively high. Some alternatives to perplexity have been proposed, such as low-level language model estimates, adversarial evaluation, artificial lattices, or classification of pseudo-negative sentences, but the word error rate reduction is the only reliable method of measuring model performance in an \gls{asr} system \cite{pauls2012large}\cite{smith2012adversarial}.
 	\subsection{WERR}
 	\label{subsection:werr}
 	\subsection{Shannon Method}
