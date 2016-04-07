@@ -255,7 +255,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		H=-\sum_{x}P(x)\log_{2}P(x).
 		\label{equation:entropy}
 	\end{equation}
-	From equation \ref{equation:entropy} it follows that entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
+	Entropy is maximised when all emission probabilities are equal, that is when $P(x)=\frac{1}{|V|}$. This means that a source with entropy H contains the same amount of information as a source emitting symbols from a set of size $2^{H}$ with probability $2^{-H}$.
 	Language can be treated as an information source producing sequences of modelling units $w_{1}, \dots, w_{n}$ with probability $P(w_{1}, \dots, w_{n})$, where each token $w_{i}$ is taken from a vocabulary $V$. Because the symbols are not emitted independently, the notion of per-word entropy is used:
 	\begin{equation}
 		H=-\lim_{n\to\infty}\frac{1}{n}\sum_{w_{1}, \dots, w_{n}}P(w_{1}, \dots, w_{n})\log_{2}P(w_{1}, \dots, w_{n}).
@@ -281,7 +281,9 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		PP=\sqrt[n]{\frac{1}{P(w_{1}, \dots, w_{n})}}=\sqrt[n]{\prod_{i=1}^{n}\frac{1}{P(w_{i}|w_{1}, \dots, w_{i-1})}}
 		\label{equation:perplexity}
 	\end{equation}
-	Perplexity is equivalent to the weighted average branching factor of a language. A model with a perplexity of $2^{H}$ is as confused while predicting the next word as if it had to choose uniformly and independently from a set of $2^{H}$ words.
+	Perplexity is equivalent to the weighted average branching factor of a language. A model with a perplexity of $2^{H}$ is as confused while predicting the next word as if there were on average $2^{H}$ equally probable words.
+
+Perplexity is 
 	\subsection{WERR}
 	\label{subsection:werr}
 	\subsection{Shannon Method}
