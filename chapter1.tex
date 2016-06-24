@@ -6,6 +6,7 @@
 \Gls{asr} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. \Gls{lvcsr} falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. The scope of this thesis is limited to speech transcription, as it enables to measure the performance of language models using well-established metrics.
 
 \subsection{Bayesian framework}
+\label{subsection:bayesian}
 In general, the recogniser tries to determine the word sequence $\hat{W}=w_{1}, \ldots, w_{L}$ out of all possible hypotheses $W$ which is most likely to have generated the sequence of observed acoustic features $Y=y_{1}, \ldots, y_{T}$:
 \begin{equation}
 \label{equation:recogniser}
@@ -20,7 +21,7 @@ $P(W)$ is estimated by the language model, while $P(Y|W)$ is computed using the 
 
 \subsection{Feature extraction}
 \label{subsection:features}
-Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters (feature vectors) from a sampled speech waveform. The most popular method of spectral analysis are \glspl{mfcc} and \gls{lpc}.
+Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}.
 
 \begin{figure}[!ht]
   \centering
@@ -47,11 +48,7 @@ The algorithm for calculating \glspl{mfcc} is shown in figure \ref{figure:mfcc}.
 \begin{equation}
 H(z)=1-\frac{a}{z},
 \end{equation}
-where $0.9 \leq a \leq 1.0$ (for a different approach see: \cite{nossair1995signal}). The signal is then divided into a sequence of frames using 20-30 milisecond windows with about 50\% overlap. The extraction takes place simply by multiplying the value of the signal by the value of the window for every time point $n$:
-\begin{equation}
-  y[n]=s[n]w[n].
-\end{equation}
-Hamming window is commonly used, as it allows to avoid discontinuities at the boundaries:
+where $0.9 \leq a \leq 1.0$. The signal is then divided into a sequence of frames using 20-30 milisecond windows with about 50\% overlap. Hamming window is commonly used, as it allows to avoid discontinuities at the boundaries:
 \begin{equation}
 \label{equation:hamming}
   w[n]=
