@@ -25,7 +25,7 @@ Speech is a non-stationary process, so to represent it as a succession of discre
 
 \begin{figure}[!ht]
   \centering
-    \begin{tikzpicture}[block/.style = {minimum width = 4cm, font = \small}]
+    \begin{tikzpicture}[block/.style = {minimum width = 2cm, font = \small}]
       \node [block] (preemphasis) {Preemphasis};
       \node [block, below = of preemphasis] (windowing) {Windowing};
       \node [block, below = of windowing] (dft) {DFT};
@@ -66,14 +66,6 @@ However, human hearing is not equally sensitive at all frequency bands. Many stu
 \begin{equation}
   m=1127\ln(1+\frac{f}{700}).
 \end{equation}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{img/mel.png}
-  \caption{Plot of pitch mel scale versus Hertz scale \cite{vedala2008mel}.}
-  \label{figure:mel}
-\end{figure}
-
 Another property of human hearing is that we are less sensitive to variation in signal level at high amplitudes than at low amplitudes. To model that logarithmic response, we take the log of each of the mel spectrum values.
 
 Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse \gls{dft} of the log magnitude of the \gls{dft} of the signal, although \gls{dct} is also frequently used instead of inverse \gls{dft}:
