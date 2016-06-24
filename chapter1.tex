@@ -3,20 +3,20 @@
 
 \section{Automatic speech recognition}
 \label{section:asr}
-\Gls{asr} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. \Gls{lvcsr} falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. In this thesis we focus on speech transcription, because its performance can be reliably measured in terms of word recognition errors.
+\Gls{asr} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. \Gls{lvcsr} falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. The scope of this thesis is limited to speech transcription, as it enables to measure the performance of language models using well-established metrics.
 
 \subsection{Bayesian framework}
 In general, the recogniser tries to determine the word sequence $\hat{W}=w_{1}, \ldots, w_{L}$ out of all possible hypotheses $W$ which is most likely to have generated the sequence of observed acoustic features $Y=y_{1}, \ldots, y_{T}$:
 \begin{equation}
 \label{equation:recogniser}
-  \hat{W}=\max_{W}P(W|Y).
+  \hat{W}=\argmax_{W}P(W|Y).
 \end{equation}
-We can rearrange the conditional probability using the Bayes rule:
+The conditional probability can be rearranged using the Bayes rule:
 \begin{equation}
   \label{equation:bayesian}
   \gls{probsequence}=\frac{P(Y|W)P(W)}{P(Y)}\propto{P(Y|W)P(W)}.
 \end{equation}
-$P(W)$ is estimated by the language model (see subsection \ref{subsection:lm}), while $P(Y|W)$ is computed using the acoustic model (see subsection \ref{subsection:acoustic}). Typical ASR systems use \glspl{hmm} to model the sequential structure of speech signal and \glspl{gmm} for modelling the emission distribution of \glspl{hmm} \cite{baker1975dragon, bourlard1994connectionist}.
+$P(W)$ is estimated by the language model, while $P(Y|W)$ is computed using the acoustic model. Typical ASR systems use \glspl{hmm} to model the sequential structure of speech signal and \glspl{gmm} for modelling the emission distribution of \glspl{hmm} \cite{baker1975dragon, bourlard1994connectionist}.
 
 \subsection{Feature extraction}
 \label{subsection:features}
