@@ -210,47 +210,10 @@ For a given class, a grammatical category can be morphological (all lexemes from
       neuter & rozpoznałyśmy & rozpoznałyście & rozpoznały \\
     \end{tabular*}
 \end{table}
-Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have more than twenty distinct forms (see Table \ref{table:noun}). In case of verbs or adjectives, the difference is even more pronounced (see Table \ref{table:verb}). New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the number of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, while even a vocabulary of one million items is too large to be processed in real time \cite{nouza2010challenges}. There are several ways of dealing with the tradeoff between the lexicon size and recognition quality.
+Examples presented in Tables \ref{table:declination} and \ref{table:conjugation} already hint at the most important problem in \gls{asr} of inflected language: the size of the lexicon. While an English noun usually has just two forms (singular and plural), its Polish equivalent can have fourteen distinct forms. In case of verbs or adjectives, the difference is even more pronounced (see Table \ref{table:verb}). New words can be created not only by changing the endings, but also by adding multiple prefixes and suffixes, as well as modifying the stem itself. Even negative, comparative, or superlative forms of an adjective are distinct lexical items (in English, they would be created with auxilliary words, such as \textit{not}, \textit{more}, \textit{the most}). This is a serious challenge in building any \gls{asr} system, as the number of distinct word-forms can easilly exceed one million. In case of English, 135 vocabulary items are needed to account for half of the Brown Corpus \cite{fagan2011introduction}, and an inventory of 50000 words is enough to achieve 99\% coverage \footnote{In \cite{michel2011quantitative} the size of the English lexicon in 2000 has been statistically estimated as $1022000$, but the distribution of words in a natural language is governed by the Zipf's law, stating that the frequency of any word is inversely proportional to its rank in the frequency table \cite{li1992random}.}. In case of inflected language, the wordbuilding mechanisms allow for producing virtually unlimited number of words, while even a vocabulary of one million items is too large to be processed in real time \cite{nouza2010challenges}. The most straightforward strategy of dealing with that problem is to limit the lexicon to words that occured at least $N$ times in the training corpus. There is obviously a tradeoff between the size of the model and recognition accuracy.
 
-The most straighforward strategy of reducing the \gls{oov} rate is to limit the lexicon to a set of most frequent word forms. It can be done by simply creating the word lexicon from words that occured at least $N$ times in the training corpus. The size of the lexicon can be controlled by the value of $N$.
-\begin{table}[!ht]
-  \caption{The noun \textit{student} (student) in English and its inflected forms in Polish}
-    \label{table:noun}
-    \centering
-    \begin{tabularx}{.8\linewidth}{@{}p{.2\textwidth}Xp{.6\textwidth}X@{}}
-      English & Polish\\
-      \hline
-      \raggedright student, students & \textbf{masculine}: student, studenta, studentowi, studentem, studencie, studenci, studentów, studentom, studentami, studentach\\
-                        & \textbf{feminine}: studentka, studentki, studentce, studentkę, studentką, studentko, studentki, studentek, studentkom, studentkami, studentkach\\
-    \end{tabularx}
-\end{table}
-
-\begin{table}[!ht]
-  \caption{The verb \textit{być} (to be) in English and its inflected forms in Polish}
-    \label{table:verb}
-    \centering
-    \begin{tabularx}{.8\linewidth}{@{}p{.2\textwidth}Xp{.6\textwidth}X@{}}
-      English & Polish\\
-      \hline
-      \raggedright be, being, been, am, are, is, was, were & jestem, jesteś, jest, jesteśmy, jesteście, są, byłem, byłam, byłeś, byłaś, był, była, było, byliśmy, byłyśmy, byliście, byłyście, byli, były, będę, będziesz, będzie, będziemy, będziecie, będą, byłbym, byłabym, byłbyś, byłabyś, byłby, byłaby, byłoby, bylibyśmy, byłybyśmy, bylibyście, byłybyście, byliby, byłyby, bądź, bądźmy, bądźcie, będący, będąc\\
-    \end{tabularx}
-\end{table}
-
-\FloatBarrier
 \subsection{Word order}
 From the \gls{asr} perspective, the most problematic grammatical feature of Polish and other Slavic language, is the relatively free word order in sentences.Thanks to rich morphology, the subject, verb, and adjectives may appear at almost arbitrary places. The role of a certain word in the sentence can be inferred from its inflection, as there is strong grammatical agreement between the parts of a sentence. The subject of a sentence must agree in gender, person, number, and case with all its modifiers and the verb \footnote{Although verbs are not subject to conjugation with respect to cases, a verb constrains the case of the subject, forming a predicate expression called verbonominal collocation\cite{vetulani2007towards}. See Table \ref{table:agreement}.}. Therefore, the agreement relation often does not fit the left-to-right direction of language processing and frequently binds words which are not immediate neighbours in the sentence. Because of this, n-gram models for Slavic languages will never be as efficient as in case of English, which imposes strict constraints on the relative order of words in a sentence.
-
-\begin{table}[!ht]
-  \caption{An example of grammatical agreement}
-    \label{table:agreement}
-    \centering
-    \begin{tabularx}{.8\linewidth}{@{}p{.4\textwidth}Xp{.4\textwidth}X@{}}
-      English & Polish\\
-      \hline
-      I see an intelligent woman & Widzę inteligentn\textbf{ą} kobiet\textbf{ę}\\
-      I don't see an intelligent woman & Nie widzę inteligentn\textbf{ej} kobiet\textbf{y}\\
-    \end{tabularx}
-\end{table}
 
 The mechanisms of grammatical agreement are too complex to be formalised into a set of machine-processable rules. A more common approach is using class-based n-gram models instead of word-based models. First, a list of classes is defined, usually based on grammatical classes and categories. Each word from the training corpus is then replaced by the coresponding class, and an n-gram model is trained. The number of classes is significantly lower than the size of the lexicon, so these kind of models are less prone to data sparsity problems and usually do not require smoothing (see Section \ref{subsection:smoothing}).
 
