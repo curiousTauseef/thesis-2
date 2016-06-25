@@ -21,14 +21,19 @@ $P(W)$ is estimated by the language model, while $P(Y|W)$ is computed using the 
 
 \subsection{Feature extraction}
 \label{subsection:features}
-Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}. The algorithm for calculating \glspl{mfcc} consists of the following steps:
+Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}. The cepstrum is formally defined as the \gls{idft} of the log magnitude of the \gls{dft} of the signal: 
+
+\begin{equation}
+	\label{equation:cepstrum}
+	c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}.
+\end{equation}
+
+In \gls{asr} applications, \gls{dct} is commonly used in place of \gls{idft}. A useful property of the cepstral analysis is that it enables to deconvolve the glottal source waveform of particular fundamental frequency \gls{fundamental} from the vocal tract filter and extract the vocal tract properties, which carry most information about the phone being produced. The algorithm for calculating \glspl{mfcc} consists of the following steps:
 \begin{enumerate}
-	\item Preemphasis
-	\item Windowing
+	\item Preemphasis and windowing
 	\item \gls{dft}
-	\item Transition to log mel scale 
-	\item Logarithm
-	\item Inverse DFT or DCT
+	\item Conversion to log mel scale 
+	\item \gls{dct}
 	\item Delta and energy coefficients
 \end{enumerate}
 
@@ -50,21 +55,16 @@ In the next step, the \gls{dft} is applied. Its result is the information about 
 \begin{equation}
   X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}.
 \end{equation}
-However, human hearing is not equally sensitive at all frequency bands. Many studies confirm that above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefore passed through a bank of triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the following mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
+
+However, many studies confirm that human hearing is not equally sensitive at all frequency bands -- above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was also shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefore passed through a bank of 26 triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the following mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
 \begin{equation}
   m=1127\ln(1+\frac{f}{700}).
 \end{equation}
-Another property of human hearing is that we are less sensitive to variation in signal level at high amplitudes than at low amplitudes. The logarithm of each of the mel spectrum values is taken to model that response.
+Another property of human hearing is that it is less sensitive to variation in signal level at high amplitudes. The logarithm of each of the mel spectrum values is taken to model that response.
 
-Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse \gls{dft} of the log magnitude of the \gls{dft} of the signal, although \gls{dct} is also frequently used instead of inverse \gls{dft}:
-\begin{equation}
-  \label{equation:cepstrum}
-  c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}.
-\end{equation}
+Finally, the \gls{dct} of the log filterbank energies is calculated. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values.
 
-Speech can be represented with the source-filter model. Cepstral analysis enables to deconvolve the glottal source waveform of particular fundamental frequency \gls{fundamental} from the vocal tract filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that their variance tends to be uncorrelated, which is not true in case of raw mel-frequency spectrum. This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see subsection \ref{subsection:acoustic}).
-
-In addition to 12 cepstral coefficients for each frame, energy and variability of the signal are also taken into account, because they provide useful cues for phone identity. For each of the 13 features (12 cepstral features and energy), the delta (velocity) and double delta (acceleration) features are calculated, resulting in a total of 39 \glspl{mfcc}.
+In addition to 12 cepstral coefficients for each frame, energy within a frame and variability between frames are also taken into account, because they provide useful cues for phone identity. For each of the 13 features (12 cepstral features and energy), the delta (velocity) and double delta (acceleration) features are calculated, resulting in a total of 39 \glspl{mfcc} \cite{jurafsky2000speech}.
 
 \subsection{Acoustic model}
 \label{subsection:acoustic}
