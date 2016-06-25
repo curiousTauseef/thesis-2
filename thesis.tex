@@ -1,4 +1,5 @@
 \documentclass[en, 11pt]{aghdpl}
+\usepackage[toc,page]{appendix}
 \usepackage{amsmath}
 \usepackage{epigraph}
 \usepackage[english]{babel}
@@ -28,7 +29,6 @@
 \usepackage[margin=1cm, font={small}]{caption}
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows, positioning, calc, backgrounds}
-\usepackage{appendix}
 \usepackage{tabularx}
 \usepackage{tipa}
 \usepackage{threeparttable}
@@ -97,8 +97,7 @@
 \include{chapter5}
 
 \begin{appendices}
-  \chapter{Appendix A}
-  \label{appendix:articulation}
+\include{appendixa}
 \end{appendices}
 
 \bibliographystyle{acm}
