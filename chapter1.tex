@@ -21,30 +21,18 @@ $P(W)$ is estimated by the language model, while $P(Y|W)$ is computed using the 
 
 \subsection{Feature extraction}
 \label{subsection:features}
-Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}.
+Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its statistical properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}. The algorithm for calculating \glspl{mfcc} consists of the following steps:
+\begin{enumerate}
+	\item Preemphasis
+	\item Windowing
+	\item \gls{dft}
+	\item Transition to log mel scale 
+	\item Logarithm
+	\item Inverse DFT or DCT
+	\item Delta and energy coefficients
+\end{enumerate}
 
-\begin{figure}[!ht]
-  \centering
-    \begin{tikzpicture}[block/.style = {minimum width = 2cm, font = \small}]
-      \node [block] (preemphasis) {Preemphasis};
-      \node [block, below = of preemphasis] (windowing) {Windowing};
-      \node [block, below = of windowing] (dft) {DFT};
-      \node [block, below = of dft] (melfilter) {Mel Filters};
-      \node [block, below = of melfilter] (log) {Logarithm};
-      \node [block, below = of log] (dct) {DCT};
-      \node [block, below = of dct] (delta) {Delta Coefficients};
-      \path[draw,->]
-      (preemphasis) edge (windowing)
-      (windowing) edge (dft)
-      (dft) edge (melfilter)
-      (melfilter) edge (log)
-      (log) edge (dct)
-      (dct) edge (delta);
-    \end{tikzpicture}
-    \caption{Calculating \gls{mfcc}}
-    \label{figure:mfcc}
-\end{figure}
-The algorithm for calculating \glspl{mfcc} is shown in figure \ref{figure:mfcc}. First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
+First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
 \begin{equation}
 H(z)=1-\frac{a}{z},
 \end{equation}
@@ -58,15 +46,15 @@ where $0.9 \leq a \leq 1.0$. The signal is then divided into a sequence of frame
   \end{cases}
 \end{equation}
 
-The next step is to extract spectral information from the windowed signal using \gls{dft}. The result of Fourier analysis is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
+In the next step, the \gls{dft} is applied. Its result is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
 \begin{equation}
   X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}.
 \end{equation}
-However, human hearing is not equally sensitive at all frequency bands. Many studies confirm that above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefore passed through a bank of triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
+However, human hearing is not equally sensitive at all frequency bands. Many studies confirm that above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefore passed through a bank of triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the following mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
 \begin{equation}
   m=1127\ln(1+\frac{f}{700}).
 \end{equation}
-Another property of human hearing is that we are less sensitive to variation in signal level at high amplitudes than at low amplitudes. To model that logarithmic response, we take the log of each of the mel spectrum values.
+Another property of human hearing is that we are less sensitive to variation in signal level at high amplitudes than at low amplitudes. The logarithm of each of the mel spectrum values is taken to model that response.
 
 Finally, cepstrum of the signal is calculated. Formally, it can be defined as the inverse \gls{dft} of the log magnitude of the \gls{dft} of the signal, although \gls{dct} is also frequently used instead of inverse \gls{dft}:
 \begin{equation}
@@ -74,29 +62,9 @@ Finally, cepstrum of the signal is calculated. Formally, it can be defined as th
   c[n]=\sum_{n=0}^{N-1}\log{\left(\abs{\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}}\right)}e^{\frac{2\pi ikn}{N}}.
 \end{equation}
 
-In general, speech can be represented with the source-filter model. The original glottal source waveform of particular fundamental frequency \gls{fundamental} is passed trough the vocal tract, which acts as a filter. However, glottal source features are irrelevant for distinguishing phones. Cepstral analysis enables to deconvolve the source from the filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values, which carry information solely about the vocal tract  \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that their variance tends to be uncorrelated, which is not true in case of raw mel-frequency spectrum. This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see subsection \ref{subsection:acoustic}).
+Speech can be represented with the source-filter model. Cepstral analysis enables to deconvolve the glottal source waveform of particular fundamental frequency \gls{fundamental} from the vocal tract filter and extract the vocal tract properties, which carry most information about the phone being produced. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values \cite{jurafsky2000speech}. Another useful property of the cepstral coefficients is that their variance tends to be uncorrelated, which is not true in case of raw mel-frequency spectrum. This means that the GMMs don't have to represent the covariance between MFCCs, which significantly reduces the number of parameters (see subsection \ref{subsection:acoustic}).
 
-Having 12 cepstral coefficients for each frame is not sufficient, as we need inormation about one more feature that is useful in phone recognition: energy. The energy of a signal $x$ from time sample $t_{1}$ to time sample $t_{2}$ can be calculated as the sum over time of the power of the samples:
-\begin{equation}
-  \text{Energy}=\sum_{t=t_{1}}^{t_{2}}x^{2}[t].
-\end{equation}
-
-We also have to take into account the variability of the signal. Changes from frame to frame, such as the slope of a formant at its transitions, provide a useful cue for phone identity. For each of the 13 features (12 cepstral features and energy), we calculate the delta (velocity) and double delta (acceleration) features. This can be done simply by computing differences between cepstral values, although usually more sophisticated estimates are used:
-
-\begin{equation}
-  d(t)=\frac{c(t+1)-c(t-1)}{2}.
-\end{equation}
-
-After adding energy coefficients and time derivatives, we end up with a total of 39 \glspl{mfcc}:
-\begin{itemize}
-\itemsep0em
-\item 12 cepstral coefficients,
-\item 12 delta cepstral coefficients,
-\item 12 double delta cepstral coefficients,
-\item 1 energy coefficient,
-\item 1 delta energy coefficient,
-\item 1 double delta energy coefficient.
-\end{itemize}
+In addition to 12 cepstral coefficients for each frame, energy and variability of the signal are also taken into account, because they provide useful cues for phone identity. For each of the 13 features (12 cepstral features and energy), the delta (velocity) and double delta (acceleration) features are calculated, resulting in a total of 39 \glspl{mfcc}.
 
 \subsection{Acoustic model}
 \label{subsection:acoustic}
