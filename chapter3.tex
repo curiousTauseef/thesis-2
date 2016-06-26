@@ -4,7 +4,10 @@
 This section describes the resources that served as a source of training data, and the tools that were used for gathering, filtering, and transforming the data, including XML-parsing, POS-tagging, lemmatization, and morphological disambiguation. It also presents two language modelling frameworks that enabled building large-scale n-gram and neural language models on consumer hardware.
 \subsection{NKJP}
 \label{section:nkjp}
-Collecting high quality language data is a difficult task, as large and representative collections of modern texts are generally hard to obtain, if only for copyright reasons. One potential source of modern texts is obviously the Internet. However, web data can be extremely noisy and scraping and cleaning it poses a lot of challenges. Moreover, speech transcripts appear to be a more valuable source of training data in \gls{asr} applications, than written texts \cite{dziadzio2015comparison}. 
+Collecting high quality language data is a difficult task, as large and representative collections of modern texts are generally hard to obtain, if only for copyright reasons. One potential source of modern texts is obviously the Internet. However, web data can be extremely noisy and scraping, cleaning, and normalizing it would be a cumbersome process. It should also be considered that the language of the Internet is different from that used in speech. Indeed, transcripts of spoken language appear to be a more valuable source of training data in \gls{asr} applications, than written texts \cite{dziadzio2015comparison}. Moreover, using raw text data to build POS-based models would require a very accurate and robust morphological tagger. For these reasons, linguistic corpora have become essential in advanced language technology. Fortunately, there exists an extensive, publicly available reference corpus of Polish language.
+
+The \gls{nkjp} is a shared initiative of four institutions: Institute of Computer Science at the Polish Academy of Sciences, Institute of Polish Language at the Polish Academy of Sciences, Polish Scientific Publishers PWN, and the Department of Computational and Corpus Linguistics at the University of Łódź. It has been carried out as a research-development project of the Ministry of Science and Higher Education.
+
 \subsection{Concraft-pl}
 \subsection{SRILM}
 \subsection{RNNLM}
