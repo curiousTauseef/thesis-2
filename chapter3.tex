@@ -1,16 +1,12 @@
 \chapter{Building the models}
-This chapter presents in detail the process of building n-gram and neural language models. The first section focuses on tools, and resources, while the second 
 \label{chapter:tools}
 \section{Tools and resources}
-The process of building a language model can be roughly divided into two main stages -- obtaining real-world language data and training the model
+This section describes the resources that served as a source of training data, and the tools that were used for gathering, filtering, and transforming the data, including XML-parsing, POS-tagging, lemmatization, and morphological disambiguation. It also presents two language modelling frameworks that enabled building large-scale n-gram and neural language models on consumer hardware.
 \subsection{NKJP}
 \label{section:nkjp}
-The first stage of building a language model is collecting real-world language data. It is a particularly challenging task, as large and diverse collections of texts are usually hard to obtain. .
+Collecting high quality language data is a difficult task, as large and representative collections of modern texts are generally hard to obtain, if only for copyright reasons. One potential source of modern texts is obviously the Internet. However, web data can be extremely noisy and scraping and cleaning it poses a lot of challenges. Moreover, speech transcripts appear to be a more valuable source of training data in \gls{asr} applications, than written texts \cite{dziadzio2015comparison}. 
 \subsection{Concraft-pl}
 \subsection{SRILM}
-\subsection{NN toolkit}
-\section{Procedure}
-
-
-
-
+\subsection{RNNLM}
+\section{Method}
+The process of building a language model can be roughly divided into two stages~--~data gathering and pre-processing and training the model.
