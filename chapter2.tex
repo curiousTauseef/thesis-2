@@ -1,8 +1,6 @@
 \chapter{Statistical language models}
 \label{chapter:lm}
-Language modelling lies at the core of many natural language processing tasks, such as speech recognition and synthesis, document classification, grammar and spelling checking, parsing, machine translation, and information retrieval. In general, the task of \glspl{lm} is to estimate the likelihood of a sequence of words. This information can then be used to reject invalid sentences or resolve ambiguities. In case of automatic speech recognition the language model guides and constrains the search among alternative word hypotheses \cite{glass2013automatic}.
 
-In this chapter, a thorough introduction to statistical language modelling is given. The first section describes the word $n$-gram model, which is still one of the most important tools in speech and language processing. It also presents several smoothing techniques. Section \ref{section:ann} is dedicated to the connectionist models based on artificial neural networks. The final section contains an overview of evaluation methods for language models.
 \section{N-gram models}
 \label{section:ngrams}
 In Section \ref{subsection:lm} we defined the chain rule of probability, which lets us decompose the joint probability of a sequence of $N$ words into a product of conditional probabilities. Let $w_{1}^{\textsc{n}}$ denote $w_{1}, \dots, w_{\textsc{n}}$. The chain rule can be formulated as
