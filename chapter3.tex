@@ -10,11 +10,28 @@ The \gls{nkjp} is a shared initiative of four institutions: Institute of Compute
 
 Another important feature of the \gls{nkjp} is that every text is accompanied by several layers of annotation. The metadata contain information about the text, such as title, author, and source, or~--~in case of speech transcripts~--~the topic of the conversation, the level of formality, background information about the speakers, and so on \cite{przepiorkowski2009xml}. More importantly, every lexical unit is described by several tags carrying information about its grammatical class and category. This enabled to easily filter the data by rejecting foreign words, incomplete or corrupted segments, punctuation, and non alpha-numeric characters. 
 
-For the purpose of the experimental part of this thesis, the redistributable subcorpus was used. It consists of all text of the full \gls{nkjp} that are free from intellectual property constraints. The sources of the texts are mostly parliamentary proceedings and legal texts (see Table \ref{table:freenkjp}).
+For the purpose of the experimental part of this thesis, the redistributable subcorpus was used. It consists of all text of the full \gls{nkjp} that are free from intellectual property constraints. The sources include mostly texts of legal documents and transcripts of parliamentary and investigation commision proceedings (see Table \ref{table:freenkjp}). For detailed information about the contents of the final training set, see Section \ref{subsection:trainingset}.
 
+\begin{table}[h!]
+  \begin{center}
+	  \caption{Contents of the redistributable subcorpus of the \gls{nkjp}}
+	    \label{table:freenkjp}
+	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}ll}
+      Source & Number of words in thousands \\
+      \midrule
+      Books & 67\\
+      Laws & 6970\\
+      Proceedings of Investigation Commisions & 4623\\
+      Parliamentary proceedings & 87621\\
+    \end{tabular*}
+  \end{center}
+\end{table}
 
 \subsection{Concraft-pl}
 \subsection{SRILM}
 \subsection{RNNLM}
 \section{Method}
 The process of building a language model can be roughly divided into two stages~--~data gathering and pre-processing and training the model.
+\subsection{Building the training set}
+\label{subsection:trainingset}
+\subsection{Training the models}
