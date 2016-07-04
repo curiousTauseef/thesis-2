@@ -4,15 +4,14 @@
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Contents of the redistributable subcorpus of the NKJP.}
-	    \label{table:freenkjp}
-	    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lr}
-      source & word count (thousands) \\
-      \cmidrule{1-2}
-      books & 67\\
-      laws & 6970\\
-      proceedings of investigation commisions & 4623\\
-      parliamentary proceedings & 87621\\
+	  \caption{Perplexity of the full plain LM with different smoothing methods.}
+	    \label{table:perplexitysmoothing}
+	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
+      {} & gt & kn & kni & cg & cgi\\
+      \midrule
+      unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.08\\
+      bigrams  & 387.107 & 471.066 & 452.718 & 484.307 & 458.396\\
+      trigrams & 279.932 & 252.284 & 251.696 & 256.057 & 251.696\\
     \end{tabular*}
   \end{center}
 \end{table}
