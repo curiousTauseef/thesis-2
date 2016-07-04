@@ -17,7 +17,7 @@ For the purpose of the experimental part of this thesis, the redistributable sub
 	  \caption{Contents of the redistributable subcorpus of the NKJP}
 	    \label{table:freenkjp}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}ll}
-      Source & Number of words in thousands \\
+      Source & Number of words (thousands) \\
       \midrule
       Books & 67\\
       Laws & 6970\\
@@ -37,14 +37,27 @@ The process of building a language model can be roughly divided into two stages~
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the training corpora}
-	\begin{tabular}{*9c}
-		{}        &  \multicolumn{2}{c}{plain} & \multicolumn{2}{c}{lemma} & \multicolumn{2}{c}{pos}& \multicolumn{2}{c}{gnc}\\
-		\cmidrule{2-9}
-		{}        &  text & speech & text & speech & text & speech & text & speech\\
-		unigrams  &  17.5 & 19.1   & 17.5 & 19.1   & 17.5 & 19.1   & 17.5 & 19.1 \\
-	        bigrams   &  11.8 & 12.7   & 29.3 & 31.9   & 17.5 & 19.1   & 17.5 & 19.1 \\
-                trigrams  &  16.6 & 15.6   & 35.9 & 37.4   & 17.5 & 19.1   & 17.5 & 19.1 \\
+	\caption{Number of unique tokens in the plain text and lemma training corpora (thousands)}
+	\begin{tabular}{*5c}
+		{}        &  \multicolumn{2}{c}{plain} & \multicolumn{2}{c}{lemma}\\
+		\cmidrule{2-5}
+		{}        &  text & speech & text & speech \\
+		unigrams  &  158  & 184    & 55   & 42    \\
+	        bigrams   &  1540 & 4083   & 1013 & 2242   \\
+                trigrams  &  639  & 1480   & 679  & 1609   \\
+	\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Number of unique tokens in the pos and gnc training corpora}
+	\begin{tabular}{*5c}
+		{}        &  \multicolumn{2}{c}{pos} & \multicolumn{2}{c}{gnc}\\
+		\cmidrule{2-5}
+		{}        &  text & speech & text & speech \\
+		unigrams  &  17.5 & 19.1   & 17.5 & 19.1   \\
+	        bigrams   &  11.8 & 12.7   & 29.3 & 31.9   \\
+                trigrams  &  16.6 & 15.6   & 35.9 & 37.4   \\
 	\end{tabular}
 \end{table}
 
