@@ -14,7 +14,7 @@ For the purpose of the experimental part of this thesis, the redistributable sub
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Contents of the redistributable subcorpus of the \gls{nkjp}}
+	  \caption{Contents of the redistributable subcorpus of the NKJP}
 	    \label{table:freenkjp}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}ll}
       Source & Number of words in thousands \\
@@ -34,4 +34,18 @@ For the purpose of the experimental part of this thesis, the redistributable sub
 The process of building a language model can be roughly divided into two stages~--~data gathering and pre-processing and training the model.
 \subsection{Building the training set}
 \label{subsection:trainingset}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Number of unique tokens in the training corpora}
+	\begin{tabular}{*9c}
+		{}        &  \multicolumn{2}{c}{plain} & \multicolumn{2}{c}{lemma} & \multicolumn{2}{c}{pos}& \multicolumn{2}{c}{gnc}\\
+		\cmidrule{2-9}
+		{}        &  text & speech & text & speech & text & speech & text & speech\\
+		unigrams  &  17.5 & 19.1   & 17.5 & 19.1   & 17.5 & 19.1   & 17.5 & 19.1 \\
+	        bigrams   &  11.8 & 12.7   & 29.3 & 31.9   & 17.5 & 19.1   & 17.5 & 19.1 \\
+                trigrams  &  16.6 & 15.6   & 35.9 & 37.4   & 17.5 & 19.1   & 17.5 & 19.1 \\
+	\end{tabular}
+\end{table}
+
 \subsection{Training the models}
