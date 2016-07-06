@@ -34,10 +34,9 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 \gls{srilm} is a toolkit for building and applying statistical language models, primarily for use in speech recognition, statistical tagging, and machine translation. It has been under development in the SRI Speech Technology and Research Laboratory since 1995. It consists of a set of C++ class libraries implementing language models, data stuctures and miscellaneous utility functions, a set of executable programs built on top of these libraries to perform standard tasks such as training and testing language models, and a collection of miscellaneous scripts facilitating minor related tasks \cite{stolcke2011srilm}. It mainly supports n-gram modelling, so it was used in the experimental part to train and evaluate word-based and class-based n-gram models. To automate certain tasks, the toolkit was accesed via a basic Python wrapper. SRILM was used under the SRI's Research Community License and the Python binding by Nathaniel Smith was used under the MIT Licence.
 \subsection{RNNLM}
 \section{Method}
-The process of building a language model can be roughly divided into two stages~--~data gathering and pre-processing and training the model.
+Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training set}
 \label{subsection:trainingset}
-
 \begin{table}[!htbp]
 	\centering
 	\caption{Number of unique tokens in the plain and lemma training corpora (thousands)}
