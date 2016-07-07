@@ -10,7 +10,7 @@ The \gls{nkjp} is a shared initiative of four institutions: Institute of Compute
 
 Another important feature of the \gls{nkjp} is that every text is accompanied by several layers of annotation. The metadata contain information about the text, such as title, author, and source, or~--~in case of speech transcripts~--~the topic of the conversation, the level of formality, background information about the speakers, and so on \cite{przepiorkowski2009xml}. More importantly, every lexical unit is described by several tags carrying information about its grammatical class and category. This enabled to easily filter the data by rejecting foreign words, incomplete or corrupted segments, punctuation, and non alpha-numeric characters. 
 
-For the purpose of the experimental part of this thesis, the redistributable subcorpus was used. It consists of all text of the full \gls{nkjp} that are free from intellectual property constraints. The sources include mostly texts of legal documents and transcripts of parliamentary and investigation commision proceedings. For detailed information about the contents of the final training set, see Section \ref{subsection:trainingset}.
+For the purpose of the experimental part of this thesis, the redistributable subcorpus was used as the main source of training data. It consists of all text of the full \gls{nkjp} that are free from intellectual property constraints. The sources include mostly texts of legal documents and transcripts of parliamentary and investigation commision proceedings. For detailed information about the contents of the final training set, see Section \ref{subsection:trainingset}.
 
 \begin{table}[h!]
   \begin{center}
@@ -37,15 +37,30 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training set}
 \label{subsection:trainingset}
-The main source of the training data was the redistributable subcorpus of the \gls{nkjp}. The training set also includes texts from the one million manually annotated subcorpus. The contents of the both corpora was divided into two categories~--~written texts and transcripts of speech.
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech corpus contains mostly transcripts of the parliamentary proceedings.
 \begin{table}[!htbp]
 	\centering
-	\caption{Contents of the training set}
-	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
-		{}        & \multicolumn{1}{c}{word count} \\
-		text   & 5 537 540  \\
-	        speech & 18 150 725 \\
-                total  & 23 688 265 \\
+	\caption{Contents of the speech corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lr}
+		source & word count \\
+		\midrule
+                conversational speech  & 80 629 \\
+                investigation commisions  & 4 198 129 \\
+                parliamentary proceedings  & 13 895 902 \\
+                total  & 18 174 660 \\
+	\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Contents of the text corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lr}
+		source & word count \\
+		\midrule
+                books & 68 465 \\
+                newspapers and articles & 813 318 \\
+                legal texts & 4 608 863 \\
+                total  & 5 490 619 \\
 	\end{tabular*}
 \end{table}
 
