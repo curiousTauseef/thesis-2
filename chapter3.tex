@@ -21,7 +21,7 @@ For the purpose of the experimental part of this thesis, the redistributable sub
       \cmidrule{1-2}
       books & 67 000\\
       proceedings of investigation commisions & 4 623 000\\
-      laws & 6 970 000\\
+      legal texts & 6 970 000\\
       parliamentary proceedings & 87 621 000\\
     \end{tabular*}
   \end{center}
@@ -37,7 +37,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training set}
 \label{subsection:trainingset}
-The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech corpus contains mostly transcripts of the parliamentary proceedings.
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech corpus contains mostly transcripted proceedings of the Polish parlament and investigation commisions. The majority of the text corpus are legal documents. 
 \begin{table}[!htbp]
 	\centering
 	\caption{Contents of the speech corpus.}
@@ -64,16 +64,16 @@ The training data was extracted from the \gls{nkjp}, more precisely from the red
 	\end{tabular*}
 \end{table}
 
-First, the XML files that constitute the \gls{nkjp} were parsed using a Python implementation of the ElementTree XML API. The XML files contain several layers of annotation, so it was possible to build four different corpora in a single run:
+The XML files that constitute the \gls{nkjp} were parsed using a Python implementation of the ElementTree XML API. The XML files contain several layers of annotation, so it was possible to build four different types of corpora in a single run:
 
 \begin{enumerate}
 	\item plain -- plain text,
 	\item lemma -- lemmatised text, 
-	\item pos -- tags containing only information about the grammatical class (part of speech),
-	\item gnc -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
-
-The content of the corpus was filtered during extraction. Only segments longer than three words were selected. 
+	\item POS -- tags containing only information about the grammatical class (part of speech),
+	\item GNC -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
 \end{enumerate}
+
+Each corpus was split into speech and text, so there are eight final training datasets~--~plain_text, plain_speech, lemma_text, lemma_speech, pos_text, pos_speech, gnc_text, and gnc_speech. These names will be used in all tables and figures. The content of the corpus was filtered during extraction. Only segments longer than three words were selected. 
 
 \begin{table}[!htbp]
 	\centering
