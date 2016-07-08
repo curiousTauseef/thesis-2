@@ -7,7 +7,7 @@
 	  \caption{Perplexity of the full plain LM with different smoothing methods.}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
-		    {} & \multicolumn{1}{c}{gt} & \multicolumn{1}{c}{kn} & \multicolumn{1}{c}{kni} & \multicolumn{1}{c}{cg} & \multicolumn{1}{c}{cgi}\\
+		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KN} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CG} & \multicolumn{1}{c}{CGI}\\
       unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.08\\
       bigrams  & 387.11 & 471.07 & 452.71 & 484.31 & 458.40\\
       trigrams & 279.93 & 252.28 & 251.69 & 256.06 & 250.31\\
@@ -18,44 +18,44 @@
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the plain text language model with Chen-Goodman smoothing.}
-	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
-		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-                unigrams  & 4409.47  & 3510.78 \\
-	        bigrams   & 1380.31  & 445.75 \\
-		trigrams  & 1226.92  & 248.27 \\
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+                unigrams  & 4409.47  & 3510.78 & 3767.08\\
+	        bigrams   & 1380.31  & 445.75 & 458.40\\
+		trigrams  & 1226.92  & 248.27 & 250.31\\
 	\end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the lemma language model with Chen-Goodman smoothing.}
-	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
-		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-		unigrams  & 1830.74  & 1358.54 \\
-	        bigrams   & 747.56   & 309.80 \\
-                trigrams  & 681.40   & 187.72 \\
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
+		unigrams  & 1830.74  & 1358.54 & 1622.00\\
+	        bigrams   & 747.56   & 309.80  & 358.68\\
+                trigrams  & 681.40   & 187.72  & 212.91\\
 	\end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the GNC language model with Chen-Goodman smoothing.}
-	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
-		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-		unigrams  & 92.40   & 161.67 \\
-	        bigrams   & 40.58   & 65.08 \\
-                trigrams  & 35.24   & 30.93 \\
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		unigrams  & 92.40   & 161.67 & 82.53\\
+	        bigrams   & 40.58   & 65.08  & 36.06\\
+                trigrams  & 35.24   & 30.93  & 29.92\\
 	\end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the POS language model with Good-Turing smoothing.}
-	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
-		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-		unigrams  & 11.28  & 10.42 \\
-	        bigrams   & 9.49   & 8.46 \\
-                trigrams  & 8.86   & 7.83 \\
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		unigrams  & 11.28  & 10.42 & 10.40\\
+	        bigrams   & 9.49   & 8.46  & 8.48\\
+                trigrams  & 8.86   & 7.83  & 7.85\\
 	\end{tabular*}
 \end{table}
 
