@@ -77,29 +77,45 @@ Each corpus was split into speech and text, so there are eight final training da
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the plain and lemma training corpora (thousands)}
-	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*4r}
-		{}        &  \multicolumn{2}{c}{plain} & \multicolumn{2}{c}{lemma}\\
-		\cmidrule{2-5}
-		{}        &  \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-		\cmidrule{2-5}
-		unigrams  &  158  & 184    & 55   & 42    \\
-	        bigrams   &  1540 & 4083   & 1013 & 2242   \\
-                trigrams  &  639  & 1480   & 679  & 1609   \\
+	\caption{Number of unique tokens in the plain corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+                unigrams  &  157 867   & 184 237   & 244 347\\
+	        bigrams   &  1 540 010 & 4 083 052 & 5 111 189\\
+		trigrams  &  639 039   & 1 480 416 & 2 119 127\\
 	\end{tabular*}
 \end{table}
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the pos and gnc training corpora.}
-	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*4r}
-		{}        &  \multicolumn{2}{c}{pos} & \multicolumn{2}{c}{gnc}\\
-		\cmidrule{2-5}
-		{}        &  \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} \\
-		\cmidrule{2-5}
-		unigrams  &  35   & 35     & 463     & 412    \\
-	        bigrams   &  851  & 905    & 34873   & 38107  \\
-                trigrams  &  8172 & 11956  & 212840  & 408868 \\
+	\caption{Number of unique tokens in the lemma corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+                unigrams  &  54 523    & 41 667    & 65 421 \\
+	        bigrams   &  1 012 669 & 2 241 798 & 2 835 191 \\
+		trigrams  &  679 041   & 1 609 414 & 2 248 516 \\
+	\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Number of unique tokens in the pos corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+                unigrams  &  35   & 35     & 35   \\
+	        bigrams   &  851  & 905    & 935  \\
+		trigrams  &  8172 & 11956  & 12558\\
+	\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Number of unique tokens in the gnc corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+                unigrams  & 463      & 412     & 475\\
+	        bigrams   & 34 874   & 38 107  & 45 689\\
+		trigrams  & 212 840  & 408 868 & 481 338\\
 	\end{tabular*}
 \end{table}
 
