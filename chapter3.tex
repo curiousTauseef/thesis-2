@@ -35,9 +35,23 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 \subsection{RNNLM}
 \section{Method}
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
-\subsection{Building the training set}
+\subsection{Building the training and testing sets}
 \label{subsection:trainingset}
-The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech corpus contains mostly transcripted proceedings of the Polish parlament and investigation commisions. The majority of the text corpus are legal documents. 
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The test corpus was built solely from parliamentary speeches. Testing the models on spoken language only seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figure \ref{figure:populartokens1}-\ref{figure:populartokens3}). However, the one million subcorpus, although more representative, is too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Contents of the text corpus.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lr}
+		source & word count \\
+		\midrule
+                books & 68 465 \\
+                newspapers & 813 318 \\
+                legal texts & 4 608 863 \\
+                total  & 5 490 619 \\
+	\end{tabular*}
+\end{table}
+
 \begin{table}[!htbp]
 	\centering
 	\caption{Contents of the speech corpus.}
@@ -48,19 +62,6 @@ The training data was extracted from the \gls{nkjp}, more precisely from the red
                 investigation commisions  & 4 198 129 \\
                 parliamentary proceedings  & 13 895 902 \\
                 total  & 18 174 660 \\
-	\end{tabular*}
-\end{table}
-
-\begin{table}[!htbp]
-	\centering
-	\caption{Contents of the text corpus.}
-	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lr}
-		source & word count \\
-		\midrule
-                books & 68 465 \\
-                newspapers and articles & 813 318 \\
-                legal texts & 4 608 863 \\
-                total  & 5 490 619 \\
 	\end{tabular*}
 \end{table}
 
