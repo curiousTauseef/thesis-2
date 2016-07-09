@@ -37,7 +37,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training and testing sets}
 \label{subsection:trainingset}
-The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The test corpus was built solely from parliamentary speeches. Testing the models on spoken language only seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figure \ref{figure:populartokens1}-\ref{figure:populartokens3}). However, the one million subcorpus, although more representative, is too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The test corpus was built solely from parliamentary speeches. Testing the models on spoken language only seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figure \ref{figure:commonunigrams}-\ref{figure:commontrigrams}). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
 
 \begin{table}[!htbp]
 	\centering
@@ -119,5 +119,26 @@ Each corpus was split into speech and text, so there are eight final training da
 		trigrams  & 212 840  & 408 868 & 481 338\\
 	\end{tabular*}
 \end{table}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includesvg[height=8cm, width=15cm, svgpath=./img/]{unigrams}
+	      \caption{Most common unigrams of the plain full corpus.}
+	      \label{figure:commonunigrams}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includesvg[height=8cm, width=15cm, svgpath=./img/]{bigrams}
+	      \caption{Most common bigrams of the plain full corpus.}
+	      \label{figure:commonbigrams}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includesvg[height=8cm, width=15cm, svgpath=./img/]{trigrams}
+	      \caption{Most common bigrams of the plain full corpus.}
+	      \label{figure:commontrigrams}
+\end{figure}
 
 \subsection{Training the models}
