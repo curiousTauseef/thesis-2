@@ -1,8 +1,8 @@
 #!/bin/zsh
-pdflatex thesis.tex
+pdflatex --shell-escape thesis.tex
 bibtex thesis
-pdflatex thesis.tex
-pdflatex thesis.tex
+pdflatex --shell-escape thesis.tex
+pdflatex --shell-escape thesis.tex
 makeindex thesis.nlo -s nomencl.ist -o thesis.nls
 makeglossaries thesis
-pdflatex thesis.tex
+pdflatex --shell-escape thesis.tex
