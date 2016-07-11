@@ -37,7 +37,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training and testing sets}
 \label{subsection:trainingset}
-The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The test corpus was built solely from parliamentary speeches. Testing the models on spoken language only seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figure \ref{figure:commonunigrams}-\ref{figure:commontrigrams}). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The testing  set was built solely from parliamentary speeches. Testing the models on transcripts of spoken language seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} presenting the most common n-grams from the training set). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
 
 \begin{table}[!htbp]
 	\centering
@@ -70,11 +70,24 @@ The XML files that constitute the \gls{nkjp} were parsed using a Python implemen
 \begin{enumerate}
 	\item plain -- plain text,
 	\item lemma -- lemmatised text, 
-	\item POS -- tags containing only information about the grammatical class (part of speech),
-	\item GNC -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
+	\item pos -- tags containing only information about the grammatical class (part of speech),
+	\item gnc -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
 \end{enumerate}
 
-Each corpus was split into speech and text, so there are eight final training datasets~--~plain_text, plain_speech, lemma_text, lemma_speech, pos_text, pos_speech, gnc_text, and gnc_speech. These names will be used in all tables and figures. The content of the corpus was filtered during extraction. Only segments longer than three words were selected. 
+Each corpus was split into speech and text. The twelve final training datasets are listed in Table \ref{table:datasets}. This nomenclature will be used consistently throughout the following chapters. 
+
+\begin{table}[!htbp]
+	\centering
+	\caption{List of the training corpora.}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
+	\label{table:datasets}
+		plain_full   & lemma_full   & pos_full   & gnc_full \\ 
+		plain_text   & lemma_text   & pos_text   & gnc_text \\
+		plain_speech & lemma_speech & pos_speech & gnc_speech \\ 
+	\end{tabular*}
+\end{table}
+
+The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed in digits were substituted with a common tag, and the text was stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
 
 \begin{table}[!htbp]
 	\centering
