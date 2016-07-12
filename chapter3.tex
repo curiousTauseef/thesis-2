@@ -87,8 +87,10 @@ Each corpus was split into speech and text. The twelve final training datasets a
 	\end{tabular*}
 \end{table}
 
-The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed in digits were substituted with a common tag, and the text was stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
+The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and the text was stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
 
+\subsection{Training the n-gram models}
+The n-gram models were trained using the SRILM toolkit. First, the n-gram statistics were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The n-gram counts were then smoothed and interpolated. Several smoothing method were used
 \begin{table}[!htbp]
 	\centering
 	\caption{Number of unique tokens in the plain corpus.}
@@ -154,4 +156,3 @@ The content of the corpora was filtered during extraction. All corrupted and inc
 	      \label{figure:commontrigrams}
 \end{figure}
 
-\subsection{Training the models}
