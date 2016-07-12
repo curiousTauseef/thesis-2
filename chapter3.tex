@@ -87,18 +87,20 @@ Each corpus was split into speech and text. The twelve final training datasets a
 	\end{tabular*}
 \end{table}
 
-The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and the text was stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
+The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and the text was converted to lowercase, stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
 
 \subsection{Training the n-gram models}
-The n-gram models were trained using the SRILM toolkit. First, the n-gram statistics were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The n-gram counts were then smoothed and interpolated. Several smoothing method were used
+The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. Note the evident data sparsity~--~in some cases, there are less trigrams present in the corpus
+
 \begin{table}[!htbp]
 	\centering
 	\caption{Number of unique tokens in the plain corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+	\label{table:countsplain}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
-                unigrams  &  157 867   & 184 237   & 244 347\\
-	        bigrams   &  1 540 010 & 4 083 052 & 5 111 189\\
-		trigrams  &  639 039   & 1 480 416 & 2 119 127\\
+                unigrams  &  157 866   & 184 236    & 244 346\\
+	        bigrams   &  1 540 010 & 4 083 052  & 5 111 189\\
+		trigrams  &  4 669 098 & 14 549 205 & 12 843 843\\
 	\end{tabular*}
 \end{table}
 
@@ -106,10 +108,11 @@ The n-gram models were trained using the SRILM toolkit. First, the n-gram statis
 	\centering
 	\caption{Number of unique tokens in the lemma corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+	\label{table:countslemma}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
-                unigrams  &  54 523    & 41 667    & 65 421 \\
-	        bigrams   &  1 012 669 & 2 241 798 & 2 835 191 \\
-		trigrams  &  679 041   & 1 609 414 & 2 248 516 \\
+                unigrams  &  54 522    & 41 666    & 65 420     \\
+	        bigrams   &  1 012 669 & 2 241 798 & 2 835 191  \\
+		trigrams  &  2 555 053 & 8 314 572 & 10 380 493 \\
 	\end{tabular*}
 \end{table}
 
@@ -117,10 +120,11 @@ The n-gram models were trained using the SRILM toolkit. First, the n-gram statis
 	\centering
 	\caption{Number of unique tokens in the pos corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+	\label{table:countspos}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
-                unigrams  &  35   & 35     & 35   \\
-	        bigrams   &  851  & 905    & 935  \\
-		trigrams  &  8172 & 11956  & 12558\\
+                unigrams  &  34    & 34     & 34   \\
+	        bigrams   &  851   & 905    & 935  \\
+		trigrams  &  10238 & 14030  & 14689\\
 	\end{tabular*}
 \end{table}
 
@@ -128,12 +132,15 @@ The n-gram models were trained using the SRILM toolkit. First, the n-gram statis
 	\centering
 	\caption{Number of unique tokens in the gnc corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
+	\label{table:countsgnc}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
-                unigrams  & 463      & 412     & 475\\
-	        bigrams   & 34 874   & 38 107  & 45 689\\
-		trigrams  & 212 840  & 408 868 & 481 338\\
+                unigrams  & 462      & 411     & 475     \\
+	        bigrams   & 34 874   & 38 107  & 45 689  \\
+		trigrams  & 389 709  & 686 461 & 803 012 \\
 	\end{tabular*}
 \end{table}
+The n-gram counts were then smoothed and interpolated. Several smoothing method were used
+
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{unigrams.png}
