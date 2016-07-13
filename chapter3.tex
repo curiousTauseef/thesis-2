@@ -90,7 +90,7 @@ Each corpus was split into speech and text. The twelve final training datasets a
 The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and the text was converted to lowercase, stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
 
 \subsection{Training the n-gram models}
-The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. Note the evident data sparsity~--~in some cases, there are less trigrams present in the corpus
+The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data.
 
 \begin{table}[!htbp]
 	\centering
@@ -139,7 +139,21 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 		trigrams  & 389 709  & 686 461 & 803 012 \\
 	\end{tabular*}
 \end{table}
-The n-gram counts were then smoothed and interpolated. Several smoothing method were used
+The n-gram counts were then smoothed and interpolated. Several smoothing method were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman. The last two smoothing methods also combined with 
+
+\begin{table}[h!]
+  \begin{center}
+	  \caption{Perplexity of the full plain LM with different smoothing methods.}
+	    \label{table:perplexitysmoothing}
+	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
+		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KN} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CG} & \multicolumn{1}{c}{CGI}\\
+      unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.08\\
+      bigrams  & 387.11 & 471.07 & 452.71 & 484.31 & 458.40\\
+      trigrams & 279.93 & 252.28 & 251.69 & 256.06 & 250.31\\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
 
 \begin{figure}[!htbp]
 	  \centering
