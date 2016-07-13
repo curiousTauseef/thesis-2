@@ -139,7 +139,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 		trigrams  & 389 709  & 686 461 & 803 012 \\
 	\end{tabular*}
 \end{table}
-The n-gram counts were then smoothed and interpolated. Several smoothing method were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman. The last two smoothing methods also combined with 
+The n-gram counts were then smoothed. Several smoothing method were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney. The last two methods were tested in two variants~--~back-off and interpolated. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the modified Kneser-Ney method has the lowest perplexity. This method was used for all language models except for the POS models, where the count of counts were too small. 
 
 \begin{table}[h!]
   \begin{center}
@@ -147,9 +147,9 @@ The n-gram counts were then smoothed and interpolated. Several smoothing method 
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
 		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KN} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CG} & \multicolumn{1}{c}{CGI}\\
-      unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.08\\
-      bigrams  & 387.11 & 471.07 & 452.71 & 484.31 & 458.40\\
-      trigrams & 279.93 & 252.28 & 251.69 & 256.06 & 250.31\\
+      unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.37\\
+      bigrams  & 387.11  & 471.07  & 452.72  & 484.31  & 458.40\\
+      trigrams & 277.19  & 250.40  & 244.44  & 254.08  & 242.31\\
     \end{tabular*}
   \end{center}
 \end{table}
