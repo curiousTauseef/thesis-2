@@ -4,9 +4,10 @@
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the plain text language model with Chen-Goodman smoothing.}
+	\caption{Perplexity of the plain text language model with Chen-Goodman's modified Kneser-Ney smoothing.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
                 unigrams  & 4409.47  & 3510.78 & 3767.37\\
 	        bigrams   & 1380.31  & 445.76  & 458.40\\
 		trigrams  & 1231.23  & 240.54  & 242.31\\
@@ -15,9 +16,10 @@
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the lemma language model with Chen-Goodman smoothing.}
+	\caption{Perplexity of the lemma language model with Chen-Goodman's modified Kneser-Ney smoothing.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
+		\midrule
 		unigrams  & 1830.74  & 1358.54 & 1622.00\\
 	        bigrams   & 747.56   & 309.80  & 358.68\\
                 trigrams  & 702.64   & 185.27  & 210.57\\
@@ -26,9 +28,10 @@
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the POS language model with Good-Turing smoothing.}
+	\caption{Perplexity of the POS language model with Witten-Bell smoothing.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
 		unigrams  & 11.28  & 10.42 & 10.40\\
 	        bigrams   & 9.49   & 8.46  & 8.48\\
                 trigrams  & 8.86   & 7.83  & 7.86\\
@@ -37,9 +40,10 @@
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the GNC language model with Chen-Goodman smoothing.}
+	\caption{Perplexity of the GNC language model with Good-Turing smoothing.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
 		unigrams  & 91.40   & 83.38  & 82.59\\
 	        bigrams   & 40.58   & 37.25  & 36.11\\
                 trigrams  & 35.45   & 31.22  & 29.99\\

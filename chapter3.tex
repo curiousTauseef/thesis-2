@@ -87,10 +87,10 @@ Each corpus was split into speech and text. The twelve final training datasets a
 	\end{tabular*}
 \end{table}
 
-The content of the corpora was filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and the text was converted to lowercase, stripped of punctuation, non-alphanumeric symbols and abbreviations. Moreover, only segments longer than three words were selected. 
+The contents of the corpora were filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and all sentences were converted to lowercase, stripped of punctuation, non-alphanumeric symbols, foreign words and abbreviations. Only segments longer than three words were selected. 
 
 \subsection{Training the n-gram models}
-The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once and more than 92 000 are required to achieve 99\% coverage (see Figure \ref{figure:coverage}. Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data.
+The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. To achieve 99\% unigram coverage, a lexicon of more than 92 000 words is required (see Figure \ref{figure:coverage}. Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data.
 
 \begin{table}[!htbp]
 	\centering
@@ -98,6 +98,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countsplain}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
                 unigrams  &  157 866   & 184 236    & 244 346\\
 	        bigrams   &  1 540 010 & 4 083 052  & 5 111 189\\
 		trigrams  &  4 669 098 & 14 549 205 & 12 843 843\\
@@ -110,6 +111,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countslemma}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
                 unigrams  &  54 522    & 41 666    & 65 420     \\
 	        bigrams   &  1 012 669 & 2 241 798 & 2 835 191  \\
 		trigrams  &  2 555 053 & 8 314 572 & 10 380 493 \\
@@ -122,18 +124,12 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countspos}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
                 unigrams  &  34    & 34     & 34   \\
 	        bigrams   &  851   & 905    & 935  \\
 		trigrams  &  10238 & 14030  & 14689\\
 	\end{tabular*}
 \end{table}
-
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{coverage.png}
-      \caption{Unigram coverage for the full plain corpus as a function of the vocabulary size.}
-      \label{figure:unigramdistribution}
-\end{figure}
 
 \begin{table}[!htbp]
 	\centering
@@ -141,28 +137,34 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countsgnc}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
+		\midrule
                 unigrams  & 462      & 411     & 475     \\
 	        bigrams   & 34 874   & 38 107  & 45 689  \\
 		trigrams  & 389 709  & 686 461 & 803 012 \\
 	\end{tabular*}
 \end{table}
-The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney. The last two methods were tested in two variants~--~back-off and interpolated. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the modified Kneser-Ney method has the lowest perplexity. This method was used for all language models except for the POS models, where the count of counts were too small. 
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{coverage.png}
+      \caption{Unigram coverage for the full plain corpus as a function of the vocabulary size.}
+      \label{figure:coverage}
+\end{figure}
+
+The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the backoff and interpolated variant. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell method should work well.
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Perplexity of the full plain LM with different smoothing methods~--~Good-Turing, Kneser-Ney (back-off and interpolated), and Chen-Goodman's modified Kneser-Ney (back-off and interpolated), respectively.}
+	  \caption{Perplexity of the full plain LM with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
-		    {} & \multicolumn{1}{c}{GT} & \multicolumn{2}{c}{KN} & \multicolumn{2}{c}{CG}\\
-		    {} & \multicolumn{1}{c}{backoff} & \multicolumn{1}{c}{backoff} & \multicolumn{1}{c}{interp} & \multicolumn{1}{c}{backoff} & \multicolumn{1}{c}{interp}\\
-
+		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KNB} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CGB} & \multicolumn{1}{c}{CGI}\\
       unigrams & 2604.09 & 3735.08 & 3735.08 & 3767.08 & 3767.37\\
       bigrams  & 387.11  & 471.07  & 452.72  & 484.31  & 458.40\\
       trigrams & 277.19  & 250.40  & 244.44  & 254.08  & 242.31\\
     \end{tabular*}
   \end{center}
 \end{table}
-
 
 \begin{figure}[!htbp]
 	  \centering
