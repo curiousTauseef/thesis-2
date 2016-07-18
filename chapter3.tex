@@ -6,7 +6,7 @@ This section describes the resources that served as a source of training data, a
 \label{section:nkjp}
 Collecting high quality language data is a difficult task, as large and representative collections of modern texts are generally hard to obtain, if only for copyright reasons. One potential source of modern texts is obviously the Internet. However, web data can be extremely noisy and scraping, cleaning, and normalizing it would be a cumbersome process. It should also be considered that the language of the Internet is different from that used in speech. Indeed, transcripts of spoken language appear to be a more valuable source of training data in \gls{asr} applications, than written texts \cite{dziadzio2015comparison}. Moreover, using raw text data to build POS-based models would require a very accurate and robust morphological tagger. For these reasons, linguistic corpora have become essential in advanced language technology. Fortunately, there exists an extensive, publicly available reference corpus of Polish language.
 
-The \gls{nkjp} is a shared initiative of four institutions: Institute of Computer Science at the Polish Academy of Sciences, Institute of Polish Language at the Polish Academy of Sciences, Polish Scientific Publishers PWN, and the Department of Computational and Corpus Linguistics at the University of Łódź. It has been carried out as a research-development project of the Ministry of Science and Higher Education. The full corpus contains over one and a half billion words. The list of sources for the corpora consists of literature, scientific journals, magazines, daily newspapers, and a variety of Internet texts. Most importantly, it contains transcripts of parliamentary proceedings and conversations. Moreover, the creators of the corpus claim that the conversations were chosen so that they represent both male and female speakers, in various age groups, coming from various regions in Poland \cite{lewandowska2012narodowy}. For that reason alone, \gls{nkjp} seemed like an excellent choice for the source of training data.
+\gls{nkjp} is a shared initiative of four institutions: Institute of Computer Science at the Polish Academy of Sciences, Institute of Polish Language at the Polish Academy of Sciences, Polish Scientific Publishers PWN, and the Department of Computational and Corpus Linguistics at the University of Łódź. It has been carried out as a research-development project of the Ministry of Science and Higher Education. The full corpus contains over one and a half billion words. The list of sources for the corpora consists of literature, scientific journals, magazines, daily newspapers, and a variety of Internet texts. Most importantly, it contains transcripts of parliamentary proceedings and conversations. Moreover, the creators of the corpus claim that the conversations were chosen so that they represent both male and female speakers, in various age groups, coming from various regions in Poland \cite{lewandowska2012narodowy}. For that reason alone, \gls{nkjp} seemed like an excellent choice for the source of training data.
 
 Another important feature of the \gls{nkjp} is that every text is accompanied by several layers of annotation. The metadata contain information about the text, such as title, author, and source, or~--~in case of speech transcripts~--~the topic of the conversation, the level of formality, background information about the speakers, and so on \cite{przepiorkowski2009xml}. More importantly, every lexical unit is described by several tags carrying information about its grammatical class and category. This enabled to easily filter the data by rejecting foreign words, incomplete or corrupted segments, punctuation, and non alpha-numeric characters. 
 
@@ -37,7 +37,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training and testing sets}
 \label{subsection:trainingset}
-The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The testing  set was built solely from parliamentary speeches. Testing the models on transcripts of spoken language seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} presenting the most common n-grams from the training set). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
+The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The testing set was built solely from parliamentary speeches and contains 20 000 sentences, each at least five words long. Testing the models on transcripts of spoken language seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} presenting the most common n-grams from the training set). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
 
 \begin{table}[!htbp]
 	\centering
@@ -70,8 +70,8 @@ The XML files that constitute the \gls{nkjp} were parsed using a Python implemen
 \begin{enumerate}
 	\item plain -- plain text,
 	\item lemma -- lemmatised text, 
-	\item pos -- tags containing only information about the grammatical class (part of speech),
-	\item gnc -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
+	\item POS -- tags containing only information about the grammatical class (part of speech),
+	\item GNC -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
 \end{enumerate}
 
 Each corpus was split into speech and text. The twelve final training datasets are listed in Table \ref{table:datasets}. This nomenclature will be used consistently throughout the following chapters. 
@@ -81,16 +81,16 @@ Each corpus was split into speech and text. The twelve final training datasets a
 	\caption{List of the training corpora.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
 	\label{table:datasets}
-		plain_full   & lemma_full   & pos_full   & gnc_full \\ 
-		plain_text   & lemma_text   & pos_text   & gnc_text \\
-		plain_speech & lemma_speech & pos_speech & gnc_speech \\ 
+		plain full   & lemma full   & POS full   & GNC full \\ 
+		plain text   & lemma text   & POS text   & GNC text \\
+		plain speech & lemma speech & POS speech & GNC speech \\ 
 	\end{tabular*}
 \end{table}
 
 The contents of the corpora were filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and all sentences were converted to lowercase, stripped of punctuation, non-alphanumeric symbols, foreign words and abbreviations. Only segments longer than three words were selected. 
 
 \subsection{Training the n-gram models}
-The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. To achieve 99\% unigram coverage, a lexicon of more than 92 000 words is required (see Figure \ref{figure:coverage}. Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data.
+The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. 
 
 \begin{table}[!htbp]
 	\centering
@@ -120,7 +120,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the pos corpus.}
+	\caption{Number of unique tokens in the POS corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countspos}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -133,7 +133,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the gnc corpus.}
+	\caption{Number of unique tokens in the GNC corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countsgnc}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -144,18 +144,20 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\end{tabular*}
 \end{table}
 
+The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. To achieve 99\% unigram coverage, a lexicon of more than 92 000 words is required (see Figure \ref{figure:coverage}). Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data. Another interesting observation is the relationship between the plain and lemma corpus. There are almost four times more inflected unigrams than distinct lemmas~--~a word in Polish has, on average, four inflected forms. A vocabulary of 33 000 lemmas is enough to achieve 99\% coverage. However, important information about grammatical agreement is lost in the lemmatisation process.
+
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{coverage.png}
       \caption{Unigram coverage for the full plain corpus as a function of the vocabulary size.}
       \label{figure:coverage}
 \end{figure}
-
-The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the backoff and interpolated variant. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell method should work well.
+\FloatBarrier
+The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the backoff and interpolated variant. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell and Good-Turing methods should work well.
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Perplexity of the full plain LM with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
+	  \caption{Perplexity of a language model trained on the full plain corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
 		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KNB} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CGB} & \multicolumn{1}{c}{CGI}\\
@@ -166,44 +168,52 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
   \end{center}
 \end{table}
 
+Figures \ref{figure:unigramdistribution}-\ref{figure:trigramdistribution} present the distribution of n-grams in the full plain corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
+\begin{equation}
+	p=\alpha k^{-\beta},
+	\label{equation:zipf}
+\end{equation}
+where $k$ is the rank of the term (from the most to the least frequent one), and $(\alpha, \beta)$ are distribution parameters.
+ 
+
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{unigrams.png}
-      \caption{Unigram distribution in the plain_full corpus.}
+      \caption{Unigram distribution in the full plain corpus.}
       \label{figure:unigramdistribution}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{bigrams.png}
-      \caption{Bigram distribution in the plain_full corpus.}
+      \caption{Bigram distribution in the full plain corpus.}
       \label{figure:unigramdistribution}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{trigrams.png}
-      \caption{Trigram distribution in the plain_full corpus.}
+      \caption{Trigram distribution in the full plain corpus.}
       \label{figure:unigramdistribution}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_unigrams.png}
-	      \caption{Most common unigrams of the plain full corpus.}
+	      \caption{Most common unigrams of the full plain corpus.}
 	      \label{figure:commonunigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_bigrams.png}
-	      \caption{Most common bigrams of the plain full corpus.}
+	      \caption{Most common bigrams of the full plain corpus.}
 	      \label{figure:commonbigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_trigrams.png}
-	      \caption{Most common bigrams of the plain full corpus.}
+	      \caption{Most common bigrams of the full plain corpus.}
 	      \label{figure:commontrigrams}
 \end{figure}
