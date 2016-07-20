@@ -35,7 +35,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 \subsection{RNNLM}
 \section{Method}
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
-\subsection{Building the training and testing sets}
+\subsection{Building the training sets}
 \label{subsection:trainingset}
 The training data was extracted from the \gls{nkjp}, more precisely from the redistributable subcorpus and the one million manually annotated subcorpus. First, the files were divided into two categories~--~written texts and transcripts of speech. This process was automated using the metadata. The speech training corpus contains mostly the transcripted proceedings of the Polish parlament and investigation commisions, while the text corpus consists mainly of legal documents. The testing set was built solely from parliamentary speeches and contains 20 000 sentences, each at least five words long. Testing the models on transcripts of spoken language seems reasonable if one wants to simulate the use of language models in an \gls{asr} system. However, the strong bias towards formal speech and writing is a serious issue. The training and testing corpora come from a specific domain and therefore cannot be treated a comprehensive representation of Polish (see Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} presenting the most common n-grams from the training set). However, the one million subcorpus, although more representative, is far too small for the experiments to yield statistically significant results. Given this tradeoff, it seemed logical to sacrifice representativeness for the sake of meaningfullness.
 
@@ -168,35 +168,21 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
   \end{center}
 \end{table}
 
-Figures \ref{figure:unigramdistribution}-\ref{figure:trigramdistribution} present the distribution of n-grams in the full plain corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
+Figure \ref{figure:ngramdistribution} present the distribution of n-grams in the full plain corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
 \begin{equation}
 	p=\alpha k^{-\beta},
 	\label{equation:zipf}
 \end{equation}
-where $k$ is the rank of the term (from the most to the least frequent one), and $(\alpha, \beta)$ are distribution parameters.
- 
+where $k$ is the rank of the term from the most to the least frequent one, and $(\alpha, \beta)$ are distribution parameters. Except for the very common and very rare terms, n-grams in the full plain corpus follow a Zipfian distribution. The exponential decay factor $\beta$ decreases with n-gram order and so does $\alpha$, the frequency of the most common term.
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{unigrams.png}
-      \caption{Unigram distribution in the full plain corpus.}
-      \label{figure:unigramdistribution}
+	  \includegraphics[height=10cm, width=15cm]{ngrams.png}
+      \caption{N-gram distribution in the full plain corpus.}
+      \label{figure:ngramdistribution}
 \end{figure}
 
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{bigrams.png}
-      \caption{Bigram distribution in the full plain corpus.}
-      \label{figure:unigramdistribution}
-\end{figure}
-
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{trigrams.png}
-      \caption{Trigram distribution in the full plain corpus.}
-      \label{figure:unigramdistribution}
-\end{figure}
-
+Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full plain corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_unigrams.png}
