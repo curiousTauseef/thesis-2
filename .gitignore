@@ -14,4 +14,9 @@
 *.bbl
 *.swp
 *.swo
+*.png
+*.ist
+*.lot
+*.lof
+*.pdf_tex
 output
