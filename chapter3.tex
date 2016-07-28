@@ -184,6 +184,7 @@ where $k$ is the rank of the term from the most to the least frequent one, and $
 \end{figure}
 
 Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full plain corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
+
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_unigrams.png}
@@ -204,5 +205,7 @@ Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most
 	      \caption{Most common bigrams of the full plain corpus.}
 	      \label{figure:commontrigrams}
 \end{figure}
+
+\FloatBarrier
 \subsection{Training the neural network models}
-The neural network models were trained on the same datasets as the n-gram models. However, as the WERR results for speech and text n-gram models turned out to be similar (see Section \ref{section:werr}) and the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For plain and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was neccessary.
+The neural network models were trained on the same datasets as the n-gram models. However, as the WERR results for speech and text n-gram models turned out to be similar (see Section \ref{section:werr}) and the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For plain and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was necessary.
