@@ -1,10 +1,11 @@
 \chapter{Results}
 \label{chapter:results}
 \section{Perplexity}
-
+The perplexity values presented in Tables \ref{table:ppl_plain}-\ref{table:ppl_gnc} were calculated on a test set of 20 000 utterances taken from the transcripted proceedings of the Polish parliament. Because the models have different vocabularies, the perplexity is not comparable across different types of models. The perplexity of speech models is generally lower than the perplexity of text models, although it could have been an effect of a larger vocabulary. However, note that in case of the plain and lemma models, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that incorporating the text model actually leads to a worse model, assuming that perplexity is a valid metric in this context.    
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the plain text language model with Chen-Goodman's modified Kneser-Ney smoothing.}
+	\label{table:ppl_plain}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
@@ -17,6 +18,7 @@
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the lemma language model with Chen-Goodman's modified Kneser-Ney smoothing.}
+	\label{table:ppl_lemma}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
 		\midrule
@@ -29,6 +31,7 @@
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the POS language model with Witten-Bell smoothing.}
+	\label{table:ppl_pos}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
@@ -41,6 +44,7 @@
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of the GNC language model with Good-Turing smoothing.}
+	\label{table:ppl_gnc}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
