@@ -23,9 +23,9 @@ The perplexity values presented in Tables \ref{table:ppl_plain}-\ref{table:ppl_g
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
 		\midrule
-		unigrams  & 1848.54  & 1296.54 & 1632.55\\
-	        bigrams   & 752.39   & 306.58  & 374.01\\
-                trigrams  & 712.68   & 189.37  & 226.69\\
+		unigrams  & 1844.97  & 1309.19 & 1654.56\\
+	        bigrams   & 744.72   & 299.82  & 367.30\\
+                trigrams  & 694.41   & 177.91  & 213.60\\
 	\end{tabular*}
 \end{table}
 Because the models have different vocabulary sizes, the perplexity comparisons across different types of models are not meaningful. For every type of models, the perplexity of speech models is lower than that of text models. This could be attributed to a larger training set, but in case of the plain, lemma, and POS corpus, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that increasing the training set by incorporating the text data actually lead to a worse model, assuming that perplexity is a valid metric in this context. Another, rather unsuprising observation is the large and consistent decrease in perplexity with the n-gram order. Tables \ref{table:ppl_plain} and \ref{table:ppl_lemma} show that the drop in perplexity is more pronounced in case of models with a larger vocabulary. Interestingly, the difference in perplexity between trigram and unigram models is much greater in case of models trained on speech data. For example, the perplexity of the plain text trigram model is approximately 3.6 times lower than that of a plain text unigram model, while the perplexity of a plain speech trigram model is 14.6 times lower than that of its unigram counterpart.
@@ -37,9 +37,9 @@ Because the models have different vocabulary sizes, the perplexity comparisons a
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
-		unigrams  & 11.28  & 10.42 & 10.40\\
-	        bigrams   & 9.49   & 8.46  & 8.48\\
-                trigrams  & 8.86   & 7.83  & 7.86\\
+		unigrams  & 11.25  & 10.40 & 10.37\\
+	        bigrams   & 9.36   & 8.35  & 8.37\\
+                trigrams  & 8.71   & 7.71  & 7.73\\
 	\end{tabular*}
 \end{table}
 
@@ -50,9 +50,9 @@ Because the models have different vocabulary sizes, the perplexity comparisons a
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
-		unigrams  & 91.88   & 83.22  & 82.49\\
-	        bigrams   & 38.58   & 35.15  & 34.12\\
-                trigrams  & 33.69   & 29.50  & 28.35\\
+		unigrams  & 90.04   & 82.16  & 81.38\\
+	        bigrams   & 38.73   & 35.61  & 34.52\\
+                trigrams  & 33.35   & 29.44  & 28.26\\
 	\end{tabular*}
 \end{table}
 
