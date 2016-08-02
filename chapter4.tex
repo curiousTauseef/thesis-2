@@ -58,6 +58,19 @@ Because the models have different vocabulary sizes, the perplexity comparisons a
 
 Tables \ref{table:ppl_pos} and \ref{table:ppl_gnc} present the perplexity results for the models based on morphosyntactic tags. The effect of the vocabulary size on perplexity is clearly visible. In case of the POS model, the perplexity of the model trained on the speech corpus is again lower than that of a model trained on the full corpus. However, the opposite is true for the GNC model. Generally, the perplexity scores are inconclusive as far as the difference between text-based and speech-based language models is concerned.
 
+\begin{table}[!htbp]
+	\centering
+	\caption{Perplexity of small plain}
+	\label{table:ppl_gnc}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*2r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
+		unigrams  & 4405.45   & 3078.70\\
+	        bigrams   & 1376.68   & 476.25\\
+                trigrams  & 1219.00   & 296.09\\
+	\end{tabular*}
+\end{table}
+
 \section{WERR}
 The n-gram models were 
 \label{section:werr}
