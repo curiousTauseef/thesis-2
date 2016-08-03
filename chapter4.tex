@@ -1,12 +1,12 @@
 \chapter{Results}
 \label{chapter:results}
 \section{Perplexity}
-The perplexity values presented in Tables \ref{table:ppl_plain}-\ref{table:ppl_gnc} were calculated on a test set of 20 000 utterances taken from the transcripted proceedings of the Polish parliament. The lowest perplexity achieved for a word n-gram model is 240.54. It should once again be noted that both the training and the test data come from a closed domain. This could significantly reduce the perplexity, as legal and parliamentary language is generally more predictable. For example, in \cite{bengio2003neural} it is reported that a Kneser-Ney smoothed back-off trigram model achieved a perplexity of 323 on the Brown Corpus (general English) and only 127 on the AP News Corpus. 
+The perplexity values presented in Tables \ref{table:ppl_word}-\ref{table:ppl_gnc} were calculated on a test set of 20 000 utterances taken from the transcripted proceedings of the Polish parliament. The lowest perplexity achieved for a word n-gram model is 240.54. It should once again be noted that both the training and the test data come from a closed domain. This could significantly reduce the perplexity, as legal and parliamentary language is generally more predictable. For example, in \cite{bengio2003neural} it is reported that a Kneser-Ney smoothed back-off trigram model achieved a perplexity of 323 on the Brown Corpus (general English) and only 127 on the AP News Corpus. 
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the plain text language model with Chen-Goodman's modified Kneser-Ney smoothing.}
-	\label{table:ppl_plain}
+	\caption{Perplexity of the word text language models with Chen-Goodman's modified Kneser-Ney smoothing.}
+	\label{table:ppl_word}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
@@ -18,7 +18,7 @@ The perplexity values presented in Tables \ref{table:ppl_plain}-\ref{table:ppl_g
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the lemma language model with Chen-Goodman's modified Kneser-Ney smoothing.}
+	\caption{Perplexity of the lemma language models with Chen-Goodman's modified Kneser-Ney smoothing.}
 	\label{table:ppl_lemma}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
@@ -28,11 +28,11 @@ The perplexity values presented in Tables \ref{table:ppl_plain}-\ref{table:ppl_g
                 trigrams  & 694.41   & 177.91  & 213.60\\
 	\end{tabular*}
 \end{table}
-Because the models have different vocabulary sizes, the perplexity comparisons across different types of models are not meaningful. For every type of models, the perplexity of speech models is lower than that of text models. This could be attributed to a larger training set, but in case of the plain, lemma, and POS corpus, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that increasing the training set by incorporating the text data actually lead to a worse model, assuming that perplexity is a valid metric in this context. Another, rather unsuprising observation is the large and consistent decrease in perplexity with the n-gram order. Tables \ref{table:ppl_plain} and \ref{table:ppl_lemma} show that the drop in perplexity is more pronounced in case of models with a larger vocabulary. Interestingly, the difference in perplexity between trigram and unigram models is much greater in case of models trained on speech data. For example, the perplexity of the plain text trigram model is approximately 3.6 times lower than that of a plain text unigram model, while the perplexity of a plain speech trigram model is 14.6 times lower than that of its unigram counterpart.
+Because the models have different vocabulary sizes, the perplexity comparisons across different types of models are not meaningful. For every type of models, the perplexity of speech models is lower than that of text models. This could be attributed to a larger training set, but in case of the word, lemma, and POS corpus, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that increasing the training set by incorporating the text data actually lead to a worse model, assuming that perplexity is a valid metric in this context. Another, rather unsuprising observation is the large and consistent decrease in perplexity with the n-gram order. Tables \ref{table:ppl_word} and \ref{table:ppl_lemma} show that the drop in perplexity is more pronounced in case of models with a larger vocabulary. Interestingly, the difference in perplexity between trigram and unigram models is much greater in case of models trained on speech data. For example, the perplexity of the word text trigram model is approximately 3.6 times lower than that of a word text unigram model, while the perplexity of a word speech trigram model is 14.6 times lower than that of its unigram counterpart.
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the POS language model with Witten-Bell smoothing.}
+	\caption{Perplexity of the POS language models with Witten-Bell smoothing.}
 	\label{table:ppl_pos}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -45,7 +45,7 @@ Because the models have different vocabulary sizes, the perplexity comparisons a
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of the GNC language model with Good-Turing smoothing.}
+	\caption{Perplexity of the GNC language models with Good-Turing smoothing.}
 	\label{table:ppl_gnc}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -60,14 +60,65 @@ Tables \ref{table:ppl_pos} and \ref{table:ppl_gnc} present the perplexity result
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of small plain}
-	\label{table:ppl_gnc}
-	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*2r}
+	\caption{Comparison of perplexity of word text and speech models with equal vocabularies}
+	\label{table:ppl_word_small}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
 		\midrule
-		unigrams  & 4405.45   & 3078.70\\
-	        bigrams   & 1376.68   & 476.25\\
-                trigrams  & 1219.00   & 296.09\\
+		unigrams  & 3351.69   & 2287.98\\
+	        bigrams   & 1051.36   & 367.79\\
+                trigrams  & 942.74    & 226.06\\
+	\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Comparison of perplexity of lemma text and speech models with equal vocabularies}
+	\label{table:ppl_word_small}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
+		unigrams  & 1520.89  & 1149.99\\
+	        bigrams   & 560.73   & 260.05\\
+                trigrams  & 498.97   & 154.91\\
+	\end{tabular*}
+\end{table}
+\begin{table}[!htbp]
+	\centering
+	\caption{Comparison of perplexity of POS text and speech models with equal vocabularies}
+	\label{table:ppl_word_small}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
+		unigrams  & 11.23  & 10.29\\
+	        bigrams   & 9.27   & 8.23\\
+                trigrams  & 8.62   & 7.56\\
+	\end{tabular*}
+\end{table}
+\begin{table}[!htbp]
+	\centering
+	\caption{Comparison of perplexity of GNC text and speech models with equal vocabularies}
+	\label{table:ppl_word_small}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
+		unigrams  & 159.14 & 156.54\\
+	        bigrams   & 47.79  & 45.08\\
+                trigrams  & 27.88  & 20.86\\
+	\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Perplexity of neural models}
+	\label{table:wer_neural}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
+		{}        &  \multicolumn{1}{c}{full} \\
+		\midrule
+		word   & 240.81\\
+		lemma  & 216.64\\
+		pos    & 7.12\\
+		gnc    & 24.87\\
 	\end{tabular*}
 \end{table}
 
@@ -76,9 +127,9 @@ The n-gram models were
 \label{section:werr}
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{plain_werr_1.png}
-	      \caption{Absolute word error reduction of the plain model (testing set 1)}
-	      \label{figure:plain1}
+	  \includegraphics[height=10cm, width=15cm]{word_werr_1.png}
+	      \caption{Absolute word error reduction of the word model (testing set 1)}
+	      \label{figure:word1}
 \end{figure}
 
 \begin{figure}[!htbp]
@@ -104,9 +155,9 @@ The n-gram models were
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{plain_werr_5.png}
-	      \caption{Absolute word error reduction of the plain model (testing set 5)}
-	      \label{figure:plain5}
+	  \includegraphics[height=10cm, width=15cm]{word_werr_5.png}
+	      \caption{Absolute word error reduction of the word model (testing set 5)}
+	      \label{figure:word5}
 \end{figure}
 
 \begin{figure}[!htbp]
@@ -130,17 +181,31 @@ The n-gram models were
 	      \label{figure:gnc5}
 \end{figure}
 
-
 \begin{table}[!htbp]
 	\centering
 	\caption{WER of n-gram models}
-	\label{table:wer_plain}
-	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}3r}
+	\label{table:wer_ngram}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
 		\midrule
-		plain  & 12.15  & 8.67  & 8.55\\
+		word   & 12.15  & 8.67  & 8.55\\
 		lemma  & 16.95  & 11.81 & 13.34\\
 		pos    & 21.10  & 19.38 & 19.58\\
 		gnc    & 12.66  & 12.57 & 12.25\\
 	\end{tabular*}
 \end{table}
+
+\begin{table}[!htbp]
+	\centering
+	\caption{WER of neural models}
+	\label{table:wer_neural}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
+		{}        &  \multicolumn{1}{c}{full} \\
+		\midrule
+		word  & 8.21\\
+		lemma  & 12.55\\
+		pos    & 17.65\\
+		gnc    & 11.61\\
+	\end{tabular*}
+\end{table}
+
