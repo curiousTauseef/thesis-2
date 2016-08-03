@@ -69,7 +69,7 @@ The training data was extracted from the \gls{nkjp}, more precisely from the red
 The XML files that constitute the \gls{nkjp} were parsed using a Python implementation of the ElementTree XML API. The XML files contain several layers of annotation, so it was possible to build four different types of corpora in a single run:
 
 \begin{enumerate}
-	\item plain -- plain text,
+	\item word -- plain text,
 	\item lemma -- lemmatised text, 
 	\item POS -- tags containing only information about the grammatical class (part of speech),
 	\item GNC -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
@@ -82,22 +82,22 @@ Each corpus was split into speech and text. The twelve final training datasets a
 	\caption{List of the training corpora.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}llll}
 	\label{table:datasets}
-		plain full   & lemma full   & POS full   & GNC full \\ 
-		plain text   & lemma text   & POS text   & GNC text \\
-		plain speech & lemma speech & POS speech & GNC speech \\ 
+		word full   & lemma full   & POS full   & GNC full \\ 
+		word text   & lemma text   & POS text   & GNC text \\
+		word speech & lemma speech & POS speech & GNC speech \\ 
 	\end{tabular*}
 \end{table}
 
 The contents of the corpora were filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and all sentences were converted to lowercase, stripped of punctuation, non-alphanumeric symbols, foreign words and abbreviations. Only segments longer than three words were selected. 
 
 \subsection{Training the n-gram models}
-The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsplain}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. 
+The n-gram models were built using the SRILM toolkit. First, the n-gram counts were computed for each corpus. Only unigrams, bigrams, and trigrams were taken under consideration. The results for the four types of corpora are presented in Tables \ref{table:countsword}-\ref{table:countsgnc}. The counts include the start-of-sentence and end-of-sentence tokens. 
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the plain corpus.}
+	\caption{Number of unique tokens in the word corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
-	\label{table:countsplain}
+	\label{table:countsword}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
 		\midrule
                 unigrams  &  157 866   & 184 236    & 244 346\\
@@ -145,20 +145,20 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 	\end{tabular*}
 \end{table}
 
-The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. To achieve 99\% unigram coverage, a lexicon of more than 92 000 words is required (see Figure \ref{figure:coverage}). Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the plain corpus, less than 0.0009\% of potential bigrams are present in the training data. Another interesting observation is the relationship between the plain and lemma corpus. There are almost four times more inflected unigrams than distinct lemmas~--~a word in Polish has, on average, four inflected forms. A vocabulary of 33 000 lemmas is enough to achieve 99\% coverage. However, important information about grammatical agreement is lost in the lemmatisation process.
+The statistics confirm the issues described in Subsection \ref{subsection:inflection}. The first evident problem is the size of the lexicon. Even though the corpus is limited to one domain, there are 244 346 distinct unigrams and 148 567 of them occur more than once. To achieve 99\% unigram coverage, a lexicon of more than 92 000 words is required (see Figure \ref{figure:coverage}). Note also the data sparsity~--~even for the POS corpus, with only 34 unigrams, less than 40\% of potential trigrams occur in the corpus. In case of the word corpus, less than 0.0009\% of potential bigrams are present in the training data. Another interesting observation is the relationship between the word and lemma corpus. There are almost four times more inflected unigrams than distinct lemmas~--~a word in Polish has, on average, four inflected forms. A vocabulary of 33 000 lemmas is enough to achieve 99\% coverage. However, important information about grammatical agreement is lost in the lemmatisation process.
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{coverage.png}
-      \caption{Unigram coverage for the full plain corpus as a function of the vocabulary size.}
+      \caption{Unigram coverage for the full word corpus as a function of the vocabulary size.}
       \label{figure:coverage}
 \end{figure}
 \FloatBarrier
-The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the backoff and interpolated variant. Perplexity of the plain text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell and Good-Turing methods should work well.
+The n-gram counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the backoff and interpolated variant. Perplexity of the word text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell and Good-Turing methods should work well.
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Perplexity of a language model trained on the full plain corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
+	  \caption{Perplexity of a language model trained on the full word corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
 		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KNB} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CGB} & \multicolumn{1}{c}{CGI}\\
@@ -169,43 +169,43 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
   \end{center}
 \end{table}
 
-Figure \ref{figure:ngramdistribution} present the distribution of n-grams in the full plain corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
+Figure \ref{figure:ngramdistribution} present the distribution of n-grams in the full word corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
 \begin{equation}
 	p=\alpha k^{-\beta},
 	\label{equation:zipf}
 \end{equation}
-where $k$ is the rank of the term from the most to the least frequent one, and $(\alpha, \beta)$ are distribution parameters. Except for the very common and very rare terms, n-grams in the full plain corpus follow a Zipfian distribution. The exponential decay factor $\beta$ decreases with n-gram order and so does $\alpha$, the frequency of the most common term.
+where $k$ is the rank of the term from the most to the least frequent one, and $(\alpha, \beta)$ are distribution parameters. Except for the very common and very rare terms, n-grams in the full word corpus follow a Zipfian distribution. The exponential decay factor $\beta$ decreases with n-gram order and so does $\alpha$, the frequency of the most common term.
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{ngrams.png}
-      \caption{N-gram distribution in the full plain corpus.}
+      \caption{N-gram distribution in the full word corpus.}
       \label{figure:ngramdistribution}
 \end{figure}
 
-Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full plain corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
+Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full word corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_unigrams.png}
-	      \caption{Most common unigrams of the full plain corpus.}
+	      \caption{Most common unigrams of the full word corpus.}
 	      \label{figure:commonunigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_bigrams.png}
-	      \caption{Most common bigrams of the full plain corpus.}
+	      \caption{Most common bigrams of the full word corpus.}
 	      \label{figure:commonbigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{common_trigrams.png}
-	      \caption{Most common bigrams of the full plain corpus.}
+	      \caption{Most common bigrams of the full word corpus.}
 	      \label{figure:commontrigrams}
 \end{figure}
 
 \FloatBarrier
 \subsection{Training the neural network models}
-The neural network models were trained on the same datasets as the n-gram models. However, as the WERR results for speech and text n-gram models turned out to be similar (see Section \ref{section:werr}) and the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For plain and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was necessary.
+The neural network models were trained on the same datasets as the n-gram models. However, as the WERR results for speech and text n-gram models turned out to be similar (see Section \ref{section:werr}) and the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For word and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was necessary.
