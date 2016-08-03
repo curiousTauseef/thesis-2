@@ -129,3 +129,18 @@ The n-gram models were
 	      \caption{Absolute word error reduction of the gnc model (testing set 5)}
 	      \label{figure:gnc5}
 \end{figure}
+
+
+\begin{table}[!htbp]
+	\centering
+	\caption{WER of n-gram models}
+	\label{table:wer_plain}
+	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}3r}
+		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full} \\
+		\midrule
+		plain  & 12.15  & 8.67  & 8.55\\
+		lemma  & 16.95  & 11.81 & 13.34\\
+		pos    & 21.10  & 19.38 & 19.58\\
+		gnc    & 12.66  & 12.57 & 12.25\\
+	\end{tabular*}
+\end{table}
