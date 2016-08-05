@@ -66,13 +66,13 @@ The training data was extracted from the \gls{nkjp}, more precisely from the red
 	\end{tabular*}
 \end{table}
 
-The XML files that constitute the \gls{nkjp} were parsed using a Python implementation of the ElementTree XML API. The XML files contain several layers of annotation, so it was possible to build four different types of corpora in a single run:
+The XML files that constitute the \gls{nkjp} were parsed using a Python implementation of the ElementTree XML API. The XML files contain several layers of annotation, so it was possible to build all corpora in a single run. Four types of modelling tokens were used:
 
 \begin{enumerate}
-	\item word -- plain text,
-	\item lemma -- lemmatised text, 
-	\item POS -- tags containing only information about the grammatical class (part of speech),
-	\item GNC -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
+	\item words -- plain text,
+	\item lemmas -- lemmatised text, 
+	\item POS tags -- tags containing only information about the grammatical class (part of speech),
+	\item GNC tags -- tags containing information about the grammatical class and selected grammatical categories (gender, number, case).
 \end{enumerate}
 
 Each corpus was split into speech and text. The twelve final training datasets are listed in Table \ref{table:datasets}. This nomenclature will be used consistently throughout the following chapters. 
@@ -208,4 +208,4 @@ Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most
 
 \FloatBarrier
 \subsection{Training the neural network models}
-The neural network models were trained on the same datasets as the n-gram models. However, as the WERR results for speech and text n-gram models turned out to be similar (see Section \ref{section:werr}) and the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For word and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was necessary.
+The neural network models were trained on the same datasets as the n-gram models. However, as the computation times for \gls{rnn} models were extremely large, only the full corpora were used, resulting in four \gls{rnn} models. Twenty percent of phrases from each training corpus were randomly assigned to a validation set, which was used for controlling the learning rate and early stopping. All models were trained using 300 neurons in the hidden layer and two-step \gls{bptt}. For word and lemma corpora, 500 word classes were used. For POS and GNC models, no additional clustering was necessary.
