@@ -291,3 +291,28 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\end{equation*}
 	where $S$ is the number of substitutions, $D$ is the number of deletions, $I$ is the number of insertions and $N$ is the number of words in the reference phrase. All of these numbers are non-negative, so the minimal value of WER is zero precisely when the hypothesis and the reference are identical. However, there is no upper bound, as the number of insertions can theoretically be arbitrary. \gls{wer} is often expressed as a percentage. It is common to assign different weights to insertions, deletions, and substitutions, but for all \gls{wer} values in this paper they were weighted equally. 
 	Word error rate is commonly used as a speech recognition accuracy metric, although it has been shown that at least in some applications, it is not necessarily the best choice. For example, optimising the parameters of the \gls{asr} component of a \gls{st} system by translation metrics has been shown to lead to greater translation quality, despite a decrease in WER \cite{he2011word}. For the purpose of this thesis, the absolute \gls{wer} reduction (WERR) is used as an evaluation score for language models. WERR is defined as a difference between the \gls{wer} of a system (expressed as a percentage) before and after applying the model.
+	\subsection{N-best list rescoring}
+	One way of calculating the \gls{werr} of a language model is the n-best list rescoring framework. An n-best list is simply a list of $n$ hypotheses that are most probable according to the acoustic model, along with their probabilities. The hypotheses are re-ranked by combining the language model with the acoustic model:
+	\begin{equation*}
+		P_{\textsc{new}}(h)=\alpha P_{\textsc{LM}}+(1-\alpha) P_{\textsc{acoustic}}
+	\end{equation*}
+	The \gls{werr} can be calculated as the difference between the \gls{wer} of the previous best hypothesis and the \gls{wer} of the new best hypothesis. 
+
+	\begin{table}[h!]
+		\caption{N-gram list rescoring}
+		\texttt{%
+			\begin{tabular}{l}
+				%\caption{N-best list before rescoring}
+				1 let's reckon nice beach \\
+				1 let's wreck a nice speech\\
+				1 lets recognize beach\\
+				1 let's wreck a nice beach \\
+				2 two rays of sunlight\\
+				2 to raise off sun light\\
+				2 too rase of sunlight\\
+				2 too rase of sunlight\\
+			\end{tabular}}
+			\centering
+		\begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
+		\end{tabular*}
+	\end{table}
