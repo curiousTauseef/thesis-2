@@ -59,7 +59,7 @@ Because the models have different vocabulary sizes, the perplexity scores are no
 
 Tables \ref{table:ppl_pos} and \ref{table:ppl_gnc} present the perplexity results for the models based on morphosyntactic tags. The effect of the vocabulary size on perplexity is clearly visible. In case of the POS model, the perplexity of the model trained on the speech corpus is again lower than that of a model trained on the full corpus. However, the opposite is true for the GNC model. 
 
-Generally, the perplexity scores hint that the models trained on speech transcripts are a better representation of the language for the purpose of \gls{asr}, as they tend to have a lower perplexity than models trained on written text, despite having a larger vocabulary. To further verify this hypothesis by eliminating the effect of the training set size, two equal sized training sets were built, one consisting of speech transcripts and the other of written texts. Then, four pairs of n-gram models were trained on these sets, this time ensuring that the vocabularies of corresponding models are identical. The perplexity of these models is presented in Tables \ref{table:ppl_word_small}-\ref{table:ppl_gnc_small}. The models based on speech data have a significantly lower perplexity for all four types of modelling units. 
+Generally, the perplexity scores hint that the models trained on speech transcripts are a better representation of the language for the purpose of \gls{asr}, as they tend to have a lower perplexity than models trained on written text, despite having a larger vocabulary. To further verify this hypothesis by eliminating the effect of the training set size, two equal sized training sets were built, one consisting of speech transcripts and the other of written texts. Then, four pairs of n-gram models were trained on these sets, this time ensuring that the vocabularies of corresponding models are identical. The perplexity of these models is presented in Tables \ref{table:ppl_word_small}-\ref{table:ppl_gnc_small}. The models based on speech data have a significantly lower perplexity for all four types of modeling units. The difference is more prominent in case of word and lemma models. For example, the perplexity of a speech-based word trigram model is more than four times lower than that of a text-based model. In case of POS and GNC models, the difference is still noticeable, although much less pronounced. Moreover, in case of speech models, perplexity still decreases more rapidly with the n-gram order. For example, using trigrams instead of unigrams results in a tenfold drop in perplexity of a speech-based model, and only a threefold decrease in case of a text-based model. 
 
 \begin{table}[!htbp]
 	\centering
@@ -76,7 +76,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 \begin{table}[!htbp]
 	\centering
 	\caption{Comparison of perplexity of lemma text and speech models with equal vocabularies}
-	\label{table:ppl_word_small}
+	\label{table:ppl_lemma_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
 		\midrule
@@ -88,7 +88,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 \begin{table}[!htbp]
 	\centering
 	\caption{Comparison of perplexity of POS text and speech models with equal vocabularies}
-	\label{table:ppl_word_small}
+	\label{table:ppl_pos_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
 		\midrule
@@ -100,7 +100,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 \begin{table}[!htbp]
 	\centering
 	\caption{Comparison of perplexity of GNC text and speech models with equal vocabularies}
-	\label{table:ppl_word_small}
+	\label{table:ppl_gnc_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
 		\midrule
@@ -109,7 +109,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
                 trigrams  & 27.88  & 20.86\\
 	\end{tabular*}
 \end{table}
-For all types of models, those trained on speech data
+
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of neural models}
@@ -122,8 +122,10 @@ For all types of models, those trained on speech data
 	\end{tabular*}
 \end{table}
 
+\section{Size}
 \section{WERR}
-The n-gram models were 
+The WERR values presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}.
+
 \label{section:werr}
 \begin{figure}[!htbp]
 	  \centering
@@ -208,4 +210,3 @@ The n-gram models were
 		gnc    & 11.61\\
 	\end{tabular*}
 \end{table}
-
