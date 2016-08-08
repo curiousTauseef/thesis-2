@@ -289,12 +289,26 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\begin{equation*}
 		WER=\frac{S+D+I}{N}
 	\end{equation*}
-	where $S$ is the number of substitutions, $D$ is the number of deletions, $I$ is the number of insertions and $N$ is the number of words in the reference phrase. All of these numbers are non-negative, so the minimal value of WER is zero precisely when the hypothesis and the reference are identical. However, there is no upper bound, as the number of insertions can theoretically be arbitrary. \gls{wer} is often expressed as a percentage. It is common to assign different weights to insertions, deletions, and substitutions, but for all \gls{wer} values in this paper they were weighted equally. Table \ref{table:werr} illustrates the process of calculating WER. 
+	where $S$ is the number of substitutions, $D$ is the number of deletions, $I$ is the number of insertions and $N$ is the number of words in the reference phrase. All of these numbers are non-negative, so the minimal value of WER is zero precisely when the hypothesis and the reference are identical. However, there is no upper bound, as the number of insertions can theoretically be arbitrary. \gls{wer} is often expressed as a percentage. It is common to assign different weights to insertions, deletions, and substitutions, but for all \gls{wer} values in this paper they were weighted equally. Table \ref{table:werr} illustrates the WER calculation. 
+
+\begin{table}[h!]
+	\caption{An example WER calculation for a reference phrase \textit{let's recognize speech}}
+  \label{table:werr}
+    \centering
+    \begin{tabular*}{.6\linewidth}{lrrrr}
+	        hypothesis               & S & D & I & WER\\
+		let's reckon nice beach  & 2 & 1 & 0 & 1\\
+		lets wreck a nice speech & 2 & 2 & 0 & $\frac{4}{3}$\\
+		lets wreck a nice beach  & 3 & 2 & 0 & $\frac{5}{3}$\\
+		let's recognize          & 0 & 0 & 1 & $\frac{1}{3}$\\
+    \end{tabular*}
+\end{table}
+
 	Word error rate is commonly used as a speech recognition accuracy metric, although it has been shown that at least in some applications, it is not necessarily the best choice. For example, optimising the parameters of the \gls{asr} component of a \gls{st} system by translation metrics has been shown to lead to greater translation quality, despite a decrease in WER \cite{he2011word}. For the purpose of this thesis, the absolute \gls{wer} reduction (WERR) is used as an evaluation score for language models. WERR is defined as a difference between the \gls{wer} of a system (expressed as a percentage) before and after applying the model.
 	\subsection{N-best list rescoring}
 	One way of calculating the \gls{werr} of a language model is the n-best list rescoring framework. An n-best list is simply a list of $n$ hypotheses that are most probable according to the acoustic model, along with their probabilities. The hypotheses are re-ranked by combining the language model (LM) with the acoustic model (AM):
 	\begin{equation*}
-		P_{\textsc{new}}(h)=\alpha P_{\textsc{LM}}+(1-\alpha) P_{\textsc{AM}}
+		P(h)=\alpha P_{\textsc{LM}}+(1-\alpha) P_{\textsc{AM}}
 	\end{equation*}
 	The \gls{werr} can be calculated as the difference between the \gls{wer} of the previous best hypothesis and the \gls{wer} of the new best hypothesis. 
 
@@ -303,15 +317,11 @@ This ratio is called a relative frequency. In the special case of unigram probab
   \label{table:nbest}
     \centering
     \begin{tabular*}{.6\linewidth}{llrrr}
-	    ID & hypothesis & $P_{\textsc{AM}}$ & $P_{\textsc{LM}}$ & $ P_{\textsc{combined}}$\\
+	    ID & hypothesis & $P_{\textsc{AM}}$ & $P_{\textsc{LM}}$ & $ P $\\
 	        \midrule
 		1 & let's reckon nice beach  & 0.1 & 0.1 & 0.1\\
 		1 & lets wreck a nice speech & 0.1 & 0.1 & 0.1\\
-		1 & let's recognize beach    & 0.1 & 0.1 & 0.1\\
 		1 & lets wreck a nice beach  & 0.1 & 0.1 & 0.1\\
-		2 & two arrays of sunlight   & 0.1 & 0.1 & 0.1\\
-		2 & to raise off sun light   & 0.1 & 0.1 & 0.1\\
-		2 & too raze of sunlight     & 0.1 & 0.1 & 0.1\\
-		2 & to rays off sun lite     & 0.1 & 0.1 & 0.1\\
+		1 & let's recognize          & 0.1 & 0.1 & 0.1\\
     \end{tabular*}
 \end{table}
