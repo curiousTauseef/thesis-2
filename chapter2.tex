@@ -306,31 +306,31 @@ This ratio is called a relative frequency. In the special case of unigram probab
 \end{table}
 
 Word error rate is commonly used as a speech recognition accuracy metric, although it has been shown that at least in some applications, it is not necessarily the best choice. For example, optimising the parameters of the \gls{asr} component of a \gls{st} system by translation metrics has been shown to lead to greater translation quality, despite a decrease in WER \cite{he2011word}. For the purpose of this thesis, the absolute \gls{wer} reduction (WERR) is used as an evaluation score for language models. WERR is defined as a reduction of \gls{wer} before and after applying the model.
-	\subsection{N-best list rescoring}
-	One way of calculating the \gls{werr} of a language model is the n-best list rescoring framework. An n-best list is simply a list of $n$ hypotheses that are most probable according to the acoustic model, along with their probabilities. The hypotheses are re-ranked using an affine combination of the acoustic model probability ($P_{\textsc{AM}}$) and the language model probability ($P_{\textsc{LM}}$):
-	\begin{equation*}
-		P(h)=(1-\alpha) P_{\textsc{AM}}+\alpha P_{\textsc{LM}},
-	\end{equation*}
-	where $\alpha$ is simply a combination coefficient.
 
+	\subsection{N-best list rescoring}
+	One way of calculating the \gls{werr} of a language model is the n-best list rescoring framework. An n-best list is simply a list of $n$ hypotheses that are most probable according to the acoustic model, along with their probabilities. The hypotheses are re-ranked using an affine combination of the acoustic model probability ($P_{\textsc{am}}$) and the language model probability ($P_{\textsc{lm}}$):
+	\begin{equation}
+		P_{\textsc{re}}(h)=(1-\alpha) P_{\textsc{am}}+\alpha P_{\textsc{lm}},
+	\end{equation}
+	Table \ref{table:nbest} shows an example of n-best list rescoring. The \gls{werr} of the language model is the difference between the \gls{wer} of the best hypothesis before and after rescoring, as shown in equation \ref{equation:WERR}. All values of WERR presented in Chapter \ref{chapter:results} are an average over a set of n-best lists.
+.
 \begin{table}[h!]
   \caption{N-best list rescoring with $\alpha=0.6$}
   \label{table:nbest}
     \centering
-    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lrrr}
-	    hypothesis & $P_{\textsc{AM}}$ & $P_{\textsc{LM}}$ & $ P $\\
+    \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lrrrr}
+	    hypothesis & $P_{\textsc{am}}$ & $P_{\textsc{lm}}$ & $P_{\textsc{re}}$ & WER\\
 	        \midrule
-		lets reckon a nice beach    & 0.5 & 0.2 & 0.32\\
-		lets wreck a nice speech    & 0.4 & 0.1 & 0.22\\
-		let us wreck a nice beach   & 0.4 & 0.3 & 0.34\\
-		let's recognize             & 0.3 & 0.6 & 0.48\\
+		lets reckon a nice beach    & 0.5 & 0.2 & 0.32 & $\frac{5}{3}$\\
+		lets wreck a nice speech    & 0.4 & 0.1 & 0.22 & $\frac{4}{3}$\\
+		let us wreck a nice beach   & 0.4 & 0.3 & 0.34 & $\frac{6}{3}$\\
+		let's recognize             & 0.3 & 0.6 & 0.48 & $\frac{1}{3}$\\
     \end{tabular*}
 \end{table}
-Table \ref{table:nbest} is an example of n-best list rescoring. The \gls{werr} of the language model is the difference between the \gls{wer} of the best hypothesis before and after rescoring, as shown in equation \ref{equation:WERR}:
 
 	\begin{align}
 		\label{equation:WERR}
-		&WER_{1}=WER(\argmax_{h}{P_{\textsc{AM}}})=\frac{5}{3} \nonumber\\
-		&WER_{2}=WER(\argmax_{h}{P})=\frac{1}{3} \nonumber\\
+		&WER_{1}=WER(\argmax{P_{\textsc{am}}})=\frac{5}{3} \nonumber\\
+		&WER_{2}=WER(\argmax{P_{\textsc{re}}})=\frac{1}{3} \nonumber\\
 		&WERR =  WER_{1} - WER_{2}\approx133.33\%
 	\end{align}
