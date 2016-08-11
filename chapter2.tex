@@ -312,7 +312,7 @@ Word error rate is commonly used as a speech recognition accuracy metric, althou
 	\begin{equation}
 		P_{\textsc{re}}(h)=(1-\alpha) P_{\textsc{am}}+\alpha P_{\textsc{lm}},
 	\end{equation}
-	Table \ref{table:nbest} shows an example of n-best list rescoring. The \gls{werr} of the language model can be calculated as the difference between the \gls{wer} before and after rescoring. The \gls{wer} can be calculated as the \gls{wer} of the best hypothesis or a weighted average of WER over a set of hypothesis, with \gls{am} or \gls{lm} probabilities as weights, but in the context of an \gls{asr} system, the first method is a more natural evaluation metric, as shown in equation \ref{equation:WERR}.
+	Table \ref{table:nbest} shows an example of n-best list rescoring. The \gls{werr} of the language model can be calculated as the difference between the \gls{wer} before and after rescoring. The \gls{wer} can be calculated as the \gls{wer} of the best hypothesis, as shown in equation \ref{equation:WERR}, or a weighted average of WER over a set of hypothesis, with \gls{am} or \gls{lm} probabilities as weights, but in the context of an \gls{asr} system, the first method is a more natural evaluation metric.
 
 \begin{table}[h!]
   \caption{N-best list rescoring with $\alpha=0.6$}
