@@ -123,67 +123,85 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 \end{table}
 
 \section{Size}
-The size of a file representing the model can indirectly show how much memory it will require in the final application.
+The size of a text representation of the model can serve as a proxy for the amount of memory it will require in the final application. Table \ref{table:sizes} presents the size of n-gram and neural models. The size of the model seems to be dependent mostly on the size of the vocabulary, with an interesting exception of the neural gnc model, which not only takes less space than the neural pos model, but is also 25 times smaller than its n-gram counterpart.
+
+\begin{table}[!htbp]
+	\centering
+	\caption{Perplexity of neural models}
+	\label{table:sizes}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
+		model  & size (MB)\\
+		\midrule
+		neural word   & 899\\
+		n-gram word   & 615\\
+		n-gram lemma  & 432\\
+		neural lemma  & 336\\
+		n-gram gnc    & 36\\
+		neural pos    & 3.7\\
+		neural gnc    & 1.4\\
+		n-gram pos    & 0.4\\
+	\end{tabular*}
+\end{table}
 
 \section{N-best list rescoring}
-The WERR values presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word5}-\ref{figure:gnc5} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. However, the results should be treated with a certain dose of caution. First of all, the quality of the acoustic hypotheses leaves a lot to be desired. Secondly, the base WER is very high, as 
+The WERR values presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word5}-\ref{figure:gnc5} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. However, the results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35, and the maximal possible \gls{werr} is only 18.9.
 
-\label{section:nbest}
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{word_werr_1.png}
-	      \caption{Absolute word error reduction of the word model (testing set 1)}
-	      \label{figure:word1}
-\end{figure}
-
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{lemma_werr_1.png}
-	      \caption{Absolute word error reduction of the lemma model (testing set 1)}
-	      \label{figure:lemmy1}
-\end{figure}
-
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{pos_werr_1.png}
-	      \caption{Absolute word error reduction of the pos model (testing set 1)}
-	      \label{figure:pos1}
-\end{figure}
-
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{gnc_werr_1.png}
-	      \caption{Absolute word error reduction of the gnc model (testing set 1)}
-	      \label{figure:gnc1}
-\end{figure}
-
+%\label{section:nbest}
 %\begin{figure}[!htbp]
 %	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{word_werr_5.png}
-%	      \caption{Absolute word error reduction of the word model (testing set 5)}
-%	      \label{figure:word5}
+%	  \includegraphics[height=10cm, width=15cm]{word_werr_1.png}
+%	      \caption{Absolute word error reduction of the word model (testing set 1)}
+%	      \label{figure:word1}
 %\end{figure}
 %
 %\begin{figure}[!htbp]
 %	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{lemma_werr_5.png}
-%	      \caption{Absolute word error reduction of the lemma model (testing set 5)}
-%	      \label{figure:lemmy5}
+%	  \includegraphics[height=10cm, width=15cm]{lemma_werr_1.png}
+%	      \caption{Absolute word error reduction of the lemma model (testing set 1)}
+%	      \label{figure:lemmy1}
 %\end{figure}
 %
 %\begin{figure}[!htbp]
 %	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{pos_werr_5.png}
-%	      \caption{Absolute word error reduction of the pos model (testing set 5)}
-%	      \label{figure:pos5}
+%	  \includegraphics[height=10cm, width=15cm]{pos_werr_1.png}
+%	      \caption{Absolute word error reduction of the pos model (testing set 1)}
+%	      \label{figure:pos1}
 %\end{figure}
 %
 %\begin{figure}[!htbp]
 %	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{gnc_werr_5.png}
-%	      \caption{Absolute word error reduction of the gnc model (testing set 5)}
-%	      \label{figure:gnc5}
+%	  \includegraphics[height=10cm, width=15cm]{gnc_werr_1.png}
+%	      \caption{Absolute word error reduction of the gnc model (testing set 1)}
+%	      \label{figure:gnc1}
 %\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{word_werr_5.png}
+	      \caption{Absolute word error reduction of the word model (testing set 5)}
+	      \label{figure:word5}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{lemma_werr_5.png}
+	      \caption{Absolute word error reduction of the lemma model (testing set 5)}
+	      \label{figure:lemmy5}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{pos_werr_5.png}
+	      \caption{Absolute word error reduction of the pos model (testing set 5)}
+	      \label{figure:pos5}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{gnc_werr_5.png}
+	      \caption{Absolute word error reduction of the gnc model (testing set 5)}
+	      \label{figure:gnc5}
+\end{figure}
 
 \FloatBarrier
 \subsection{Mock n-best list rescoring}
