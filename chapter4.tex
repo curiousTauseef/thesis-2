@@ -110,10 +110,12 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 	\end{tabular*}
 \end{table}
 
+Table \ref{table:ppl_neural} presents the perplexity of neural models evaluated on the same testing set. When compared to corresponding n-gram models with the same vocabulary, their perplexity is slightly lower, with an exception of the lemma model.
+
 \begin{table}[!htbp]
 	\centering
 	\caption{Perplexity of neural models}
-	\label{table:wer_neural}
+	\label{table:ppl_neural}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		word   & 240.81\\
 		lemma  & 216.64\\
@@ -123,11 +125,11 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 \end{table}
 
 \section{Size}
-The size of a text representation of the model can serve as a proxy for the amount of memory it will require in the final application. Table \ref{table:sizes} presents the size of n-gram and neural models. The size of the model seems to be dependent mostly on the size of the vocabulary, with an interesting exception of the neural gnc model, which not only takes less space than the neural pos model, but is also 25 times smaller than its n-gram counterpart.
+The size of a text representation of the model can serve as a proxy for the amount of memory it will require in the final application. As shown in Table \ref{table:sizes}, the size of the model seems to be dependent mostly on the size of the vocabulary, with an interesting exception of the neural gnc model, which not only takes less space than the neural pos model, but is also 25 times smaller than its n-gram counterpart.
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of neural models}
+	\caption{Model size comparison}
 	\label{table:sizes}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		model  & size (MB)\\
@@ -144,63 +146,69 @@ The size of a text representation of the model can serve as a proxy for the amou
 \end{table}
 
 \section{N-best list rescoring}
-The WERR values presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word5}-\ref{figure:gnc5} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. However, the results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35, and the maximal possible \gls{werr} is only 18.9.
+\label{section:nbest}
+The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35, and the maximal possible \gls{werr} is only 18.9.  
 
-%\label{section:nbest}
-%\begin{figure}[!htbp]
-%	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{word_werr_1.png}
-%	      \caption{Absolute word error reduction of the word model (testing set 1)}
-%	      \label{figure:word1}
-%\end{figure}
-%
-%\begin{figure}[!htbp]
-%	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{lemma_werr_1.png}
-%	      \caption{Absolute word error reduction of the lemma model (testing set 1)}
-%	      \label{figure:lemmy1}
-%\end{figure}
-%
-%\begin{figure}[!htbp]
-%	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{pos_werr_1.png}
-%	      \caption{Absolute word error reduction of the pos model (testing set 1)}
-%	      \label{figure:pos1}
-%\end{figure}
-%
-%\begin{figure}[!htbp]
-%	  \centering
-%	  \includegraphics[height=10cm, width=15cm]{gnc_werr_1.png}
-%	      \caption{Absolute word error reduction of the gnc model (testing set 1)}
-%	      \label{figure:gnc1}
-%\end{figure}
+\begin{table}[!htbp]
+	\centering
+	\caption{Maximal \gls{werr} achieved by respective models in n-best list rescoring}
+	\label{table:max_werr}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
+		model  & WERR (\%)\\
+		\midrule
+		n-gram word   & 15.67\\
+		neural word   & 15.28\\
+		n-gram lemma  & 14.88\\
+		neural lemma  & 14.10\\
+		n-gram gnc    & 13.54\\
+		neural gnc    & 13.20\\
+		neural pos    & 9.58\\
+		n-gram pos    & 9.54\\
+	\end{tabular*}
+\end{table}
+
+ Table \ref{table:max_werr} presents the maximum \gls{werr} values achieved by the respective models. Unsurprisingly, the models trained on words achieve the highest \gls{werr}, with the n-gram model having a slight advantage over its neural counterpart. As far as the trigram models are concerned, those trained on speech data perform slightly better than those trained on written text and In case of the lemma and GNC model, they even achieve higher \gls{werr} than the models trained on the full corpus.
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{word_werr_5.png}
-	      \caption{Absolute word error reduction of the word model (testing set 5)}
-	      \label{figure:word5}
+	  \includegraphics[height=10cm, width=15cm]{word_werr.png}
+	  \caption{Absolute \gls{werr} of the word trigram model}
+	      \label{figure:word}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{lemma_werr_5.png}
-	      \caption{Absolute word error reduction of the lemma model (testing set 5)}
-	      \label{figure:lemmy5}
+	  \includegraphics[height=10cm, width=15cm]{lemma_werr.png}
+	  \caption{Absolute \gls{werr} of the lemma trigram model}
+	      \label{figure:lemma}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{pos_werr_5.png}
-	      \caption{Absolute word error reduction of the pos model (testing set 5)}
-	      \label{figure:pos5}
+	  \includegraphics[height=10cm, width=15cm]{pos_werr.png}
+	  \caption{Absolute \gls{werr} of the pos trigram model}
+	      \label{figure:pos}
 \end{figure}
 
 \begin{figure}[!htbp]
 	  \centering
-	  \includegraphics[height=10cm, width=15cm]{gnc_werr_5.png}
-	      \caption{Absolute word error reduction of the gnc model (testing set 5)}
-	      \label{figure:gnc5}
+	  \includegraphics[height=10cm, width=15cm]{gnc_werr.png}
+	  \caption{Absolute \gls{werr} of the gnc trigram model}
+	      \label{figure:gnc}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{ngram_full.png}
+	  \caption{Absolute \gls{werr} of the trigram models}
+	      \label{figure:neural}
+\end{figure}
+
+\begin{figure}[!htbp]
+	  \centering
+	  \includegraphics[height=10cm, width=15cm]{neural.png}
+	  \caption{Absolute \gls{werr} of the neural models}
+	      \label{figure:neural}
 \end{figure}
 
 \FloatBarrier
@@ -233,12 +241,12 @@ Table \ref{table:wer_ngram} presents the mean WER of the hypotheses chosen by th
 		\midrule
 		word   & 12.15  & 8.67  & 8.55\\
 		lemma  & 16.95  & 11.81 & 13.34\\
-		pos    & 21.10  & 19.38 & 19.58\\
-		gnc    & 12.66  & 12.57 & 12.25\\
+		pos    & 20.96  & 19.38 & 19.54\\
+		gnc    & 12.58  & 12.27 & 11.89\\
 	\end{tabular*}
 \end{table}
 
-Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. Regardless of the type of the modelling unit, they outperform the n-gram models trained on the same corpus. In particular, the \gls{rnn} GNC model has a lower WER than all n-gram models except for the speech and full word-based trigram model. This result suggests that \gls{rnn} morphosyntactic models can be a promising area of research as far as speech recognition is concerned, as they combine the compactness of class-based models and the ability to capture relationship spanning across multiple words, which is especially important in case of languages with a large degree of inflection.
+Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. Regardless of the type of the modelling unit, they outperform the n-gram models trained on the same corpus. In particular, the neural GNC model achieves a lower WER than all n-gram models except for the speech and full word-based trigram model. This result suggests that \gls{rnn} morphosyntactic models can be a promising area of research as far as speech recognition is concerned, as they combine the compactness of class-based models and the ability to capture relationship spanning across multiple words, which is especially important in case of languages with a large degree of inflection.
 
 \begin{table}[!htbp]
 	\centering
