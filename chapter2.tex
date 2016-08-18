@@ -245,7 +245,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\label{section:rnn}
 	For decades, n-grams have been the standard approach to statistical language modelling. Although many alternative techniques were proposed, the improvements in performance usually came at the cost of computational complexity \cite{mikolov2011rnnlm}. The neural network based language models were introduced in \cite{bengio2003neural} and motivated by the observation that the word-based n-gram models have two major setbacks~--~they are unable to capture longer contexts and they ignore the similarity between words. The neural models use a distributed representation to deal with the high dimensionality of the training data. The idea is to represent each word as a real-valued vector in $\mathbb{R}^{m}$ and then express the probability function of word sequences in terms of these vectors. The probability function are smooth functions of the word representation, so these kind of models generalize much better to unknown sequences. Because the word embedding $W$: $words \mapsto \mathbb{R}^{m}$ has a useful property of clustering together synonyms and words from the same class, it allows to deal with the data sparsity by generalizing every training sentence to a class of similar sentences. The embedding and the parameters of the probability function can be learned simultaneously. In \cite{bengio2003neural}, a feedforward multi-layer neural network implementing this framework was shown to yield a much better perplexity than the Kneser-Ney backoff n-gram models, but at the cost of high computational complexity and complex implementation.
 
-	In \cite{mikolov2011extensions}, a recurrent network architecture was shown to outperform the feedforward one. The \glspl{rnn} have a simple implementation and a very useful ability to store information in the hidden layer. The architecture of neural networks used in the experiments is described in \cite{mikolov2010recurrent} and presented in Figure \ref{figure:rnn}. The input layer is formed by concatenating $w(t)$, a vector representing the current word with $s(t-1)$, the output of the hidden layer from the previous time step:
+	In \cite{mikolov2011extensions}, a recurrent network architecture was shown to outperform the feedforward one. The \glspl{rnn} have a simple implementation and a very useful ability to store information in the hidden layer. The architecture of neural networks used in the experiments is described in \cite{mikolov2010recurrent} and presented in Figure \ref{figure:recurrent}. The input layer is formed by concatenating $w(t)$, a vector representing the current word with $s(t-1)$, the output of the hidden layer from the previous time step:
 	\begin{equation}
 		x(t)=[w(t)^{T}s(t-1)^{T}]^{T}
 		\label{equation:word_vector}
@@ -253,23 +253,29 @@ This ratio is called a relative frequency. In the special case of unigram probab
 
 	\begin{figure}[htbp]
 		\centering
-		\includesvg{rnn.svg}
-		\caption{A simple \gls{rnn}}
+		\includesvg{rnn}
+		\caption{A simple \gls{rnn} called an Elman network \cite{mikolov2011extensions}}
+		\label{figure:recurrent}
 	\end{figure}
-	The word vector $w(t)$ has the same size as the vocabulary. It uses 1-of-$N$ coding, meaning that the $i$-th word of the vocabulary is coded by setting the $i$-th element to one and all the other elements to zero \cite{schwenk2005training}. The output layer $y(t)$ has the same dimensionality and represents the probability distribution of the next word. The network is trained using the standard backpropagation algorithm, described in \cite{rumelhart1988learning}. The output of the hidden layer is computed as follows:
+	The word vector $w(t)$ has the same size as the vocabulary. It uses 1-of-$N$ coding, meaning that the $i$-th word of the vocabulary is coded by setting the $i$-th element to one and all the other elements to zero \cite{schwenk2005training}. The output layer $y(t)$ has the same dimensionality and represents the probability distribution of the next word. The network is trained using the standard backpropagation algorithm, described in \cite{rumelhart1988learning}. The output of the hidden layer is computed by applying the sigmoid activation function \gls{sigmoid} on the product of the input and the weight matrix $U$:
 	\begin{equation}
-		s_{j}(t)=f(\sum_{i}x_{i}(t)u_{ij}),
+		s_{j}(t)=f(\sum_{i}x_{i}(t)u_{ji}),
 		\label{equation:hidden}
 	\end{equation}
-where f(z) is the sigmoid function:
+where:
 \begin{equation}
-	\frac{1}{1+e^{-z}}.
+	f(z)=\frac{1}{1+e^{-z}}.
 	\label{equation:sigmoid}
 \end{equation}
-The values of the ouput layer are calculated using the softmax activation function:
+The values of the ouput layer are calculated by multiplying the output of the hidden layer by the weight matrix $V$ and applying the softmax function:
 \begin{equation}
-	y_{k}(t)=g(\sum_{j}s_{j}(t)v_{kj})
+	y_{k}(t)=g(\sum_{j}s_{j}(t)v_{kj}),
 	\label{equation:output}
+\end{equation}
+The softmax function \gls{softmax} transforms a real-valued vector $z$ into a vector $\sigma$ of real values in the range (0, 1) adding up to one, so that it forms a valid probability distribution:
+\begin{equation}
+	\sigma(z)_{j}=\frac{e^{z_{j}}}{\sum_{k}e^{z_{k}}}.
+	\label{equation:softmax}
 \end{equation}
  	\section{Evaluation of language models}
 	\label{section:evaluation}
