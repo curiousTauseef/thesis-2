@@ -223,6 +223,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 
 	Although word-based $n$-gram language models have been outperformed by deep neural networks in terms of perplexity and word error reduction rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
 	\subsection{Class-based $n$-gram models}
+	\label{subsection:class}
 	Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class $n$-gram model with $C$ classes and a vocabulary of size $V$ has $V-C$ word emission parameters and $C^{n}-1$ independent $n$-gram parameters \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class $n$-gram models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
 	\begin{equation}
 		\pi:w_{i}\mapsto \gls{mapping}
@@ -231,7 +232,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
 	In case of a deterministic mapping, the probability of a word given its history can be calculated as the product of the probability of a particular word given its class (word emission probability) and the probability of a certain class given a history of $n-1$ classes:
 	\begin{equation}
-		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}))P_{1}(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
+		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P(w_{i}|\pi(w_{i}))P(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
 		\label{equation:classngram}
 	\end{equation}
 	The class $n$-gram probabilities can be calculated from the corpus using \gls{mle}, similarly to word $n$-gram probabilities. Note that a history equivalence class can be used in the The word emission probability is often dropped, but can be otherwise estimated as the relative frequency of the form:
@@ -277,6 +278,29 @@ The softmax function \gls{softmax} transforms a real-valued vector $z$ into a ve
 	\sigma(z)_{j}=\frac{e^{z_{j}}}{\sum_{k}e^{z_{k}}}.
 	\label{equation:softmax}
 \end{equation}
+The \glspl{rnn} used in the experimental take advantage of two important techniques~--~\gls{bptt} and output layer factorization. The former aims to improve the model performance, while the latter allows to speed up the training process. BPTT is an extension of the backpropagation algorithm on the recurrent networks. The network is unfolded by duplicating the recurrent weight for an arbitrary number of time steps $\tau$, and the error is propagated back through an unfolded network, as presented in Figure \ref{figure:unfolding} \cite{boden2002guide}.
+	\begin{figure}[htbp]
+		\centering
+		\includesvg{unfold}
+		\caption{An unfolded network for BPTT with $\tau$=2}
+		\label{figure:unfolding}
+	\end{figure}
+
+	To speed up the training, one could use a technique analogous to the one described in Section \ref{subsection:class}. Assumming that each word belongs to exactly one class, the probability of the word given its history can be calculated as in equation \ref{equation:classngram}. This reduces the computational complexity from $(1+H)H\tau+HV$ to $(1+H)H\tau+HC$, where $H$ is the size of the hidden layer, $V$ is the size of the vocabulary, $\tau$ is the number of \gls{bptt} steps, and $C$ is the number of classes. That can be a substantial improvement, as the $HV$ term is usually the computational bottleneck and of course $C$ is chosen so that $C\ll V$. However, the neural network architecture allows to extend this idea and assume that the emission probability depends on the hidden layer $s(t)$. Equation \ref{equation:classngram} becomes:
+	\begin{equation}
+		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}), s(t))P_{1}(\pi(w_{i})|s(t))
+		\label{equation:classneural}
+	\end{equation}
+	Words are assigned to classes using the frequency binning with the amount of classes as a parameter. The modified network architecture is presented in Figure \ref{figure:rnnclass}. The probability distribution is first estimated over the classes and then over the words from the class containing the predicted word:
+	\begin{equation}
+		c_{l}=g(\sum_{j}s_{j}(t)w_{lj})
+		\label{equation:classoutput}
+	\end{equation}
+	\begin{equation}
+		y_{c}(t)=g(\sum_{j}s_{j}(t)v_{cj})
+		\label{equation:wordoutput}
+	\end{equation}
+
  	\section{Evaluation of language models}
 	\label{section:evaluation}
 	The best way to evaluate a language model in the context of automatic speech recognition is to simply incorporate it in an existing \gls{asr} system and measure the performance. This approach, known as extrinsic evaluation, is the only way to know whether a particular model will actually improve the recognition rates, but it can be time-consuming, as it requires running the entire system multiple times \cite{jurafsky2000speech}. Moreover, the recognition task is a very complex one, so there are a lot of factors that can affect the performance of the model. It is therefore more practical to use an intrinsic evaluation metric, such as perplexity, which enables to quickly and objectively measure the quality of a model in an application-agnostic manner. This section describes the evaluation methods used in the experimental part.
