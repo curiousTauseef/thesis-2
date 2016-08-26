@@ -169,19 +169,19 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
   \end{center}
 \end{table}
 
-Figure \ref{figure:ngramdistribution} present the distribution of n-grams in the full word corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
-\begin{equation}
-	p=\alpha k^{-\beta},
-	\label{equation:zipf}
-\end{equation}
-where $k$ is the rank of the term from the most to the least frequent one, and $(\alpha, \beta)$ are distribution parameters. Except for the very common and very rare terms, n-grams in the full word corpus follow a Zipfian distribution. The exponential decay factor $\beta$ decreases with n-gram order and so does $\alpha$, the frequency of the most common term.
-
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{ngrams.png}
       \caption{N-gram distribution in the full word corpus.}
       \label{figure:ngramdistribution}
 \end{figure}
+
+Figure \ref{figure:ngramdistribution} presents the distribution of n-grams in the full word corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
+\begin{equation}
+	p=\alpha k^{-\beta},
+	\label{equation:zipf}
+\end{equation}
+where $k$ is the rank of the term from the most to the least frequent one, and $(\alpha, \beta)$ are distribution parameters. Except for the very common and very rare terms, n-grams in the full word corpus follow a Zipfian distribution. The exponential decay factor $\beta$ decreases with n-gram order and so does $\alpha$, the frequency of the most common term.
 
 Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full word corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
 
