@@ -3,7 +3,7 @@
 
 \section{Automatic speech recognition}
 \label{section:asr}
-\Gls{asr} can be defined as independent, computer-driven transcription of spoken language into readable text in real time \cite{stuckless1994developments, jelinek1997statistical}. Although this process can be performed almost effortlessly by the human brain, it is extremely difficult to reverse-engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s. As Moravec wrote: ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''\cite{moravec1988mind}.}. \Gls{lvcsr} falls into two distinct categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. The scope of this thesis is limited to speech transcription, as it enables to measure the performance of language models using well-established metrics.
+\Gls{asr} can be defined as \enquote{\textit{independent, computer-driven transcription of spoken language into readable text in real time}} \cite{stuckless1994developments, jelinek1997statistical}. Although this process is performed almost effortlessly by the human brain, it is extremely difficult to reverse~engineer\footnote{The observation that low-level sensorimotor skills require far more computational resources than high-level reasoning is known as the Moravec's paradox and has been formulated independently by several artificial intelligence researchers in the 1980s \cite{moravec1988mind}.} \Gls{lvcsr} falls into two categories: speech transcription and speech understanding. The former aims to find the exact orthographic transcription of analysed utterance, while the latter aims to find its meaning. The scope of this thesis is limited to speech transcription, as it allows to measure the performance of language models using well-established metrics.
 
 \subsection{Bayesian framework}
 \label{subsection:bayesian}
@@ -17,11 +17,11 @@ The conditional probability can be rearranged using the Bayes rule:
   \label{equation:bayesian}
   \gls{probsequence}=\frac{P(Y|W)P(W)}{P(Y)}\propto{P(Y|W)P(W)}.
 \end{equation}
-$P(W)$ is estimated by the language model, while $P(Y|W)$ is computed using the acoustic model. Typical ASR systems use \glspl{hmm} to model the sequential structure of speech signal and \glspl{gmm} for modelling the emission distribution of \glspl{hmm} \cite{baker1975dragon, bourlard1994connectionist}.
+$P(W)$ is estimated by the language model, while $P(Y|W)$ is evaluated using the acoustic model. Typical ASR systems use \glspl{hmm} to represent the sequential structure of speech signal and \glspl{gmm} to model the emission distribution of \glspl{hmm} \cite{baker1975dragon, bourlard1994connectionist}.
 
 \subsection{Feature extraction}
 \label{subsection:features}
-Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its properties are constant over a short period of time. Under this assumption it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}. The cepstrum is formally defined as the \gls{idft} of the log magnitude of the \gls{dft} of the signal: 
+Speech is a non-stationary process, so to represent it as a succession of discrete states, it is assumed that its properties are constant over a short period of time. Under this assumption, it is possible to extract statistically meaningful acoustic parameters from a sampled speech waveform. One of the most popular types of features are \glspl{mfcc}. The cepstrum is formally defined as the \gls{idft} of the log magnitude of the \gls{dft} of the signal: 
 
 \begin{equation}
 	\label{equation:cepstrum}
@@ -34,14 +34,14 @@ In \gls{asr} applications, \gls{dct} is commonly used in place of \gls{idft}. A 
 	\item \gls{dft}
 	\item Conversion to log mel scale 
 	\item \gls{dct}
-	\item Delta and energy coefficients
+	\item Calculating the delta, double delta, and energy coefficients
 \end{enumerate}
 
-First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
+First, the speech waveform is subjected to high-frequency preemphasis in order to compensate for lip radiation and the attenuation of high frequencies caused by the sampling process \cite{singh2012preprocessing}. Typically, the signal is passed through a high-pass \gls{fir} filter:
 \begin{equation}
 H(z)=1-\frac{a}{z},
 \end{equation}
-where $0.9 \leq a \leq 1.0$. The signal is then divided into a sequence of frames using 20-30 milisecond windows with about 50\% overlap. Hamming window is commonly used, as it allows to avoid discontinuities at the boundaries:
+where $0.9 \leq a \leq 1.0$. The signal is then segmented into a sequence of frames using 20-30 milisecond windows with about 50\% overlap. The Hamming window is commonly used, as it allows to avoid discontinuities at the boundaries:
 \begin{equation}
 \label{equation:hamming}
   w[n]=
@@ -51,16 +51,16 @@ where $0.9 \leq a \leq 1.0$. The signal is then divided into a sequence of frame
   \end{cases}
 \end{equation}
 
-In the next step, the \gls{dft} is applied. Its result is the information about the amounts of energy in $N$ evenly-spaced discrete frequency bands:
+In the next step, the \gls{dft} is applied. The resulting spectrum carries the information the amounts of energy in $N$ discrete frequency bands:
 \begin{equation}
   X[k]=\sum_{n=0}^{N-1}x[n]e^{\frac{-2\pi ikn}{N}}.
 \end{equation}
 
-However, many studies confirm that human hearing is not equally sensitive at all frequency bands -- above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was also shown that simulating this property of human brain during feature extraction improves ASR performance. The signal is therefore passed through a bank of 26 triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to the following mapping between raw acoustic frequency $f$ and mel frequency $m$ \cite{muda2010voice}:
+The \gls{dft} bands are evenly-spaced, but many studies confirm that human hearing is not equally sensitive at all frequencies -- above about 500 Hz increasingly large intervals are judged by listeners to produce equal pitch increments \cite{stevens1937scale, fletcher1938loudness}. It was shown that simulating this property of the human brain during the feature extraction improves the ASR performance. The signal is therefore passed through a bank of 26 triangular filters spaced linearly below 1000 Hz and logarithmically above. This corresponds to a following mapping between the raw acoustic frequency $f$ and the mel frequency $m$ \cite{muda2010voice}:
 \begin{equation}
   m=1127\ln(1+\frac{f}{700}).
 \end{equation}
-Another property of human hearing is that it is less sensitive to variation in signal level at high amplitudes. The logarithm of each of the mel spectrum values is taken to model that response.
+Another property of the human hearing is that it is less sensitive to variation in signal level at high amplitudes. To model that response, the logarithm of each of the mel spectrum values is taken.
 
 Finally, the \gls{dct} of the log filterbank energies is calculated. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values.
 
@@ -223,17 +223,7 @@ The mechanisms of grammatical agreement are too complex to be formalised into a 
 \subsection{Phonology}
 The vowel system consists of six oral monophthongs and two nasal diphthongs, presented in Table \ref{table:vowel}. There are several inconsistencies that make the orthographic to phonemic transcription challenging. Note for example that the nasal vowels, denoted by letters <ą> and <ę>, are pronounced either as a mid-vowel followed by a nasalised labio-velar or palatal glide, or as a combination of an oral vowel and a nasal consonant. Moreover, letter <i> can denote a vowel /i/, as in \textit{igła} /\textipa{igwa}/ (needle), have a purely orthographic function of marking the palatalization of preceding consonant when followed by a vowel, as in \textit{cieplo} /\textipa{\t{tC}EpwO}/(heat), or do both at the same time, for example in \textit{cichy} /\textipa{\t{tC}ix1}/ (silent). It can also denote a consonant /j/, as in \textit{hiena} /\textipa{xjEna}/, or a combination of /j/ and /i/, for example in \textit{naiwny} /\textipa{najivn1}/ (naïve). In contrast, the vowel /u/ can be denoted by two different letters: <ó> and <u>. Although there is no difference in articulation, they cannot be used interchangeably. It is a relic of the vowel length system, which is still present in Czech and Slovak, but has disappeared from Polish.
 
-The Polish consonant system is far more complex, at least from the \gls{asr} perspective, mostly due to the distinction between the "rustling" laminal retroflex sounds~(sz,~ż,~cz,~dz), the corresponding "humming" alveolo-palatals~(ś,~ź,~ć,~dź), and "hissing" alveolars~(s,~z,~c,~dz). Table \ref{table:consonants} presents Polish consonants -- their orthographic transcription, corresponding \gls{ipa} symbols, examples, and English approximations \cite{gussmann2007phonology}. Several comments should be made:
-
-\begin{itemize}
-\item The sound /\textipa{\:z}/ can be written either as <ż>, as in \textit{może} /\textipa{mO\:zE}/ (he/she can) or <rz>, as in \textit{morze} /\textipa{mO\:zE}/ (sea). However, <rz> can also denote a combination of /\textipa{r}/ and /\textipa{z}/, e.g. \textit{zamarzać} /\textipa{zamarza\t{tC}}/ (to freeze).
-\item The sound /\textipa{x}/ is rendered orthographically either as <ch> or <h>. It has strongest friction before consonants, weaker friction before vowels and weakest friction intervocalically, where it may be realized as glottal /\textipa{h}/. It also has a voiced allophone /\textipa{G}/ that occurs whenever /\textipa{x}/ is followed by a voiced obstruent, as in \textit{niechby} (may it).
-\item The phoneme /\textipa{n}/ has a velar allophone \textipa{N}, which occurs before velar consonants, as in \textit{bank} /\textipa{baNk}/ (bank).
-\item The  affricatives /\textipa{\t{t\:s} \t{d\:z}}/ are written with digraphs <cz~dż>. In contrast, transitions /t\:s d\:z/ are usually denoted by trigraphs <trz> and <drz>, e.g. \textit{trzoda} /\textipa{t\:sOda}/ (flock), \textit{drzewo} /\textipa{d\:zEvO}/ (tree), with some rare exceptions, like \textit{nadżerka} /\textipa{nad\:zErka}/ (laceration).
-\item The alveolo-palatals /\textipa{C~\textctz~\t{tC}~\t{d\textctz}~\textltailn}/ are rendered <ś~ź~ć~dź~ń> pre-consonantally and word-finally. However, they are spelled with multigraphs <si~zi~ci~dzi~ni> before a vowel. There are some exceptions, especially in loanwords, e.g. \textit{sinus} /\textipa{sinus}/ (sine), \textit{siwert} /\textipa{sivert}/ (sievert).
-\item The retroflex fricatives and affricates /\textipa{\:s~\:z~\t{t\:s}~\t{t\:z}}/ are sometimes transcribed as palato-alveolar consonants /\textipa{S~Z~\t{tS}~\t{tZ}}/ \cite{jassem2003polish}.
-\item The phonemes /\textipa{k\super{i}}/ and /\textipa{g\super{i}}/ are less commonly transcribed as /\textipa{c}/ and /\textipa{\textbardotlessj}/.
-\end{itemize}
+the polish consonant system is far more complex, at least from the \gls{asr} perspective, mostly due to the distinction between the "rustling" laminal retroflex sounds~(sz,~ż,~cz,~dz), the corresponding "humming" alveolo-palatals~(ś,~ź,~ć,~dź), and "hissing" alveolars~(s,~z,~c,~dz). table \ref{table:consonants} presents polish consonants -- their orthographic transcription, corresponding \gls{ipa} symbols, examples, and english approximations \cite{gussmann2007phonology}. 
 
 \section{Motivation and outline}
 \label{section:outline}
