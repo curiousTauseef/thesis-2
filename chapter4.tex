@@ -156,14 +156,22 @@ The values of \gls{werr} presented in this section were calculated using the n-b
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		model  & WERR (\%)\\
 		\midrule
-		n-gram word   & 15.67\\
+		n-gram word full    & 15.67\\
+		n-gram lemma speech  & 15.32\\
 		neural word   & 15.28\\
-		n-gram lemma  & 14.88\\
+		n-gram word speech  & 15.22\\
+		n-gram word text    & 15.16\\
+		n-gram lemma full    & 14.88\\
+		n-gram lemma text    & 14.24\\
 		neural lemma  & 14.10\\
-		n-gram gnc    & 13.54\\
+		n-gram gnc speech & 13.75\\
+		n-gram gnc full   & 13.54\\
+		n-gram gnc text   & 13.29\\
 		neural gnc    & 13.20\\
+		n-gram pos text   & 9.89\\
 		neural pos    & 9.58\\
-		n-gram pos    & 9.54\\
+		n-gram pos full   & 9.54\\
+		n-gram pos speech & 9.47\\
 	\end{tabular*}
 \end{table}
 
@@ -262,9 +270,28 @@ Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. R
 	\end{tabular*}
 \end{table}
 
-\begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=10cm, width=15cm]{total.png}
-	  \caption{The absolute WERR achieved by respective models on mock n-best list rescoring}
-	      \label{figure:total}
-\end{figure}
+\begin{table}[!htbp]
+	\centering
+	\caption{WERR achieved by respective models in the mock n-best list rescoring task}
+	\label{table:max_werr}
+	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
+		model  & WERR (\%)\\
+		\midrule
+		neural word   & 21.43\\
+		n-gram word full  & 21.09\\
+		n-gram word speech  & 20.97\\
+		neural gnc    & 18.03\\
+		n-gram lemma speech  & 17.83\\
+		n-gram gnc full  & 17.75\\
+		n-gram word text  & 17.49\\
+		n-gram gnc speech  & 17.37\\
+		neural lemma  & 17.09\\
+		n-gram gnc text  & 17.06\\
+		n-gram lemma full  & 16.30\\
+		n-gram lemma text  & 12.69\\
+		neural pos    & 11.99\\
+		n-gram pos speech  & 10.26\\
+		n-gram pos full  & 10.10\\
+		n-gram pos text  & 8.68\\
+	\end{tabular*}
+\end{table}
