@@ -33,10 +33,40 @@
 	sort={p}
 }
 
+\newglossaryentry{bestwordsequence}{
+	name={\ensuremath{\hat{W}}},
+	description={the word sequence most likely to have generated the sequence of acoustic features},
+	sort={w}
+}
+
+\newglossaryentry{acousticsequence}{
+	name={\ensuremath{Y}},
+	description={the sequence of observed acoustic features},
+	sort={y}
+}
+
+\newglossaryentry{hmmsequence}{
+	name={\ensuremath{\Theta}},
+	description={The state sequence of an \acrshort{hmm}},
+	sort={t}
+}
+
 \newglossaryentry{crossentropy}{
 	name={\ensuremath{\hat{H}}},
 	description={Cross-entropy},
 	sort={h}
+}
+
+\newglossaryentry{transition}{
+	name={\ensuremath{\{a_{ij}\}}},
+	description={the transition matrix of an \acrshort{hmm}},
+	sort={a}
+}
+
+\newglossaryentry{observation}{
+	name={\ensuremath{\{b_{ij}\}}},
+	description={the observation distribution associated with state S_{i} of an \acrshort{hmm}},
+	sort={b}
 }
 
 \newglossaryentry{entropy}{
