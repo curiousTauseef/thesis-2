@@ -60,11 +60,11 @@ The \gls{dft} bands are evenly-spaced, but many studies confirm that human heari
 \begin{equation}
   m=1127\ln(1+\frac{f}{700}).
 \end{equation}
-Another property of the human hearing is that it is less sensitive to variation in signal level at high amplitudes. To model that response, the logarithm of each of the mel spectrum values is taken.
+Another property of the human hearing is that it is less sensitive to variations in signal level at high amplitudes. To model that response, the logarithm of each of the mel spectrum values is taken.
 
-Finally, the \gls{dct} of the log filterbank energies is calculated. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to vocal tract characteristic. Generally, MFCCs are formed from the first 12 cepstral values.
+Finally, the \gls{dct} of the log filterbank energies is calculated. Higher values on the cepstrum x-axis represent the glottal pulse, while lower values correspond to the vocal tract characteristic. Generally, the MFCCs are formed from the first 12 cepstral values.
 
-In addition to 12 cepstral coefficients for each frame, energy within a frame and variability between frames are also taken into account, because they provide useful cues for phone identity. For each of the 13 features (12 cepstral features and energy), the delta (velocity) and double delta (acceleration) features are calculated, resulting in a total of 39 \glspl{mfcc} \cite{jurafsky2000speech}.
+In addition to the 12 cepstral coefficients for each frame, the energy within a frame and the variability between frames are also taken into account, because they provide useful cues for phone identity. For each of the 13 features (12 cepstral features and energy), the delta (velocity) and double delta (acceleration) features are calculated, resulting in a total of 39 \glspl{mfcc} \cite{jurafsky2000speech}.
 
 \subsection{Acoustic model}
 \label{subsection:acoustic}
