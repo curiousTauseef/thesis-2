@@ -88,22 +88,22 @@ In practice, the number of alternative pronunciations for each word $w_{i}$ is s
 To calculate $P(Y|W)$, we represent each base phone $q$ by an \gls{hmm} of the form shown in Figure~\ref{figure:hmm}, described by the following elements:
 \begin{enumerate}
 \item $N$ -- number of states,
-\item $S=\{S_{1}, \ldots, S_{N}\}$ -- individual states,
+\item $S=\{S_{1}, \ldots, S_{N}\}$ -- the set of states,
 \item $\theta_{t}$ -- state at time t,
 \item $\pi=\{\pi_{i}\}$ -- initial state distribution:
   \begin{equation*}
     \pi_{i}=P(\theta_{1}=S_{i}) \qquad (1 \leqslant i \leqslant N),
   \end{equation*}
-\item $A=\gls{transition}$ -- transition matrix describing the probability of transition from state $S_{i}$ to state $S_{j}$:
+\item $A=\{a_{ij}\}$ -- transition matrix describing the probability of transition from state $S_{i}$ to state $S_{j}$:
   \begin{equation*}
     a_{ij}=P(\theta_{t+1}=S_{j}|\theta_{t}=S_{i}) \qquad (1 \leqslant i, j \leqslant N), 
   \end{equation*}
-\item $B=\gls{observation}$ -- observation distribution associated with state $S_{i}$, usually modeled by an affine combination of $M$ Gaussians, called a \acrfull{gmm}:
+\item $B=\{b_{i}(y)\}$ -- observation distribution associated with state $S_{i}$, usually modeled by an affine combination of $M$ Gaussians, called a \acrfull{gmm}:
     \begin{gather}
       b_{i}(y)=\sum_{k=1}^{M}w_{ik}\mathcal{N}(y, \mu_{ik}, \Sigma_{ik}) \\
       (1 \leqslant i \leqslant N, \quad w_{ik} \geqslant 0, \quad\mathlarger{\sum_{k=1}^{M}}w_{ik}=1)\nonumber
     \end{gather}
-where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix associated with state $S_{i}$ and mixture $k$, while $w_{ik}$ is the mixture weight \cite{juang1985mixture}.
+where $\mu_{ik}$ and $\Sigma_{ik}$ are the mean vector and covariance matrix associated with state $S_{i}$ and Gaussian $k$, while $w_{ik}$ is the linear combination coefficient \cite{juang1985mixture}.
 \end{enumerate}
 Every time step, the \gls{hmm} makes a transition from its current state to one of its connected states, generating a feature vector according to the probability density function associated with the state being entered. Two important assumptions follow:
 \begin{enumerate}
@@ -116,20 +116,20 @@ Every time step, the \gls{hmm} makes a transition from its current state to one 
     P(y_{t}|y_{t-1}, \ldots, y_{1})=P(y_{t}|y_{t-1}).
   \end{equation}
 \end{enumerate}
-These assumptions significantly simplify the calculation of the posterior probability $P(Y|W)$ from Equation~\ref{equation:pronunciations}. We can now define it in terms of acoustic model parameters \cite{lu2013subspace}:
+These assumptions significantly simplify the calculation of the posterior probability $P(Y|W)$ from Equation~\ref{equation:pronunciations}. We can now define it in terms of the acoustic model parameters \cite{lu2013subspace}:
 \begin{equation}
   P(Y|Q)=\sum_{\Theta}P(\Theta, Y|Q),
 \end{equation}
 where $\Theta=\theta_{0}, \ldots, \theta_{T+1}$ is a state sequence and
 \begin{equation}
   \label{equation:states}
-  P(\gls{hmmsequence}, Y|Q)=a_{\theta_{0}\theta_{1}}\prod_{t=1}^{T}b_{\theta_{t}}(y_{t})a_{\theta_{t}\theta{t+1}}.
+  P(\Theta, Y|Q)=a_{\theta_{0}\theta_{1}}\prod_{t=1}^{T}b_{\theta_{t}}(y_{t})a_{\theta_{t}\theta{t+1}}.
 \end{equation}
-In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit). The model parameters $\lambda=\{a_{ij}, b_{j}(y)\}$ can be estimated from a corpus of training data using the forward-backward algorithm \cite{baum1970maximization}. Generally, it iteratively updates the model parameters by maximizing the lower bound of the log-likelihood function $log(P(Y|W))$. For a detailed explanation of the algorithm, see \cite{rabiner1986introduction}.
+In the above equation, $\theta_{0}$ and $\theta_{T+1}$ are non-emitting states (entry and exit). The model parameters $\lambda=\{a_{ij}, b_{i}(y)\}$ can be estimated from a corpus of training data using the forward-backward algorithm \cite{baum1970maximization}. For a detailed explanation of the algorithm, see \cite{rabiner1986introduction}.
 
-The described technique has an important shortcoming -- decomposing each vocabulary word into a sequence of independent units (monophones) completely ignores the context-dependent variation that exist in real speech. A common solution is to use a unique model for every triphone, i.e. phoneme in left and right context. This approach results in a data sparsity problem -- for $N$ base phones, there are $N^{3}$ potential triphones, which can be avoided by mapping the complete set of logical triphones $L$ to a reduced set of physical models $P$ by clustering and tying together the parameters in each cluster. The clustering is usually done at state-level using phonetically driven decision trees \cite{gales2008application}.
+The described technique has an important shortcoming~--~decomposing each vocabulary word into a sequence of independent monophones ignores the context-dependent variation that exists in real speech. A common solution is to use triphones, i.e. phonemes in their left and right context. However, this approach results in a data sparsity problem~--~for $N$ base phones, there are $N^{3}$ potential triphones. This can be avoided by mapping the complete set of logical triphones~$L$ to a reduced set of physical models~$P$ by clustering and tying together the parameters in each cluster. The clustering is usually done at state-level using phonetically driven decision trees \cite{gales2008application}.
 
-\Glspl{hmm} remained a \textit{de facto} standard for acoustic modelling until the advent of \gls{dnn}, first successfully used for acoustic modelling in 2012, as a result of cooperation between Google, Microsoft, IBM, and the University of Toronto. According to Richard Rashid, former head of Microsoft Research, it was ``the most dramatic change in accuracy since 1979 \cite{markoff2012scientists}''. In \cite{hinton2012deep}, \glspl{dnn} with many hidden layers have been shown to outperform \glspl{gmm} on a variety of challenging speech recognition tasks, sometimes by a large margin. The unprecedented gains in error reduction were further confirmed in \cite{pan2012investigation}, where it is reported that \glspl{dnn} can consistently achieved about 25-30\% relative error reduction over the best discriminatively trained \glspl{gmm}.
+\Glspl{hmm} remained a \textit{de facto} standard for acoustic modelling until the advent of \glspl{dnn}, first successfully used for acoustic modelling in 2012, as a result of cooperation between Google, Microsoft, IBM, and the University of Toronto. According to Richard Rashid, former head of Microsoft Research, it was \enquote{\textit{the most dramatic change in accuracy since 1979}} \cite{markoff2012scientists}. In \cite{hinton2012deep}, \glspl{dnn} with many hidden layers have been shown to outperform \glspl{gmm} on a variety of challenging speech recognition tasks, sometimes by a large margin. The unprecedented gains in error reduction were further confirmed in \cite{pan2012investigation}, where it is reported that \glspl{dnn} can consistently achieved about 25-30\% relative error reduction over the best discriminatively trained \glspl{gmm}.
 
 \subsection{Language models}
 \label{subsection:lm}
@@ -140,7 +140,7 @@ In a Bayesian framework presented in equation \ref{equation:bayesian}, the langu
 \label{equation:chain}
   P(W)=\prod^{n}_{i=1}P(w_{i}|h_{i}),
 \end{equation}
-where $\gls{wordhistory}=w_{1}, \ldots, w_{i-1}$ is the word history for $w_{i}$, often reduced to equivalence class \gls{equivalenceclass}:
+where $\gls{wordhistory}=w_{1}, \ldots, w_{i-1}$ is the word history for $w_{i}$, often reduced to an equivalence class \gls{equivalenceclass}:
 \begin{equation}
 	P(w_{i}|h_{i})\approx P(w_{i}|\Phi(h_{i}))=P(w_{i}|\varphi_{i}).
 \end{equation}
@@ -149,7 +149,7 @@ Good equivalence classes maximise information about the next word $w_{i}$ given 
 \section{Polish Language}
 \label{section:polish}
 \subsection{Introduction}
-Although \gls{asr} has been an active field of research for several decades, for a long time most of the effort has been focused on English.  Many important techniques were developed as a result of research programmes financed by the American Defense Advanced Research Projects Agency and involving companies and institutions like IBM, AT\&T Bell Labs, Institute for Defense Analysis, Princeton University, and CMU. In the nineties numerous ASR systems originally developed for English had been succesfully ported to other languages, such as French, German, Japanese, and Mandarin Chinese \cite{besacier2014automatic}. Also the recently introduced \gls{dnn} models were first trained and benchmarked on English corpora, and later used for other languages \cite{hinton2012deep}. Although this suggest that similar modelling assumptions can hold across languages, Polish and other inflected languages still pose a formidable challenge for speech technology researchers, due to their complex grammar, rich inflection, and a large set of phonetically similar prefixes and suffixes. This section describes the features of Polish in the context of \gls{asr} and explains where the main problems arise and how can they can be tackled.
+Although \gls{asr} has been an active field of research for several decades, for a long time most of the effort has been focused on English.  Many important techniques were developed as a result of research programmes financed by the American Defense Advanced Research Projects Agency and involving companies and institutions like IBM, AT\&T Bell Labs, Institute for Defense Analysis, Princeton University, and CMU. In the nineties, numerous ASR systems originally developed for English had been succesfully ported to other languages, such as French, German, Japanese, and Mandarin Chinese \cite{besacier2014automatic}. The recently introduced \gls{dnn} models were also first trained and benchmarked on English corpora, and later used for other languages \cite{hinton2012deep}. Although this suggest that similar modelling assumptions can hold across languages, Polish and other inflected languages still pose a formidable challenge for speech technology researchers, due to their complex grammar, rich inflection, and a large set of phonetically similar prefixes and suffixes. This section describes the features of Polish in the context of \gls{asr} and explains where the main problems arise and how can they can be tackled.
 \subsection{Slavic Languages}
 Polish is an Indo-European language used by about 40 million speakers in Poland and around the world. It belongs to the Slavic group, containing about 20 languages and dialects spoken by over 400 million people in Central, Southern, and Eastern Europe, as well as in the Asian part of Russia \cite{karpov2012speech}. This family of languages is traditionally divided into three main branches:
 \begin{itemize}
@@ -157,7 +157,7 @@ Polish is an Indo-European language used by about 40 million speakers in Poland 
 \item South Slavic -- Serbian, Croatian, Bulgarian, Slovene, and Macedonian,
 \item East Slavic -- Russian, Ukrainian, and Bellarusian.
 \end{itemize}
-In the field of speech technology, research and development effort has been focused primarily on Czech \cite{nouza2010adapting, oparin2008morphological}, Polish \cite{zelasko2015linguistically, ziolko2011automatic}, Russian {\cite{karpov2012speech}}, and Slovak \cite{lojka2009finite}.
+In the field of speech technology, research and development efforts has been focused primarily on Czech \cite{nouza2010adapting, oparin2008morphological}, Polish \cite{zelasko2015linguistically, ziolko2011automatic}, Russian {\cite{karpov2012speech}}, and Slovak \cite{lojka2009finite}.
 \subsection{Inflection}
 \label{subsection:inflection}
 Polish, like other Slavic languages, exhibits a large degree of inflection. This means that a lexical unit (lexeme) modifies its basic form (lemma) depending on grammatical, morphological, and contextual relations. Grammatical classes, e.g. nouns, adjectives, adverbs, have an associated set of grammatical categories, such as number, case, or aspect. Major grammatical categories and their values are:
@@ -192,7 +192,7 @@ For a given class, a grammatical category can be morphological (all lexemes from
 \end{table}
 
 \begin{table}[h!]
-  \caption{Conjugation of the verb \textit{rozpoznawać} (recognize) in past tense and perfective aspect, with respect to number (singular, plural), person (first, second, third), and gender (masculine, feminine, neuter)}
+  \caption{Conjugation of the verb \textit{rozpoznawać} (recognise) in past tense and perfective aspect, with respect to number (singular, plural), person (first, second, third), and gender (masculine, feminine, neuter)}
   \label{table:conjugation}
     \centering    \subcaption{singular}
     \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}llll}
