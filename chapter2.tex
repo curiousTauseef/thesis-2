@@ -8,7 +8,7 @@ In Section \ref{subsection:lm} we defined the chain rule of probability, which l
 	\label{equation:chain}
 	P(w_{1}^{n})=\prod_{i=1}^{n}P(w_{i}|w_{1}^{i-1})=\prod_{i=1}^{n}P(w_{i}|h_{i}).
 \end{equation}
-However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an \mbox{$n$-gram} model. An \mbox{$n$-gram} is simply a sequence of $n$ words (or other modelling units) -- an \mbox{$n$-gram} of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The \mbox{$n$-gram} model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
+However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an \mbox{$n$-gram} model. An \mbox{$n$-gram} is simply a sequence of $n$ words (or other modelling units)~--~an \mbox{$n$-gram} of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The \mbox{$n$-gram} model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
 \begin{equation}
 	P(w_{i}|w_{1}^{i-1})\approx P(w_{i}|w_{i-n+1}^{i-1})
 \end{equation}
@@ -25,7 +25,7 @@ Finding an optimal history classification function is the matter of striking a f
 Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased~--~higher order \mbox{$n$-gram}s typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
-The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple -- the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-gram}s sharing the same history:
+The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple~--~the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-gram}s sharing the same history:
 \begin{equation}
 	\label{equation:mle}
 	p(w_{i}|w_{i-n+1}^{i-1})=\frac{C(w_{i-n+1}^{i})}{\sum_{w_{i}}C(w_{i-n+1}^{i})}.
@@ -62,7 +62,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\begin{equation}
 		P(\texttt{<s> egg and bacon </s>})=0 \Leftarrow P(\texttt{bacon}|\texttt{and})=0
 	\end{equation}
-	Both these artifacts are a consequence of data sparsity -- the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
+	Both these artifacts are a consequence of data sparsity~--~the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
 
 	Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
 
@@ -75,7 +75,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\end{equation}
 	This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
 	\subsubsection*{Katz smoothing}
-	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times -- in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 	\begin{equation}
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 	\end{equation}
@@ -203,7 +203,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\begin{equation}
 		P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
 	\end{equation}
-	Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters -- it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
+	Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters~--~it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
 	\begin{multline}
 		P(\texttt{<s> open the pod bay door hal </s>}) \approx \\
 		\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
@@ -214,7 +214,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 	\end{center}
 	A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
 	In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word \mbox{$n$-gram}s can be simply infeasible due to data sparsity and memory constraints.
-	Another issue with word-based \mbox{$n$-gram}s is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order -- permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
+	Another issue with word-based \mbox{$n$-gram}s is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order~--~permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 	\begin{center}
 		\texttt{a brilliant american mathematician who graduated from} \\
 		\texttt{a brilliant american mathematician who graduated recently from}.
@@ -229,7 +229,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\pi:w_{i}\mapsto \gls{mapping}
 		\label{equation:deterministic_class}
 	\end{equation}
-	The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle} -- a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
+	The class mapping $\pi$ can be deterministic or probabilistic. An example of a deterministic mapping is the \texttt{<ign>} token described in Section \ref{subsection:mle}~--~a word either appears in the vocabulary or not, so the mapping is unambiguous. In contrast, clustering based on linguistic knowledge is often ambiguous, because the same word can belong to different grammatical categories, depending on the context. 
 	In case of a deterministic mapping, the probability of a word given its history can be calculated as the product of the probability of a particular word given its class (word emission probability) and the probability of a certain class given a history of $n-1$ classes:
 	\begin{equation}
 		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P(w_{i}|\pi(w_{i}))P(\pi(w_{i})|\pi(w_{i-n+1}), \dots, \pi(w_{i-1}))
@@ -241,7 +241,7 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\label{equation:emission_probability}
 	\end{equation}
 	In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the posible realisations \cite{ney1994structuring}.
-	The methods for finding the class mapping function fall roughly into two categories -- knowledge-based and data-driven. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The data-driven clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The class-based models used in this work are deterministic, knowledge-based morphosyntactic models.
+	The methods for finding the class mapping function fall roughly into two categories~--~knowledge-based and data-driven. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The data-driven clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The class-based models used in this work are deterministic, knowledge-based morphosyntactic models.
 	\section{Neural network models}
 	\label{section:rnn}
 	For decades, n-grams have been the standard approach to statistical language modelling. Although many alternative techniques were proposed, the improvements in performance usually came at the cost of computational complexity \cite{mikolov2011rnnlm}. The neural network based language models were introduced in \cite{bengio2003neural} and motivated by the observation that the word-based n-gram models have two major setbacks~--~they are unable to capture longer contexts and they ignore the similarity between words. 
