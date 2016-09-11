@@ -35,6 +35,7 @@ Concraft-pl is a morphosyntactic tagger for Polish. It combines Maca -- a morpho
 \subsection{RNNLM}
 The \gls{rnnlm} is a simple language modelling toolkit built by Mikolov et al. \cite{mikolov2011extensions}. It consists of a single C++ library for training language models based on recurrent neural networks. It also facilitates model evaluation by providing functionalities for perplexity calculation and n-best list rescoring. The training process is controlled by a set of parameters, such as the size of the hidden layer, the number of clustering classes, and the number of time steps to use in \gls{bptt} (see \ref{section:rnn} for details). The learning rate is adjusted automatically based on an entropy score calculated on a validation file.
 \section{Method}
+\label{section:method}
 Building language models can be roughly divided into two stages~--~first, the training data is gathered and pre-processed, and then the models are trained and evaluated. This section contains a description of the process conducted in the experimental part. The first subsection presents in detail the subsequent stages of the data preprocessing pipeline, while the second is devoted to the training process.
 \subsection{Building the training sets}
 \label{subsection:trainingset}
