@@ -10,7 +10,7 @@ In Section \ref{subsection:lm} we defined the chain rule of probability, which l
 \end{equation}
 However, there is no way of computing the probability of a word given a long history of preceding words. Estimating it from relative frequency counts is infeasible, if only for data sparsity reason. We can deal with this problem by using an \mbox{$n$-gram} model. An \mbox{$n$-gram} is simply a sequence of $n$ words (or other modelling units)~--~an \mbox{$n$-gram} of size 1 is called a unigram, size 2 is a bigram, and size 3 is called a trigram. The \mbox{$n$-gram} model approximates the probability of a word given all the previous words with the probability of the word given $n-1$ preceding words:
 \begin{equation}
-	P(w_{i}|w_{1}^{i-1})\approx P(w_{i}|w_{i-n+1}^{i-1})
+	P(w_{i}|w_{1}^{i-1})\approx P(w_{i}|w_{i-n+1}^{i-1}).
 \end{equation}
 The \mbox{$n$-gram} can be interpreted as a left-to-right Markov chain of order $n-1$, because the probability of the current state depends only on $n-1$ previous states. To put it differently, the \mbox{$n$-gram} models satisfies the $n-1$ order Markov assumption (see Section \ref{subsection:acoustic}). In contrast to \glspl{hmm}, the states of Markov chains are directly visible.
 
@@ -20,28 +20,28 @@ Another way to look at the \mbox{$n$-gram} model is through the notion of histor
 \end{equation}
 Finding an optimal history classification function is the matter of striking a fine balance between its predictive power and complexity. To be a useful predictor, an equivalence class has to maximise the information about next word, while minimising the dimensionality of the resulting model. In case of \mbox{$n$-gram} models, the history classification function $\Phi$ simply limits the word history to the last $n-1$ elements:
 \begin{equation}
-	\varphi_{i}=\Phi(h_{i})=\Phi(w_{1}^{i-1})=w_{i-n+1}^{i-1}
+	\Phi(w_{1}^{i-1})=w_{i-n+1}^{i-1}.
 \end{equation}
-Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is increased~--~higher order \mbox{$n$-gram}s typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
+Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is \mbox{increased~--~higher} order \mbox{$n$-gram}s typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
 The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple~--~the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-gram}s sharing the same history:
 \begin{equation}
 	\label{equation:mle}
-	p(w_{i}|w_{i-n+1}^{i-1})=\frac{C(w_{i-n+1}^{i})}{\sum_{w_{i}}C(w_{i-n+1}^{i})}.
+	P(w_{i}|w_{i-n+1}^{i-1})=\frac{C(w_{i-n+1}^{i})}{\sum_{w_{j}}C(w_{i-n+1}^{i-1}, w_{j})}.
 \end{equation}
 Note that the sum in the denominator is equal simply to $C(\varphi_{i})$, so the formula in Equation \ref{equation:mle} can be more intuitively understood as the proportion of cases in which a particular equivalent word history $\varphi_{i}$ is followed by the word $w_{i}$:
 \begin{equation}
 	\label{equation:mle2}
 	P(w_{i}|\varphi_{i})=\frac{C(\varphi_{i}, w_{i})}{C(\varphi_{i})}.
 \end{equation}
-This ratio is called a relative frequency. In the special case of unigram probability it can be calculated as the count of the particular word $w_{i}$ normalised by the size of the corpus:
+This ratio is called the relative frequency. In the special case of unigram probability it can be calculated as the count of the particular word $w_{i}$ normalised by the size of the corpus:
 \begin{equation}
 	\label{equation:mle2}
 	P(w_{i})=\frac{C(w_{i})}{\sum_{w}C(w)}.
 \end{equation}
 \begin{table}[h!]
-	\caption{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}. The \texttt{<s>} and \texttt{</s>} tags denote the beginning and the end of the sentence.}
+	\caption[Calculating selected bigram and trigram probabilities using maximum likelihood estimation]{Calculating selected bigram and trigram probabilities using maximum likelihood estimation \cite{jurafsky2000speech}. The \texttt{<s>} and \texttt{</s>} tags denote the beginning and the end of the sentence.}
 	\label{table:mle}
 	\texttt{%
 		\begin{tabular}{c}
@@ -53,38 +53,35 @@ This ratio is called a relative frequency. In the special case of unigram probab
 		\end{tabular}}
 		\centering
 		\begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}lll}
-			$P(\texttt{bacon}|\texttt{spam})=\frac{2}{8}$ & $P(\texttt{spam}|\texttt{spam})=\frac{1}{8}$ & $P(\texttt{egg}|\texttt{<s> <s>})=\frac{1}{2}$  \\
+			$P(\texttt{bacon}|\texttt{spam})=\frac{2}{8}$ & $P(\texttt{spam}|\texttt{spam})=\frac{1}{8}$ & $P(\texttt{egg}|\texttt{<s> <s>})=\frac{2}{4}$  \\
 			$P(\texttt{bacon}|\texttt{egg})=\frac{2}{3}$  & $P(\texttt{spam}|\texttt{<s>})=\frac{2}{4}$ & $P(\texttt{egg}|\texttt{bacon and})=0$ \\
 			$P(\texttt{bacon}|\texttt{and})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 	\end{table}
-	Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
+
+Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
 	\begin{equation}
-		P(\texttt{<s> egg and bacon </s>})=0 \Leftarrow P(\texttt{bacon}|\texttt{and})=0
+		P(\texttt{bacon}|\texttt{and})=0 \Rightarrow P(\texttt{<s> egg and bacon </s>})=0
 	\end{equation}
 	Both these artifacts are a consequence of data sparsity~--~the corpus is simply too small for the model to be an accurate representation of the language. The probability of observed items is overestimated, while the probability of unobserved items is underestimated. Although the example is obviously exaggerated, the problem persists in case of full-sized corpora. There are many techniques of correcting this bias by shifting the probability mass from frequent to previously unseen items. This process, called smoothing or discounting, is described in Section \ref{subsection:smoothing}. 
 
-	Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
+	Zero probability is one problem, but there is also an issue of words that do not appear in the corpus at all. In speech recognition, \gls{oov} tokens are inevitable and they need to be identified, because they contribute to recognition errors in surrounding words. More importantly, they are often information-rich nouns, such as proper names, domain-specific notions, or foreign words. Language models can be used to facilitate the process of \gls{oov} token detection by incorporating the information about unknown words into the training process. All words that appear in the \gls{lm} training data, but do not appear in the \gls{asr} vocabulary, are simply substituted by the unknown word token \texttt{<ign>}. These pseudo-words are then treated like any other regular word in the corpus, similarly to \texttt{<s>} and \texttt{</s>}. 
 
 	Another conclusion that can be drawn from the example in Table \ref{table:mle} is that the model is only as representative as the corpus it is trained on. This is especially important in \gls{lvcsr}, where the model not only has to represent non-domain-specific vocabulary, but also focus on spoken language, which is often very different from writing. \gls{asr} systems are often trained on written texts, because this kind of data is usually readily available, but using speech transcripts can lead to better results with less training data \cite{dziadzio2015comparison}. This idea is further explored in the experimental part of the thesis.
 	\subsection{Smoothing}
 	\label{subsection:smoothing}
-	Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add $\delta$ to every \mbox{$n$-gram} count, where typically $0 < \delta \leq 1$:
+	Smoothing is a way of dealing with the zero probability problem. In principle, it is the process of adjusting the \gls{mle} estimates to produce more accurate probabilities \cite{chen1996empirical}. High probabilities are adjusted downwards and low probabilities are adjusted upwards, so the resulting distribution is more uniform. The simplest method of smoothing is additive smoothing. The idea is to add a constant $\delta$ to every \mbox{$n$-gram} count:
 	\begin{equation}
-		P_{add}(w_{i}|w_{i-n+1}^{i-1})=\frac{\delta+C(w_{i-n+1}^{i})}{\delta|V|+\sum_{w_{i}}C(w_{i-n+1}^{i})}.
+		P_{\textsc{add}}(w_{i}|\varphi{i})=\frac{\delta+C(\varphi_{i}w_{i})}{\delta|V|+C(\varphi_{i})},
 	\end{equation}
-	This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing is used in the experimental part.
+where typically $0 < \delta \leq 1$. This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing are used in the experimental part.
 	\subsubsection*{Katz smoothing}
 	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 	\begin{equation}
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
+		\label{equation:add}
 	\end{equation}
-	In particular, the total number of counts that should be assigned to bigrams with zero counts is equal to the number of singletons:
-	\begin{equation}
-		\label{equation:good-turing}
-		\hat{0}n_{0}=(0+1)\frac{n_{1}}{n_{0}}=n_{1}
-	\end{equation}
-	The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an \mbox{$n$-gram} $\alpha$ with $c$ counts:
+	From Equation \ref{equation:add} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an \mbox{$n$-gram} $\alpha$ with $c$ counts:
 	\begin{equation}
 		P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 	\end{equation}
