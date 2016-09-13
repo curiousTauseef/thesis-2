@@ -28,7 +28,7 @@ Two word histories are therefore equivalent if their last $n-1$ elements are ide
 The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple~--~the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-gram}s sharing the same history:
 \begin{equation}
 	\label{equation:mle}
-	P(w_{i}|w_{i-n+1}^{i-1})=\frac{C(w_{i-n+1}^{i})}{\sum_{w_{j}}C(w_{i-n+1}^{i-1}, w_{j})}.
+	P(w_{i}|\varphi)=\frac{C(\varphi, w_{i})}{\sum_{w_{j}}C(\varphi, w_{j})}.
 \end{equation}
 Note that the sum in the denominator is equal simply to $C(\varphi_{i})$, so the formula in Equation \ref{equation:mle} can be more intuitively understood as the proportion of cases in which a particular equivalent word history $\varphi_{i}$ is followed by the word $w_{i}$:
 \begin{equation}
@@ -110,16 +110,16 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{chen1996empirical}. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
 	\begin{equation}
-		P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
+		P_{\textsc{katz}}(w_{i}|\varphi)=
 		\begin{cases}
-			\frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if }C(w_{i-n+1}^{i}) > k\\
-			d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } 1\leq C(w_{i-n+1}^{i})\leq k\\
-			\alpha(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
+			\frac{C(\varphi, w_{i})}{C(\varphi)}& \text{if } C(\varphi, w_{i}) > k\\
+			d_{C(\varphi, w_{i})}\cdot \frac{C(\varphi, w_{i})}{C(\varphi)}& \text{if } 1 \leq C(\varphi, w_{i}) \leq k\\
+			\alpha(\varphi)\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(\varphi, w_{i})=0,
 		\end{cases}
 	\end{equation}
 	where:
 	\begin{equation}
-		\alpha(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
+		\alpha(\varphi)=\frac{1-\sum_{w_{i}:C(\varphi, w_{i})>0}P_{\textsc{katz}}(w|\varphi)}{\sum_{w_{j}:C(\varphi, w_{j})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 	\end{equation}
 	 The updated probability estimate can be computed from corrected count by normalisation, as shown in Equation \ref{equation:mle2}. For details on the derivation of $\alpha$ and $d_{c}$, see \cite{chen1996empirical}.
 	\subsubsection*{Kneser-Ney smoothing}
