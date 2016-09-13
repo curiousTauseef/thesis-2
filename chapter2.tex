@@ -108,7 +108,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}.
 		\label{equation:dc}
 	\end{equation}
-	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{chen1996empirical}. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
+	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{whittaker2000statistical}. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
 	\begin{equation}
 		P_{\textsc{katz}}(w_{i}|\varphi)=
 		\begin{cases}
@@ -119,7 +119,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	where:
 	\begin{equation}
-		\alpha(\varphi)=\frac{1-\sum_{w_{i}:C(\varphi, w_{i})>0}P_{\textsc{katz}}(w|\varphi)}{\sum_{w_{j}:C(\varphi, w_{j})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
+		\alpha(\varphi)=\frac{1-\sum_{w_{i}:C(\varphi, w_{i})>0}P_{\textsc{katz}}(w_{i}|\varphi)}{\sum_{w_{i}:C(\varphi, w_{i})=0}P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i})}.
 	\end{equation}
 	 The updated probability estimate can be computed from corrected count by normalisation, as shown in Equation \ref{equation:mle2}. For details on the derivation of $\alpha$ and $d_{c}$, see \cite{chen1996empirical}.
 	\subsubsection*{Kneser-Ney smoothing}
