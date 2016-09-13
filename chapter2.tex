@@ -79,11 +79,11 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 	\begin{equation}
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
-		\label{equation:add}
+		\label{equation:gt}
 	\end{equation}
-	From Equation \ref{equation:add} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the size of the sample. For an \mbox{$n$-gram} $\alpha$ with $c$ counts:
+	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{alpha}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\alpha:C(\alpha)=c)=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\alpha:C(\alpha)=c_{alpha})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
 	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
@@ -100,21 +100,21 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	The updated probability estimate can be computed from corrected count by normalisation:
 	\begin{equation}
-		P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}
+		P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}.
 	\end{equation}
 	The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary treshold $k$ are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
 	\begin{equation}
 		1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
 		\label{equation:constraint1}
 	\end{equation}
-	Furthermore, the total number of counts discounted in the global bigram distribution should be equal to the total number of counts that should be assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:good-turing}):
+	Furthermore, the total number of counts discounted in the bigram distribution should be equal to the total number of counts assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:gt}):
 	\begin{equation}
 		\sum_{c}n_{c}(1-d_{c})c=n_{1}.
 		\label{equation:constraint2}
 	\end{equation}
 	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by
 	\begin{equation}
-		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}
+		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}.
 		\label{equation:dc}
 	\end{equation}
 	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
