@@ -6,7 +6,7 @@ This section describes the resources that served as a source of training data, a
 \label{section:nkjp}
 Collecting high quality language data is a difficult task, as large and representative collections of modern texts are generally hard to obtain, if only for copyright reasons. One potential source of modern texts is obviously the Internet. However, web data can be extremely noisy and scraping, cleaning, and normalising it would be a cumbersome process. It should also be considered that the language of the Internet is different from that used in speech. Indeed, transcripts of spoken language appear to be a more valuable source of training data in \gls{asr} applications, than written texts \cite{dziadzio2015comparison}. Moreover, using raw text data to build POS-based models would require a very accurate and robust morphological tagger. For these reasons, linguistic corpora have become essential in advanced language technology. Fortunately, there exists an extensive, publicly available reference corpus of Polish language.
 
-\gls{nkjp} is a shared initiative of four institutions: the Institute of Computer Science at the Polish Academy of Sciences, the Institute of Polish Language at the Polish Academy of Sciences, the Polish Scientific Publisher PWN, and the Department of Computational and Corpus Linguistics at the University of Łódź. It has been carried out as a research-development project of the Ministry of Science and Higher Education. The full corpus contains over one and a half billion words. The list of sources for the corpora consists of literature, scientific journals, magazines, daily newspapers, and a variety of Internet texts. Most importantly, it contains transcripts of parliamentary proceedings and conversations. Moreover, the creators of the corpus claim that the conversations were chosen so that they represent both male and female speakers, in various age groups, coming from various regions in Poland \cite{lewandowska2012narodowy}. For that reason alone, \gls{nkjp} seemed like an excellent choice for the source of training data.
+\gls{nkjp} is a shared initiative of four institutions: the Institute of Computer Science at the Polish Academy of Sciences, the Institute of Polish Language at the Polish Academy of Sciences, the Polish Scientific Publisher PWN, and the Department of Computational and Corpus Linguistics at the University of Łódź. It has been carried out as a research-development project of the Ministry of Science and Higher Education. The full corpus contains over one and a half billion words. The list of sources for the corpora consists of literature, scientific journals, magazines, daily newspapers, and a variety of Internet texts. Most importantly, it contains transcripts of parliamentary proceedings and conversations. Moreover, the creators of the corpus claim that the conversations were chosen so that they represent both male and female speakers, in various age groups, coming from various regions in Poland \cite{lewandowska2012narodowy}.
 
 Another important feature of the \gls{nkjp} is that every text is accompanied by several layers of annotation. The metadata contain information about the text, such as title, author, and source, or~--~in case of speech transcripts~--~the topic of the conversation, the level of formality, background information about the speakers, and so on \cite{przepiorkowski2009xml}. More importantly, every lexical unit is described by several tags carrying information about its grammatical class and category. This enabled to easily filter the data by rejecting foreign words, incomplete or corrupted segments, punctuation, and \mbox{non-alphanumeric} characters. 
 
@@ -73,7 +73,7 @@ The XML files that constitute the \gls{nkjp} were parsed using a Python implemen
 	\item words -- plain text,
 	\item lemmas -- lemmatised text, 
 	\item POS tags -- tags containing only information about the grammatical class (part of speech),
-	\item GNC tags -- tags containing information about the grammatical class and selected grammatical categories that were shown in \cite{pohl2013using} to offer significant improvements over the POS-only model (gender, number, case).
+	\item GNC tags -- tags containing information about the grammatical class and selected grammatical categories that were shown in \cite{pohl2013using} to offer significant improvements over the \mbox{POS-only} model (gender, number, case).
 \end{enumerate}
 
 Each corpus was split into speech and text. The twelve final training datasets are listed in Table \ref{table:datasets}. This nomenclature will be used consistently throughout the following chapters. The contents of the corpora were filtered during extraction. All corrupted and incomplete segments were discarded, all numerals expressed with digits were substituted with a common tag, and all sentences were converted to lowercase, stripped of punctuation, non-alphanumeric symbols, foreign words and abbreviations. Only segments longer than three words were selected. 
@@ -94,7 +94,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the word corpus.}
+	\caption[Number of unique tokens in the word corpus]{Number of unique tokens in the word corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countsword}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -107,7 +107,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the lemma corpus.}
+	\caption[Number of unique tokens in the lemma corpus]{Number of unique tokens in the lemma corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countslemma}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -120,7 +120,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the POS corpus.}
+	\caption[Number of unique tokens in the POS corpus]{Number of unique tokens in the POS corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countspos}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -133,7 +133,7 @@ The n-gram models were built using the SRILM toolkit. First, the n-gram counts w
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Number of unique tokens in the GNC corpus.}
+	\caption[Number of unique tokens in the GNC corpus]{Number of unique tokens in the GNC corpus.}
 	\begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}l*3r}
 	\label{table:countsgnc}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech} & \multicolumn{1}{c}{full}  \\
@@ -149,7 +149,7 @@ The statistics confirm the issues described in Subsection \ref{subsection:inflec
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{coverage.png}
-      \caption{Unigram coverage for the full word corpus as a function of the vocabulary size.}
+      \caption[Unigram coverage for the full word corpus as a function of the vocabulary size]{Unigram coverage for the full word corpus as a function of the vocabulary size.}
       \label{figure:coverage}
 \end{figure}
 \FloatBarrier
@@ -157,7 +157,7 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
 
 \begin{table}[h!]
   \begin{center}
-	  \caption{Perplexity of a language model trained on the full word corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
+	  \caption[Perplexity of a language model trained on the full word corpus with different smoothing methods]{Perplexity of a language model trained on the full word corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (backoff), Kneser-Ney (interpolated), Chen-Goodman (backoff), Chen-Goodman (interpolated).}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
 		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KNB} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CGB} & \multicolumn{1}{c}{CGI}\\
@@ -175,7 +175,7 @@ The n-gram counts were then smoothed. Several smoothing methods were tested~--~G
       \label{figure:ngramdistribution}
 \end{figure}
 
-Figure \ref{figure:ngramdistribution} presents the distribution of n-grams in the full word corpus on a double logarithmic plot. Zipf's law states that the rank-frequency distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
+Figure \ref{figure:ngramdistribution} presents the distribution of \mbox{n-grams} in the full word corpus on a double logarithmic plot. Zipf's law states that the \mbox{rank-frequency} distribution of words in a natural language corpus is an inverse relation. More formally, the probability mass function of the term frequencies is of the form:
 \begin{equation}
 	p=\alpha k^{-\beta},
 	\label{equation:zipf}

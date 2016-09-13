@@ -73,9 +73,9 @@ Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilit
 	\begin{equation}
 		P_{\textsc{add}}(w_{i}|\varphi{i})=\frac{\delta+C(\varphi_{i}w_{i})}{\delta|V|+C(\varphi_{i})},
 	\end{equation}
-where typically $0 < \delta \leq 1$. This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing are used in the experimental part.
-	\subsubsection*{Katz smoothing}
-	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-grams} that occur $c$ times using the counts of \mbox{$n$-grams} that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-grams} using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-grams} that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+where typically $0 < \delta \leq 1$. This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly.
+	\subsubsection*{Katz back-off}
+	Katz back-off builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-grams} that occur $c$ times using the counts of \mbox{$n$-grams} that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-grams} using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-grams} that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 	\begin{equation}
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 		\label{equation:gt}
@@ -85,7 +85,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c}_{\alpha}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
-	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
+	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz back-off extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
 	\begin{equation}
 		C_{\textsc{katz}}(w_{i-1}, w_{i})=
 		\begin{cases}
@@ -108,7 +108,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}.
 		\label{equation:dc}
 	\end{equation}
-	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{whittaker2000statistical}. The updated probability $P_{\textsc{katz}}$ of word~$w_{i}$ given truncated history $w_{i-n+1}^{i-1}$ is given by:
+	Katz back-off for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{whittaker2000statistical}. The updated probability $P_{\textsc{katz}}$ of word~$w_{i}$ given truncated history $w_{i-n+1}^{i-1}$ is given by:
         \begin{equation}
         P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
         \begin{cases}
