@@ -94,17 +94,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
 		\end{cases}
 	\end{equation}
-	where $d_{c}$ is the discount coefficient and $\alpha$ is the back-off weight. The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the \mbox{Good-Turing} discount: 
-	\begin{equation}
-		1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
-		\label{equation:constraint1}
-	\end{equation}
-	Furthermore, the total number of counts discounted in the bigram distribution should be equal to the total number of counts assigned to zero-count bigrams according to the \mbox{Good-Turing} estimate (see Equation \ref{equation:gt}):
-	\begin{equation}
-		\sum_{c}n_{c}(1-d_{c})c=n_{1}.
-		\label{equation:constraint2}
-	\end{equation}
-	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given in equation \ref{equation:d}. Note that counts larger than some arbitrary treshold $k$ are assumed to be reliable and are not discounted: 
+	where $d_{c}$ is the discount coefficient and $\alpha$ is the back-off weight. The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary treshold $k$ are assumed to be reliable and are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the \mbox{Good-Turing} discount and the total number of counts discounted in the \mbox{$n$-gram} distribution is equal to the total number of counts that should be assigned to \mbox{$n$-grams} with zero counts according to the \mbox{Good-Turing} estimate: 
 	\begin{equation}
             d_{c}=
             \begin{cases}
@@ -113,7 +103,9 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		\label{equation:dc}
             \end{cases}
 	\end{equation}
-	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
+	For details on the derivation of the discount coefficient, see \cite{chen1996empirical}.
+
+Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
 	\begin{equation}
 		P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
 		\begin{cases}
@@ -121,7 +113,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\alpha(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
 		\end{cases}
 	\end{equation}
-	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$::
+	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged, i.e. TODO CHECK THAT $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
 	\begin{equation}
 		\alpha(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 	\end{equation}
