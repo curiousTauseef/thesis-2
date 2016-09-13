@@ -58,7 +58,6 @@ This ratio is called the relative frequency. In the special case of unigram prob
 			$P(\texttt{bacon}|\texttt{and})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 	\end{table}
-
 Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
 	\begin{equation}
 		P(\texttt{bacon}|\texttt{and})=0 \Rightarrow P(\texttt{<s> egg and bacon </s>})=0
@@ -118,14 +117,11 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\alpha(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
 		\end{cases}
 	\end{equation}
-	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
+	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged:
 	\begin{equation}
 		\alpha(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 	\end{equation}
-	The updated probability estimate can be computed from corrected count by normalisation:
-	\begin{equation}
-		P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}.
-	\end{equation}
+	The updated probability estimate can be computed from corrected count by normalisation, as in Equation \ref{equation:mle2}.
 
 	\subsubsection*{Kneser-Ney smoothing}
 	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
