@@ -80,9 +80,9 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 		\label{equation:gt}
 	\end{equation}
-	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to \mbox{$n$-grams} with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{alpha}$ counts:
+	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to \mbox{$n$-grams} with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{\alpha}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\alpha:C(\alpha)=c_{alpha})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
 	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
@@ -117,12 +117,11 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\alpha(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
 		\end{cases}
 	\end{equation}
-	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged:
+	where:
 	\begin{equation}
 		\alpha(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 	\end{equation}
-	The updated probability estimate can be computed from corrected count by normalisation, as in Equation \ref{equation:mle2}.
-
+	 The updated probability estimate can be computed from corrected count by normalisation, as shown in Equation \ref{equation:mle2}. For details on the derivation of $\alpha$ and $d_{c}$, see \cite{chen1996empirical}.
 	\subsubsection*{Kneser-Ney smoothing}
 	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
 	\begin{equation}
