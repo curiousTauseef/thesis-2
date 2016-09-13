@@ -82,7 +82,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to \mbox{$n$-grams} with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{\alpha}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c_{\alpha}}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c}_{\alpha}}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
 	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
@@ -90,7 +90,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		C_{\textsc{katz}}(w_{i-1}, w_{i})=
 		\begin{cases}
 			d_{c}c & \text{if } c>0 \\
-			\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
+			\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0.
 		\end{cases}
 	\end{equation}
 	The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary treshold $k$ are not discounted ($d_{c}=1$). The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
@@ -121,7 +121,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\begin{equation}
 		\alpha(\varphi)=\frac{1-\sum_{w_{i}:C(\varphi, w_{i})>0}P_{\textsc{katz}}(w_{i}|\varphi)}{\sum_{w_{i}:C(\varphi, w_{i})=0}P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i})}.
 	\end{equation}
-        For details on the derivation of the back-off weight~$\alpha$ and the discount coefficient~$d_{c}$, see \cite{chen1996empirical}.
+        Note that the value of $\alpha(\varphi)$ is chosen so that the total number of counts in the distribution is unchanged. For details on the derivation of the back-off weight~$\alpha$ and the discount coefficient~$d_{c}$, see \cite{chen1996empirical}.
 	\subsubsection*{Kneser-Ney smoothing}
 	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
 	\begin{equation}
