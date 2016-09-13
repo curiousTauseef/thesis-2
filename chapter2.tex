@@ -81,9 +81,9 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 		\label{equation:gt}
 	\end{equation}
-	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\bet$ with $c_{beta}$ counts:
+	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\bet$ with $c_{\beta}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\beta:C(\beta)=c_{beta})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\beta:C(\beta)=c_{\beta})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
 	The problem with using plain \mbox{Good-Turing} estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind \mbox{Good-Turing} estimation by using \mbox{lower-order} distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
