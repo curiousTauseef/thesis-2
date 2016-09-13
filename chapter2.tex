@@ -82,7 +82,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to \mbox{$n$-grams} with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{\alpha}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\alpha:C(\alpha)=c_{\alpha})=\frac{\hat{c_{\alpha}}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
 	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
@@ -100,7 +100,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	Furthermore, the total number of counts discounted in the \mbox{$n$-gram} distribution should be equal to the total number of counts assigned to zero-count \mbox{$n$-grams} according to the Good Turing estimate (see Equation \ref{equation:gt}):
 	\begin{equation}
-		\sum_{c}n_{c}(1-d_{c})c=n_{1}.
+		\sum_{c=1}^{k}n_{c}(1-d_{c})c=n_{1}.
 		\label{equation:constraint2}
 	\end{equation}
 	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by:
@@ -108,7 +108,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}.
 		\label{equation:dc}
 	\end{equation}
-	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{whittaker2000statistical}. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
+	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion \cite{whittaker2000statistical}. The updated probability $P_{\textsc{katz}}$ of word~$w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by:
 	\begin{equation}
 		P_{\textsc{katz}}(w_{i}|\varphi)=
 		\begin{cases}
@@ -121,7 +121,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\begin{equation}
 		\alpha(\varphi)=\frac{1-\sum_{w_{i}:C(\varphi, w_{i})>0}P_{\textsc{katz}}(w_{i}|\varphi)}{\sum_{w_{i}:C(\varphi, w_{i})=0}P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i})}.
 	\end{equation}
-	 The updated probability estimate can be computed from corrected count by normalisation, as shown in Equation \ref{equation:mle2}. For details on the derivation of $\alpha$ and $d_{c}$, see \cite{chen1996empirical}.
+        For details on the derivation of the back-off weight~$\alpha$ and the discount coefficient~$d_{c}$, see \cite{chen1996empirical}.
 	\subsubsection*{Kneser-Ney smoothing}
 	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
 	\begin{equation}
