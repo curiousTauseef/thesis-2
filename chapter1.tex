@@ -18,7 +18,7 @@ The conditional probability can be rearranged using the Bayes rule:
   \label{equation:bayesian}
   \gls{probsequence}=\frac{P(Y|W)P(W)}{P(Y)}\propto{P(Y|W)P(W)}.
 \end{equation}
-$P(W)$ is estimated by the language model, while $P(Y|W)$ is evaluated using the acoustic model. Typical ASR systems use \glspl{hmm} to represent the sequential structure of speech signal and \glspl{gmm} to model the emission distribution of \glspl{hmm}~\cite{baker1975dragon, bourlard1994connectionist}.
+$P(W)$ is estimated by the \gls{lm}, while $P(Y|W)$ is evaluated using the \gls{am}. Typical ASR systems use \glspl{hmm} to represent the sequential structure of speech signal and \glspl{gmm} to model the emission distribution of \glspl{hmm}~\cite{baker1975dragon, bourlard1994connectionist}.
 
 \subsection{Feature extraction}
 \label{subsection:features}
