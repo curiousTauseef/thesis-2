@@ -22,10 +22,10 @@ Finding an optimal history classification function is the matter of striking a f
 \begin{equation}
 	\Phi(w_{1}^{i-1})=w_{i-n+1}^{i-1}.
 \end{equation}
-Two word histories are therefore equivalent if their last $n-1$ elements are identical. The tradeoff between efficiency and complexity quickly becomes apparent when the value of $n$ is \mbox{increased~--~higher} order \mbox{$n$-gram}s typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
+Two word histories are therefore equivalent if their last $n-1$ elements are identical. The trade-off between efficiency and complexity quickly becomes apparent when the value of $n$ is \mbox{increased~--~higher} order \mbox{$n$-grams} typically exhibit lower perplexity (see Section \ref{subsection:perplexity}) and better performance, but are more expensive in terms of time and memory.
 \subsection{Maximum Likelihood Estimation}
 \label{subsection:mle}
-The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple~--~the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-gram}s sharing the same history:
+The most common technique of estimating the \mbox{$n$-gram} probabilities from a text corpus is \gls{mle}. The procedure is very simple~--~the \mbox{$n$-gram} probability of a word $w_{i}$ given the truncated history $\varphi_{i}=w_{i-n+1}^{i-1}$ is the observed frequency of the \mbox{$n$-gram} $w_{i-n+1}^{i}$ normalised by the sum of observed frequencies of all \mbox{$n$-grams} sharing the same history:
 \begin{equation}
 	\label{equation:mle}
 	P(w_{i}|\varphi)=\frac{C(\varphi, w_{i})}{\sum_{w_{j}}C(\varphi, w_{j})}.
@@ -141,15 +141,15 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{equation}
 	The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurences of the word, but the number of words it follows:
 	\begin{equation}
-		P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)}
+		P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)},
 		\label{equation:kneser-ney}
 	\end{equation}
 	where $N_{1+}(\bullet~w_{i})$ is the number of different words that precede $w_{i}$ in the training data and $N_{1+}(\bullet~\bullet)$ is the number of unique bigrams with nonzero count:
 	\begin{equation}
-		N_{1+}(\bullet~w_{i})=|{w_{i-1}:C(w_{i-1}, w_{i})>0}|
+		N_{1+}(\bullet~w_{i})=|{w_{i-1}:C(w_{i-1}, w_{i})>0}|,
 	\end{equation}
 	\begin{equation}
-		N_{1+}(\bullet~\bullet)=|{(w_{i-1}, w_{i}):C(w_{i-1}, w_{i})>0}|
+		N_{1+}(\bullet~\bullet)=|{(w_{i-1}, w_{i}):C(w_{i-1}, w_{i})>0}|.
 	\end{equation}
 	The general formula for the unmodified Kneser-Ney smoothing is
 	\begin{equation}
@@ -162,21 +162,21 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\begin{equation}
 		N_{1+}(\bullet~w_{i-n+2}^{i-1}~\bullet)=|{w_{i-n+1, w_{i}}:C(w_{i-n+1}^{i})>0}|.
 	\end{equation}
-	The Chen and Goodman's modification of the original Kneser-Ney algorithm uses three different discount values, $\delta_{1}$, $\delta_{2}$, $\delta_{3}$, that are applied to \mbox{$n$-gram}s with one, two, and three or more counts, respectively \cite{chen1996empirical}. While estimating $P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})$, the parameter $\delta$ simply becomes a function of $C(w_{i-n+1}^{i-1})$: 
+	The Chen and Goodman's modification of the original Kneser-Ney algorithm uses three different discount values, $\delta_{1}$, $\delta_{2}$, $\delta_{3}$, that are applied to \mbox{$n$-grams} with one, two, and three or more counts, respectively \cite{chen1996empirical}. While estimating $P_{\textsc{kn}}(w_{i}|w_{i-n+1}^{i-1})$, the parameter $\delta$ simply becomes a function of $C(w_{i-n+1}^{i-1})$: 
 	\begin{equation}
 		D(c)=	
 		\begin{cases}
 			0 & \text{if } c=0\\
 			\delta_{1} & \text{if } c=1\\
 			\delta_{2} & \text{if } c=2\\
-			\delta_{3+} & \text{if } c\geq3\\
+			\delta_{3+} & \text{if } c\geq3.\\
 		\end{cases}
 	\end{equation}
-	The distribution must still sum to one, so the new value of $\alpha$ is
+	The distribution must still sum to one, so the new value of $\alpha$ is:
 	\begin{equation}
-		\alpha(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
+		\alpha(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}.
 	\end{equation}
-	The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for \mbox{$n$-gram}s with one or two counts is different from the optimal average discount for \mbox{$n$-gram}s with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
+	The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for \mbox{$n$-grams} with one or two counts is different from the optimal average discount for \mbox{$n$-grams} with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
 	\begin{align}
 		Y&=\frac{n_{1}}{n_{1}+2n_{2}} \nonumber\\ 
 		\delta_{1}&=1-2Y\frac{n_{2}}{n_{1}} \nonumber\\
@@ -184,29 +184,29 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		\delta_{3+}&=3-4Y\frac{n_{4}}{n_{3}}.
 	\end{align}
 	\subsection{Word n-grams}
-	So far, while describing the \mbox{$n$-gram} models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, \mbox{$n$-gram}s can use sub-lexical units, such as phonemes, letters, and syllables, or supra-lexical units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because word-based models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
+	So far, while describing the \mbox{$n$-gram} models, we used the terms ``word'' and ``modeling unit'' interchangeably. However, depending on the application, \mbox{$n$-grams} can use \mbox{sub-lexical} units, such as phonemes, letters, and syllables, or \mbox{supra-lexical} units, such as \gls{pos} tags. In case of \gls{asr}, words are the most popular choice for the modeling units, because \mbox{word-based} models can be easily incorporated into the search process described in section \ref{subsection:lm}. For example, consider this famous quote:
 	\begin{center}
-		\texttt{open the pod bay doors}
+		\texttt{open the pod bay doors}.
 	\end{center}
 	We would like to estimate the probability of next word being \texttt{hal}. Using a bigram model, we get:
 	\begin{equation}
-		P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors})
+		P(\texttt{hal}|\texttt{open the pod bay doors}) \approx P(\texttt{hal}|\texttt{doors}).
 	\end{equation}
-	Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous - for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters~--~it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
+	Truncating the history to $n-1$ units drastically reduces the number of free parameters. Although this number is still enormous~--~for a bigram model and a vocabulary of 50000 words, there are potentially two and a half billion parameters~--~it is at least feasible to estimate the probability of the entire sequence using the chain rule from Equation \ref{equation:chain}:
 	\begin{multline}
 		P(\texttt{<s> open the pod bay door hal </s>}) \approx \\
-		\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal})
+		\approx P(\texttt{open}|\texttt{<s>})P(\texttt{the}|\texttt{open})P(\texttt{pod}|\texttt{the})P(\texttt{bay}|\texttt{pod})P(\texttt{door}|\texttt{bay})P(\texttt{hal}|\texttt{door})P(\texttt{</s>}|\texttt{hal}).
 	\end{multline}
-	There are several disadvantages of word-based \mbox{$n$-gram} models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, low-order word-based \mbox{$n$-gram}s may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short \mbox{$n$-gram}s. Take this quote from Yoda as an example:
+	There are several disadvantages of \mbox{word-based} \mbox{$n$-gram} models. The first one is the obviously unrealistic Markov's assumption. Language dependencies often span across far more than just three or four words, especially in inflected languages. Consequently, \mbox{low-order} \mbox{word-based} \mbox{$n$-grams} may do a poor job at disambiguating grammatically invalid sentences, because an incorrect sentence can be constructed from a sequence of valid short \mbox{$n$-grams}. Take this quote from Yoda as an example:
 	\begin{center}
-		\texttt{<s> look I so old to young eyes </s>}
+		\texttt{<s> if no mistake you have made losing you are </s>}
 	\end{center}
 	A bigram model would likely assign a relatively high probability to this phrase, because each pair of consecutive words is entirely plausible. 
-	In the above example, using a trigram model would probably yield better results, but at a considerable cost - even for a lexicon of 50 000 words (far too few for modeling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a tradeof between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing higher-order word \mbox{$n$-gram}s can be simply infeasible due to data sparsity and memory constraints.
-	Another issue with word-based \mbox{$n$-gram}s is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order~--~permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
+	In the above example, using a trigram model would probably yield better results, but at a considerable cost~--~even for a lexicon of 50 000 words (far too few for modelling any inflected language), switching from bigram to trigram introduces more than one hundred trillions potential parameters! In short, there is always a \mbox{trade-off} between the quality of predictions and the amount of data required to calculate the probability estimates. Training and storing \mbox{higher-order} word \mbox{$n$-grams} can be simply infeasible due to data sparsity and memory constraints.
+	Another issue with word-based \mbox{$n$-grams} is that the truncation of word history may lead to unintuitive or inconsistent behaviour. This problem is especially pronounced in case of languages with weak constraints on word order~--~permutations of the same sequence may be assigned different probability estimates despite being grammatically and semantically equivalent. Furthermore, very similar word histories may lead to different predictions. Consider these two sequences:
 	\begin{center}
-		\texttt{a brilliant american mathematician who graduated from} \\
-		\texttt{a brilliant american mathematician who graduated recently from}.
+		\texttt{she graduated from} \\
+		\texttt{she graduated very recently from}.
 	\end{center}
 	From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
 
