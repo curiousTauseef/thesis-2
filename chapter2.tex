@@ -76,59 +76,54 @@ Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilit
 	\end{equation}
 where typically $0 < \delta \leq 1$. This method is easy to implement, but has been shown in \cite{Gale94what'swrong} to generally perform poorly. That is why Katz back-off and Chen and Goodman's modified Knesser-Ney smoothing are used in the experimental part.
 	\subsubsection*{Katz smoothing}
-	Katz smoothing builds on the Good-Turing estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
+	Katz smoothing builds on the \mbox{Good-Turing} estimate, based on the \textit{symmetry requirement} which states that two events which occur the same number of times in the sample must have equal probabilities \cite{whittaker2000statistical}. The idea is to adjust the count of \mbox{$n$-gram}s that occur $c$ times using the counts of \mbox{$n$-gram}s that occur $c+1$ times~--~in particular, to estimate the probability of unseen \mbox{$n$-gram}s using the singleton counts. Let $n_{c}$ denote the number of \mbox{$n$-gram}s that occur $c$ times in the sample. For each count $c$, an adjusted count $\hat{c}$ is computed:
 	\begin{equation}
 		\hat{c}=(c+1)\frac{n_{c+1}}{n_{c}}.
 		\label{equation:gt}
 	\end{equation}
-	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\alpha$ with $c_{alpha}$ counts:
+	From Equation \ref{equation:gt} it follows that the total number of counts that will be assigned to bigrams with zero counts is equal to the number of singletons. The updated probability estimate can be calculated by normalising the updated count by the total number of tokens. For an \mbox{$n$-gram} $\bet$ with $c_{beta}$ counts:
 	\begin{equation}
-		P_{\textsc{good}}(\alpha:C(\alpha)=c_{alpha})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
+		P_{\textsc{good}}(\beta:C(\beta)=c_{beta})=\frac{\hat{c}}{\sum_{c}cn_{c}}.
 	\end{equation}
 
-	The problem with using plain Good-Turing estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind Good-Turing estimation by using lower-order distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
+	The problem with using plain \mbox{Good-Turing} estimates for discounting is that $n_{c+1}$ quite often equals zero for high $c$. Katz smoothing extends the idea behind \mbox{Good-Turing} estimation by using \mbox{lower-order} distributions to better reallocate the count mass subtracted from nonzero counts. For example, while adjusting the counts of bigrams, the unigram distribution is used: 
 	\begin{equation}
 		C_{\textsc{katz}}(w_{i-1}, w_{i})=
 		\begin{cases}
 			d_{c}c & \text{if } c>0 \\
-			\gamma(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
+			\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0,
 		\end{cases}
 	\end{equation}
-	where $d_{c}$ is the discount ratio. The back-off weight $\gamma$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$:
-	\begin{equation}
-		\gamma(w_{i-1})=\frac{1-\sum_{w_{i}: C(w_{i-1}, w_{i})>0}P_{\textsc{katz}}(w_{i}|w_{i-1})}{\sum_{w_{i}: C(w_{i-1}, w_{i})=0}P_{\textsc{mle}}(w_{i})}.
-	\end{equation}
-	The updated probability estimate can be computed from corrected count by normalisation:
-	\begin{equation}
-		P_{\textsc{katz}}(w_{i}|w_{i-1})=\frac{C_{\textsc{katz}}(w_{i-1}, w_{i})}{\sum_{w_{i}}C_{\textsc{katz}}(w_{i-1}, w_{i})}.
-	\end{equation}
-	The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary treshold $k$ are not discounted. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
+	where $d_{c}$ is the discount coefficient and $\alpha$ is the back-off weight. The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the \mbox{Good-Turing} discount: 
 	\begin{equation}
 		1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
 		\label{equation:constraint1}
 	\end{equation}
-	Furthermore, the total number of counts discounted in the bigram distribution should be equal to the total number of counts assigned to zero-count bigrams according to the Good Turing estimate (see Equation \ref{equation:gt}):
+	Furthermore, the total number of counts discounted in the bigram distribution should be equal to the total number of counts assigned to zero-count bigrams according to the \mbox{Good-Turing} estimate (see Equation \ref{equation:gt}):
 	\begin{equation}
 		\sum_{c}n_{c}(1-d_{c})c=n_{1}.
 		\label{equation:constraint2}
 	\end{equation}
-	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given by
+	The only solution that satisfies the constraints formulated in Equation \ref{equation:constraint1} and \ref{equation:constraint2} is given in equation \ref{equation:d}. Note that counts larger than some arbitrary treshold $k$ are assumed to be reliable and are not discounted: 
 	\begin{equation}
-		d_{c}=\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}}.
+            d_{c}=
+            \begin{cases}
+		\frac{\frac{\hat{c}}{c}-\frac{(k+1)n_{k+1}}{n_{1}}}{1-\frac{(k+1)n_{k+1}}{n_{1}}} \text{if } c > k\\
+                1 \text{if } c <= k.
 		\label{equation:dc}
+            \end{cases}
 	\end{equation}
 	Katz smoothing for higher-order \mbox{$n$-gram} is defined recursively, where the unigram model is taken to be the \gls{mle} unigram model to end the recursion. The updated probability $P_{\textsc{katz}}$ of word $w_{i}$ given truncated history $\varphi=w_{i-n+1}^{i-1}$ is given by
 	\begin{equation}
 		P_{\textsc{katz}}(w_{i}|w_{i-n+1}^{i-1})=
 		\begin{cases}
-			\frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if }C(w_{i-n+1}^{i}) > k\\
-			d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } 1\leq C(w_{i-n+1}^{i})\leq k\\
-			\gamma(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
+			d_{C(w_{i-n+1}^{i})}\cdot \frac{C(w_{i-n+1}^{i})}{C(w_{i-n+1}^{i-1})}& \text{if } C(w_{i-n+1}^{i})>0\\
+			\alpha(w_{i-n+1}^{i-1})\cdot P_{\textsc{katz}}(w_{i}|w_{i-n+2}^{i-1})& \text{if } C(w_{i-n+1}^{i})=0,
 		\end{cases}
 	\end{equation}
-	where:
+	where $\alpha$ is chosen so that the total number of counts in the distribution is unchanged, i.e. $\sum_{w_{i}}C_{\textsc{katz}}(w_{i})=\sum_{w_{i}}C(w_{i})$::
 	\begin{equation}
-		\gamma(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
+		\alpha(w_{i-n+1}^{i-1})=\frac{1-\sum_{w_{i}:C(w_{i-n+1}^{i})>0}P_{\textsc{katz}}(w|w_{i-n+1}^{i-1})}{\sum_{w_{i}:C(w_{i-n+1}^{i})=0}P_{\textsc{katz}}(w|w_{i-n+2}^{i})}.
 	\end{equation}
 	\subsubsection*{Kneser-Ney smoothing}
 	The Kneser-Ney smoothing is an extension of absolute discounting, which involves subtracting a fixed discount $\delta \in (0, 1)$ from each nonzero count:
@@ -180,9 +175,9 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\delta_{3+} & \text{if } c\geq3\\
 		\end{cases}
 	\end{equation}
-	The distribution must still sum to one, so the new value of $\gamma$ is
+	The distribution must still sum to one, so the new value of $\alpha$ is
 	\begin{equation}
-		\gamma(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
+		\alpha(w_{i-n+1}^{i-1})=\frac{\delta_{1}N_{1}(w_{i-n+1}^{i-1}~\bullet)+\delta_{2}N_{2}(w_{i-n+1}^{i-1}~\bullet)+\delta_{3+}N_{3+}(w_{i-n+1}^{i-1}~\bullet)}{\sum_{w_{i}}C(w_{i-n+1}^{i})}
 	\end{equation}
 	The modified version has been shown to significantly outperform the original Kneser-Ney algorithm, because the optimal average discount for \mbox{$n$-gram}s with one or two counts is different from the optimal average discount for \mbox{$n$-gram}s with higher counts. Chen and Goodman provide estimates of the optimal values for $\delta_{1}$, $\delta_{2}$, and $\delta_{3}$:
 	\begin{align}
