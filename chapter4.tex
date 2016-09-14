@@ -67,6 +67,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 	\label{table:ppl_word_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
 		unigrams  & 3351.69   & 2287.98\\
 	        bigrams   & 1051.36   & 367.79\\
                 trigrams  & 942.74    & 226.06\\
@@ -78,6 +79,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 	\label{table:ppl_lemma_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
 		unigrams  & 1520.89  & 1149.99\\
 	        bigrams   & 560.73   & 260.05\\
                 trigrams  & 498.97   & 154.91\\
@@ -89,6 +91,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 	\label{table:ppl_pos_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
 		unigrams  & 11.23  & 10.29\\
 	        bigrams   & 9.27   & 8.23\\
                 trigrams  & 8.62   & 7.56\\
@@ -100,6 +103,7 @@ Generally, the perplexity scores hint that the models trained on speech transcri
 	\label{table:ppl_gnc_small}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}l*2r}
 		{}        & \multicolumn{1}{c}{text} & \multicolumn{1}{c}{speech}\\
+		\midrule
 		unigrams  & 159.14 & 156.54\\
 	        bigrams   & 47.79  & 45.08\\
                 trigrams  & 27.88  & 20.86\\
@@ -110,7 +114,7 @@ Table \ref{table:ppl_neural} presents the perplexity of neural models evaluated 
 
 \begin{table}[!htbp]
 	\centering
-	\caption{Perplexity of neural models}
+	\caption[Perplexity of neural models]{Perplexity of neural models.}
 	\label{table:ppl_neural}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		word   & 240.81\\
@@ -141,7 +145,7 @@ The size of a text representation of the model can serve as a proxy for the amou
 
 \section{N-best list rescoring}
 \label{section:nbest}
-The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35, and the maximal possible \gls{werr} is only 18.9.  
+The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35\%, and the maximal possible \gls{werr} is only 18.9\%.  
 
 \begin{table}[!htbp]
 	\centering
