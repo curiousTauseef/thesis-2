@@ -145,11 +145,11 @@ The size of a text representation of the model can serve as a proxy for the amou
 
 \section{N-best list rescoring}
 \label{section:nbest}
-The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35\%, and the maximal possible \gls{werr} is only 18.9\%.  
+The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35\%, and the maximal possible \gls{werr} is only 18.9\%. Note that all WER and WERR values in this and the following section are given as a percentage.
 
 \begin{table}[!htbp]
 	\centering
-	\caption[Maximal WERR achieved by respective models in \mbox{n-best} list rescoring]{Maximal \gls{werr}[\%] achieved by respective models in n-best list rescoring.}
+	\caption[Maximal WERR achieved by respective models in \mbox{n-best} list rescoring]{Maximal \gls{werr} achieved by respective models in n-best list rescoring.}
 	\label{table:max_werr}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		n-gram word full    & 15.67\\
@@ -257,8 +257,6 @@ Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. R
 	\caption[WER of neural models]{WER of neural models.}
 	\label{table:wer_neural}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
-		{}        &  \multicolumn{1}{c}{full} \\
-		\midrule
 		word  & 8.21\\
 		lemma  & 12.55\\
 		pos    & 17.65\\
@@ -268,7 +266,7 @@ Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. R
 
 \begin{table}[!htbp]
 	\centering
-	\caption[WERR[\%] achieved by respective models in mock \mbox{n-best} list rescoring]{WERR[\%] achieved by respective models in mock \mbox{n-best} list rescoring.}
+	\caption[WERR achieved by respective models in mock \mbox{n-best} list rescoring]{WERR achieved by respective models in mock \mbox{n-best} list rescoring.}
 	\label{table:max_werr}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		neural word   & 21.43\\
