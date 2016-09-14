@@ -353,7 +353,7 @@ The \glspl{rnn} used in the experimental part take advantage of two important te
 	where $S$ is the number of substitutions, $D$ is the number of deletions, $I$ is the number of insertions and $N$ is the number of words in the reference phrase. All of these numbers are non-negative, so the minimal value of WER is zero precisely when the hypothesis and the reference are identical. However, there is no upper bound, as the number of insertions can theoretically be arbitrary. \gls{wer} is often expressed as a percentage. It is common to assign different weights to insertions, deletions, and substitutions, but for all \gls{wer} values in this paper they were weighted equally. Table \ref{table:werr} illustrates the WER calculation. 
 
 \begin{table}[h!]
-	\caption[An example of \gls{wer} calculation]{An example of \gls{wer} calculation for a reference phrase \textit{let's recognize speech}}.
+	\caption[An example of WER calculation]{An example of \gls{wer} calculation for a reference phrase \textit{let's recognize speech}}.
   \label{table:werr}
     \centering
     \begin{tabular*}{.6\linewidth}{@{\extracolsep{\fill}}lrrrr}
