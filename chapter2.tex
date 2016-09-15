@@ -58,7 +58,7 @@ This ratio is called the relative frequency. In the special case of unigram prob
 			$P(\texttt{bacon}|\texttt{and})=0$            & $P(\texttt{spam}|\texttt{and})=1$ & $P(\texttt{</s>}|\texttt{and spam})=1$ \\
 		\end{tabular*}
 	\end{table}
-Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will asign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
+Table \ref{table:mle} shows an example of calculating \mbox{$n$-gram} probabilities using a corpus of four phrases from Monty Python's notorious spam sketch. Inspecting it reveals a major problem with the \gls{mle} approach. Note that some probability estimates are equal to one, so using the model to generate random sentences would in many cases result in phrases taken verbatim from the corpus. Even worse, there are also probability estimates equal to zero. This means that because of the chain rule, the model will assign a zero probability to any sequence containing a known word in a new context. This includes one of the previous lines of the sketch:
 	\begin{equation}
 		P(\texttt{bacon}|\texttt{and})=0 \Rightarrow P(\texttt{<s> egg and bacon </s>})=0
 	\end{equation}
@@ -93,7 +93,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 			\alpha(w_{i-1})P_{\textsc{mle}}(w_{i}) & \text{if } c=0.
 		\end{cases}
 	\end{equation}
-	The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary treshold $k$ are not discounted ($d_{c}=1$). The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
+	The discount coefficient $d_{c}$ depends on the the \mbox{$n$-gram} count $c$. Counts larger than some arbitrary threshold $k$ are not discounted ($d_{c}=1$). The value of $d_{c}$ when $c\leq k$ is chosen so that the resulting discount is proportional to the Good-Turing discount: 
 	\begin{equation}
 		1-d_{c}=\mu(1-\frac{\hat{c}}{c}).
 		\label{equation:constraint1}
@@ -139,7 +139,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\begin{equation}
 		\delta=\frac{n_{1}}{n_{1}+2n_{2}}.
 	\end{equation}
-	The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurences of the word, but the number of words it follows:
+	The idea behind Kneser-Ney smoothing is that since the lower-order model is only necessary when the count is small or zero in the higher-order model, it should be optimised for that purpose. In most other algorithms, the lower-order distribution is just a smoothed version of the MLE distribution. In Kneser-Ney smoothing, the unigram probability is not proportional to the number of occurrences of the word, but the number of words it follows:
 	\begin{equation}
 		P_{\textsc{kn}}(w_{i})=\frac{N_{1+}(\bullet~w_{i})}{N_{1+}(\bullet~\bullet)},
 		\label{equation:kneser-ney}
@@ -210,7 +210,7 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 	\end{center}
 	From the point of view of predicting the next word, these two histories are very similar. However, they would be considered completely different by a trigram word model \cite{whittaker2000statistical}. In the second case, we would need at least a $5$-gram model to capture the intuition that the next word is probably a name of a university.
 
-	Although \mbox{word-based} \mbox{$n$-gram} language models have been outperformed by deep neural networks in terms of perplexity and word error rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necesarily the best choice.
+	Although \mbox{word-based} \mbox{$n$-gram} language models have been outperformed by deep neural networks in terms of perplexity and word error rate, they are still commonly used in \gls{asr} systems, as they strike a fine balance between effectiveness and simplicity. They are straightforward to train and can be easily used to guide the search through the lattice of word hypotheses. However, in case of inflected languages, the problem of data sparsity is significantly amplified and therefore using words as the modeling unit is not necessarily the best choice.
 	\subsection{Class-based n-gram models}
 	\label{subsection:class}
 	Class-based models address the problem of data sparsity by reducing the number of parameters. The idea is to cluster words with similar statistical distributions or linguistic properties into groups. A class \mbox{$n$-gram} model with a vocabulary of size $V$ and $C$ classes has $V-C$ word emission parameters and $C^{n}-1$ independent \mbox{$n$-gram} parameters \cite{brown1992class}. Class-based models always have fewer parameters than analogous word-based models, and therefore their parameters can be more accurately estimated, as most classes will be well represented in the corpus. Class \mbox{$n$-gram} models are constructed in a similar fashion as word-based models, except that words are mapped to equivalence classes: 
@@ -229,13 +229,13 @@ where typically $0 < \delta \leq 1$. This method is easy to implement, but has b
 		P(w_{i}|c_{i})=\frac{C(w_{i})}{C(\pi(w_{i}))}.
 		\label{equation:emission_probability}
 	\end{equation}
-	In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the posible realisations \cite{ney1994structuring}.
+	In case of a probabilistic mapping, there are multiple realisations of the same word history, as each word can belong to several classes. Therefore, the prediction of the current word requires a summation over the probabilities of all the possible realisations \cite{ney1994structuring}.
 	The methods for finding the class mapping function fall roughly into two categories~--~\mbox{knowledge-based} and \mbox{data-driven}. The former approach takes advantage of prior linguistic knowledge. Examples include clustering based on \gls{pos} tags or semantic functions. This method usually requires additional resources such as tagged corpora, wordnets, or automatic morphological taggers. The \mbox{data-driven} clustering generally uses a greedy algorithm to automatically cluster words in such a way that the perplexity of the corpus is minimised. The \mbox{class-based} models used in this work are deterministic, \mbox{knowledge-based} morphosyntactic models.
 	\section{Neural network models}
 	\label{section:rnn}
 	For decades, n-grams have been the standard approach to statistical language modelling. Although many alternative techniques were proposed, the improvements in performance usually came at the cost of computational complexity \cite{mikolov2011rnnlm}. The neural network based language models were introduced in \cite{bengio2003neural} and motivated by the observation that the \mbox{word-based} \mbox{n-gram} models have two major setbacks~--~they are unable to capture longer contexts and they ignore the similarity between words. 
 	\subsection{The feedforward architecture}	
-The neural models use a distributed representation to deal with the high dimensionality of the training data. The idea is to represent each word as a \mbox{real-valued} vector in $\mathbb{R}^{m}$ and then express the probability function of word sequences in terms of these vectors. The probability function is a smooth function of the word representations, so these kind of models generalize much better to unknown sequences. Because the word embedding $W$: $words \mapsto \mathbb{R}^{m}$ has a useful property of clustering together synonyms and words from the same class, it allows to deal with the data sparsity by generalizing every training sentence to a class of similar sentences. The embedding and the parameters of the probability function can be learned simultaneously. In~\cite{bengio2003neural}, a feedforward multi-layer neural network implementing this framework was shown to yield a much better perplexity than the \mbox{Kneser-Ney} backoff \mbox{n-gram} models, but at the cost of high computational complexity and nontrivial implementation.
+The neural models use a distributed representation to deal with the high dimensionality of the training data. The idea is to represent each word as a \mbox{real-valued} vector in $\mathbb{R}^{m}$ and then express the probability function of word sequences in terms of these vectors. The probability function is a smooth function of the word representations, so these kind of models generalize much better to unknown sequences. Because the word embedding $W$: $words \mapsto \mathbb{R}^{m}$ has a useful property of clustering together synonyms and words from the same class, it allows to deal with the data sparsity by generalizing every training sentence to a class of similar sentences. The embedding and the parameters of the probability function can be learned simultaneously. In~\cite{bengio2003neural}, a feedforward multi-layer neural network implementing this framework was shown to yield a much better perplexity than the \mbox{Kneser-Ney} back-off \mbox{n-gram} models, but at the cost of high computational complexity and nontrivial implementation.
 	\subsection{The recurrent architecture}
 	In \cite{mikolov2011extensions}, a recurrent network architecture was shown to outperform the feedforward one. The \glspl{rnn} have a simple implementation and a very useful ability to store information in the hidden layer. The architecture of neural networks used in the experiments is described in \cite{mikolov2010recurrent} and presented in Figure \ref{figure:recurrent}. The input layer is formed by concatenating $w(t)$, a vector representing the current word with $s(t-1)$, the output of the hidden layer from the previous time step:
 	\begin{equation}
@@ -259,7 +259,7 @@ where:
 	f(z)=\frac{1}{1+e^{-z}}.
 	\label{equation:sigmoid}
 \end{equation}
-The values of the ouput layer are calculated by multiplying the output of the hidden layer by the weight matrix $V$ and applying the softmax function:
+The values of the output layer are calculated by multiplying the output of the hidden layer by the weight matrix $V$ and applying the softmax function:
 \begin{equation}
 	y_{k}(t)=g(\sum_{j}s_{j}(t)v_{kj}),
 	\label{equation:output}
@@ -271,7 +271,7 @@ The softmax function \gls{softmax} transforms a real-valued vector $z$ into a ve
 \end{equation}
 
 \subsection{Extensions to the RNN model}
-The \glspl{rnn} used in the experimental part take advantage of two important techniques~--~\gls{bptt} and output layer factorization. The former aims to improve the model performance, while the latter allows to speed up the training process. BPTT is an extension of the backpropagation algorithm on the recurrent networks. The network is unfolded by duplicating the recurrent weight for an arbitrary number of time steps $\tau$, and the error is propagated back through an unfolded network, as presented in Figure \ref{figure:unfolding}.
+The \glspl{rnn} used in the experimental part take advantage of two important techniques~--~\gls{bptt} and output layer factorisation. The former aims to improve the model performance, while the latter allows to speed up the training process. BPTT is an extension of the backpropagation algorithm on the recurrent networks. The network is unfolded by duplicating the recurrent weight for an arbitrary number of time steps $\tau$, and the error is propagated back through an unfolded network, as presented in Figure \ref{figure:unfolding}.
 
 	\begin{figure}[htbp]
 		\centering
@@ -280,7 +280,7 @@ The \glspl{rnn} used in the experimental part take advantage of two important te
 		\label{figure:unfolding}
 	\end{figure}
 
-	To speed up the training, one could use a technique analogous to the one described in Section \ref{subsection:class}. Assumming that each word belongs to exactly one class, the probability of the word given its history can be calculated as in equation \ref{equation:classngram}. This reduces the computational complexity from $(1+H)H\tau+HV$ to $(1+H)H\tau+HC$, where $H$ is the size of the hidden layer, $V$ is the size of the vocabulary, $\tau$ is the number of \gls{bptt} steps, and $C$ is the number of classes. That can be a substantial improvement, as the $HV$ term is usually the computational bottleneck and of course $C$ is chosen so that $C\ll V$. However, the neural network architecture allows to extend this idea and assume that the emission probability depends on the hidden layer $s(t)$. Equation \ref{equation:classngram} becomes:
+	To speed up the training, one could use a technique analogous to the one described in Section \ref{subsection:class}. Assuming that each word belongs to exactly one class, the probability of the word given its history can be calculated as in equation \ref{equation:classngram}. This reduces the computational complexity from $(1+H)H\tau+HV$ to $(1+H)H\tau+HC$, where $H$ is the size of the hidden layer, $V$ is the size of the vocabulary, $\tau$ is the number of \gls{bptt} steps, and $C$ is the number of classes. That can be a substantial improvement, as the $HV$ term is usually the computational bottleneck and of course $C$ is chosen so that $C\ll V$. However, the neural network architecture allows to extend this idea and assume that the emission probability depends on the hidden layer $s(t)$. Equation \ref{equation:classngram} becomes:
 	\begin{equation}
 		P_{\textsc{class}}(w_{i}|w_{i-n+1}^{i-1})=P_{0}(w_{i}|\pi(w_{i}), s(t))P_{1}(\pi(w_{i})|s(t)).
 		\label{equation:classneural}
