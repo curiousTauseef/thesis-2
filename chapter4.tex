@@ -1,7 +1,7 @@
 \chapter{Results}
 \label{chapter:results}
 \section{Perplexity}
-The perplexity values presented in Tables \ref{table:ppl_word}-\ref{table:ppl_gnc} were calculated on a test set of 20000 utterances taken from the transcripted proceedings of the Polish parliament. The lowest perplexity achieved for a word n-gram model is 240.54. It should once again be noted that both the training and the test data come from a specific domain. This could significantly reduce the perplexity, as legal and parliamentary language is generally more predictable. For example, in~\cite{bengio2003neural} it is reported that a Kneser-Ney smoothed back-off trigram model achieved a perplexity of~323 on the Brown Corpus (general English) and only~127 on the AP News Corpus. 
+The perplexity values presented in Tables \ref{table:ppl_word}-\ref{table:ppl_gnc} were calculated on a test set of 20000 utterances taken from the transcripted proceedings of the Polish parliament. The lowest perplexity achieved for a word \mbox{$n$-gram} model is 240.54. It should once again be noted that both the training and the test data come from a specific domain. This could significantly reduce the perplexity, as legal and parliamentary language is generally more predictable. For example, in~\cite{bengio2003neural} it is reported that a Kneser-Ney smoothed back-off trigram model achieved a perplexity of~323 on the Brown Corpus (general English) and only~127 on the AP News Corpus. 
 
 \begin{table}[!htbp]
 	\centering
@@ -29,7 +29,7 @@ The perplexity values presented in Tables \ref{table:ppl_word}-\ref{table:ppl_gn
 	\end{tabular*}
 \end{table}
 
-Because the models have different vocabularies, the perplexity scores are not comparable across different types of models. However, for every type of models, the perplexity of speech models is lower than that of text models. This could be attributed to a larger training set, but in case of the word, lemma, and POS corpus, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that extending the training set by incorporating the text data actually lead to a worse model, assuming that perplexity is a valid metric in this context. Another, rather unsurprising observation is the large and consistent decrease in perplexity with the n-gram order. Tables \ref{table:ppl_word} and \ref{table:ppl_lemma} show that the drop in perplexity is more pronounced in case of models with a larger vocabulary. Interestingly, the difference in perplexity between trigram and unigram models is much greater in case of models trained on speech data. For example, the perplexity of the word text trigram model is approximately 3.6 times lower than that of a word text unigram model, while the perplexity of a word speech trigram model is 14.6 times lower than that of its unigram counterpart.
+Because the models have different vocabularies, the perplexity scores are not comparable across different types of models. However, for every type of models, the perplexity of speech models is lower than that of text models. This could be attributed to a larger training set, but in case of the word, lemma, and POS corpus, the perplexity of a model trained on the full corpus is consistently higher than that of a model trained on the speech corpus alone. This means that extending the training set by incorporating the text data actually lead to a worse model, assuming that perplexity is a valid metric in this context. Another, rather unsurprising observation is the large and consistent decrease in perplexity with the \mbox{$n$-gram} order. Tables \ref{table:ppl_word} and \ref{table:ppl_lemma} show that the drop in perplexity is more pronounced in case of models with a larger vocabulary. Interestingly, the difference in perplexity between trigram and unigram models is much greater in case of models trained on speech data. For example, the perplexity of the word text trigram model is approximately 3.6 times lower than that of a word text unigram model, while the perplexity of a word speech trigram model is 14.6 times lower than that of its unigram counterpart.
 
 \begin{table}[!htbp]
 	\centering
@@ -59,7 +59,7 @@ Because the models have different vocabularies, the perplexity scores are not co
 
 Tables \ref{table:ppl_pos} and \ref{table:ppl_gnc} present the perplexity results for the models based on morphosyntactic tags. The effect of the vocabulary size on perplexity is clearly visible. In case of the POS model, the perplexity of the model trained on the speech corpus is again lower than that of a model trained on the full corpus. However, the opposite is true for the GNC model. 
 
-Generally, the perplexity scores hint that the models trained on speech transcripts are a better representation of the language for the purpose of \gls{asr}, as they tend to have a lower perplexity than models trained on written text, despite having a slightly larger vocabulary. To further verify this hypothesis by eliminating the effect of the training set size, two equal sized training sets were built, one consisting of speech transcripts and the other of written texts. Then, four pairs of \mbox{n-gram} models were trained on these sets, this time ensuring that the vocabularies of corresponding models are identical. The perplexity of these models is presented in Tables \mbox{\ref{table:ppl_word_small}-\ref{table:ppl_gnc_small}}. The models based on speech data have a significantly lower perplexity for all four types of modeling units. The difference is more prominent in case of word and lemma models. For example, the perplexity of a \mbox{speech-based} word trigram model is more than four times lower than that of a \mbox{text-based} model. In case of POS and GNC models, the difference is still noticeable, although much less pronounced. Moreover, in case of speech models, perplexity still decreases more rapidly with the n-gram order. For example, using trigrams instead of unigrams results in a tenfold drop in perplexity of a \mbox{speech-based} model, and only a threefold decrease in case of a \mbox{text-based} model. 
+Generally, the perplexity scores hint that the models trained on speech transcripts are a better representation of the language for the purpose of \gls{asr}, as they tend to have a lower perplexity than models trained on written text, despite having a slightly larger vocabulary. To further verify this hypothesis by eliminating the effect of the training set size, two equal sized training sets were built, one consisting of speech transcripts and the other of written texts. Then, four pairs of \mbox{n-gram} models were trained on these sets, this time ensuring that the vocabularies of corresponding models are identical. The perplexity of these models is presented in Tables \mbox{\ref{table:ppl_word_small}-\ref{table:ppl_gnc_small}}. The models based on speech data have a significantly lower perplexity for all four types of modeling units. The difference is more prominent in case of word and lemma models. For example, the perplexity of a \mbox{speech-based} word trigram model is more than four times lower than that of a \mbox{text-based} model. In case of POS and GNC models, the difference is still noticeable, although much less pronounced. Moreover, in case of speech models, perplexity still decreases more rapidly with the \mbox{$n$-gram} order. For example, using trigrams instead of unigrams results in a tenfold drop in perplexity of a \mbox{speech-based} model, and only a threefold decrease in case of a \mbox{text-based} model. 
 
 \begin{table}[!htbp]
 	\centering
@@ -125,7 +125,7 @@ Table \ref{table:ppl_neural} presents the perplexity of neural models evaluated 
 \end{table}
 
 \section{Size}
-The size of a text representation of the model can serve as a proxy for the amount of memory it will require in the final application. As shown in Table \ref{table:sizes}, the size of the model seems to be dependent mostly on the size of the vocabulary, with an interesting exception of the neural GNC model, which not only takes less space than the neural POS model, but is also 25 times smaller than its n-gram counterpart.
+The size of a text representation of the model can serve as a proxy for the amount of memory it will require in the final application. As shown in Table \ref{table:sizes}, the size of the model seems to be dependent mostly on the size of the vocabulary, with an interesting exception of the neural GNC model, which not only takes less space than the neural POS model, but is also 25 times smaller than its \mbox{$n$-gram} counterpart.
 
 \begin{table}[!htbp]
 	\centering
@@ -133,13 +133,13 @@ The size of a text representation of the model can serve as a proxy for the amou
 	\label{table:sizes}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		neural word   & 899\\
-		n-gram word   & 615\\
-		n-gram lemma  & 432\\
+		\mbox{$n$-gram} word   & 615\\
+		\mbox{$n$-gram} lemma  & 432\\
 		neural lemma  & 336\\
-		n-gram GNC    & 36\\
+		\mbox{$n$-gram} GNC    & 36\\
 		neural POS    & 3.7\\
 		neural GNC    & 1.4\\
-		n-gram POS    & 0.4\\
+		\mbox{$n$-gram} POS    & 0.4\\
 	\end{tabular*}
 \end{table}
 
@@ -147,29 +147,29 @@ The size of a text representation of the model can serve as a proxy for the amou
 \label{section:nbest}
 The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35\%, and the maximal possible \gls{werr} is only 18.9\%. Note that all WER and WERR values in this and the following section are given as a percentage.
 
- Table \ref{table:max_werr} presents the maximum \gls{werr} values achieved by the respective models. Unsurprisingly, the models trained on words achieve the highest \gls{werr}, with the n-gram model having a slight advantage over its neural counterpart. As far as the trigram models are concerned, those trained on speech data perform slightly better than those trained on written text and In case of the lemma and GNC model, they even achieve higher \gls{werr} than the models trained on the full corpus.
+Table \ref{table:max_werr} presents the maximum \gls{werr} values achieved by the respective models. Unsurprisingly, the models trained on words achieve the highest \gls{werr}, with the \mbox{$n$-gram} model having a slight advantage over its neural counterpart. As far as the trigram models are concerned, those trained on speech data perform slightly better than those trained on written text and In case of the lemma and GNC model, they even achieve higher \gls{werr} than the models trained on the full corpus.
 
 \begin{table}[!htbp]
 	\centering
 	\caption[Maximal WERR achieved by respective models in \mbox{n-best} list rescoring]{Maximal \gls{werr} achieved by respective models in n-best list rescoring.}
 	\label{table:max_werr}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
-		n-gram word full    & 15.67\\
-		n-gram lemma speech  & 15.32\\
+		word full    & 15.67\\
+		lemma speech  & 15.32\\
 		neural word   & 15.28\\
-		n-gram word speech  & 15.22\\
-		n-gram word text    & 15.16\\
-		n-gram lemma full    & 14.88\\
-		n-gram lemma text    & 14.24\\
+		word speech  & 15.22\\
+		word text    & 15.16\\
+		lemma full    & 14.88\\
+		lemma text    & 14.24\\
 		neural lemma  & 14.10\\
-		n-gram gnc speech & 13.75\\
-		n-gram gnc full   & 13.54\\
-		n-gram gnc text   & 13.29\\
+		gnc speech & 13.75\\
+		gnc full   & 13.54\\
+		gnc text   & 13.29\\
 		neural gnc    & 13.20\\
-		n-gram pos text   & 9.89\\
+		pos text   & 9.89\\
 		neural pos    & 9.58\\
-		n-gram pos full   & 9.54\\
-		n-gram pos speech & 9.47\\
+		pos full   & 9.54\\
+		pos speech & 9.47\\
 	\end{tabular*}
 \end{table}
 
@@ -250,7 +250,7 @@ Table \ref{table:wer_ngram} presents the mean WER of the hypotheses chosen by th
 	\end{tabular*}
 \end{table}
 
-Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. Regardless of the type of the modelling unit, they outperform the n-gram models trained on the same corpus. In particular, the neural GNC model achieves a lower WER than all n-gram models except for the speech and full word-based trigram model. This result suggests that \gls{rnn} morphosyntactic models can be a promising area of research as far as speech recognition is concerned, as they combine the compactness of class-based models and the ability to capture relationship spanning across multiple words, which is especially important in case of languages with a large degree of inflection.
+Table \ref{table:wer_neural} presents the mean \gls{wer} of the neural models. Regardless of the type of the modelling unit, they outperform the \mbox{$n$-gram} models trained on the same corpus. In particular, the neural GNC model achieves a lower WER than all \mbox{$n$-gram} models except for the speech and full word-based trigram model. This result suggests that \gls{rnn} morphosyntactic models can be a promising area of research as far as speech recognition is concerned, as they combine the compactness of class-based models and the ability to capture relationship spanning across multiple words, which is especially important in case of languages with a large degree of inflection.
 
 \begin{table}[!htbp]
 	\centering
@@ -271,20 +271,20 @@ Table \ref{table:max_werr_mock} presents the results of the mock n-best list res
 	\label{table:max_werr_mock}
 	\begin{tabular*}{.4\linewidth}{@{\extracolsep{\fill}}lr}
 		neural word   & 21.43\\
-		n-gram word full  & 21.09\\
-		n-gram word speech  & 20.97\\
+		word full  & 21.09\\
+		word speech  & 20.97\\
 		neural gnc    & 18.03\\
-		n-gram lemma speech  & 17.83\\
-		n-gram gnc full  & 17.75\\
-		n-gram word text  & 17.49\\
-		n-gram gnc speech  & 17.37\\
+		lemma speech  & 17.83\\
+		gnc full  & 17.75\\
+		word text  & 17.49\\
+		gnc speech  & 17.37\\
 		neural lemma  & 17.09\\
-		n-gram gnc text  & 17.06\\
-		n-gram lemma full  & 16.30\\
-		n-gram lemma text  & 12.69\\
+		gnc text  & 17.06\\
+		lemma full  & 16.30\\
+		lemma text  & 12.69\\
 		neural pos    & 11.99\\
-		n-gram pos speech  & 10.26\\
-		n-gram pos full  & 10.10\\
-		n-gram pos text  & 8.68\\
+		pos speech  & 10.26\\
+		pos full  & 10.10\\
+		pos text  & 8.68\\
 	\end{tabular*}
 \end{table}
