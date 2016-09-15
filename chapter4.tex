@@ -147,6 +147,8 @@ The size of a text representation of the model can serve as a proxy for the amou
 \label{section:nbest}
 The values of \gls{werr} presented in this section were calculated using the n-best list rescoring framework described in Subsection \ref{subsection:wer}. The n-best lists were actual recognition hypotheses from the Sarmata \gls{asr} system \cite{ziolko2011automatic}. The test utterances come from Polish television news programmes. The language models were tested on a set of 84 lists, each containing about 240 hypotheses. Figures \ref{figure:word}-\ref{figure:neural} present the absolute \gls{werr} of language models as a function of the $\alpha$ coefficient. The results should be treated with a certain dose of caution, as the quality of the acoustic hypotheses leaves a lot to be desired~--~the minimal WER a language model can achieve on this corpus is 66.35\%, and the maximal possible \gls{werr} is only 18.9\%. Note that all WER and WERR values in this and the following section are given as a percentage.
 
+ Table \ref{table:max_werr} presents the maximum \gls{werr} values achieved by the respective models. Unsurprisingly, the models trained on words achieve the highest \gls{werr}, with the n-gram model having a slight advantage over its neural counterpart. As far as the trigram models are concerned, those trained on speech data perform slightly better than those trained on written text and In case of the lemma and GNC model, they even achieve higher \gls{werr} than the models trained on the full corpus.
+
 \begin{table}[!htbp]
 	\centering
 	\caption[Maximal WERR achieved by respective models in \mbox{n-best} list rescoring]{Maximal \gls{werr} achieved by respective models in n-best list rescoring.}
@@ -170,8 +172,6 @@ The values of \gls{werr} presented in this section were calculated using the n-b
 		n-gram pos speech & 9.47\\
 	\end{tabular*}
 \end{table}
-
- Table \ref{table:max_werr} presents the maximum \gls{werr} values achieved by the respective models. Unsurprisingly, the models trained on words achieve the highest \gls{werr}, with the n-gram model having a slight advantage over its neural counterpart. As far as the trigram models are concerned, those trained on speech data perform slightly better than those trained on written text and In case of the lemma and GNC model, they even achieve higher \gls{werr} than the models trained on the full corpus.
 
 \begin{figure}[!htbp]
 	  \centering
