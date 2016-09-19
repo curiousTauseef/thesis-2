@@ -149,15 +149,15 @@ The results for the four types of corpora are presented in Tables \ref{table:cou
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{coverage.png}
-      \caption[Unigram coverage for the full word corpus as a function of the vocabulary size]{Unigram coverage for the full word corpus as a function of the vocabulary size.}
+      \caption[Unigram coverage of the full word corpus]{Unigram coverage of the full word corpus as a function of the vocabulary size.}
       \label{figure:coverage}
 \end{figure}
 \FloatBarrier
-The \mbox{$n$-gram} counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the back-off and interpolated variant. Perplexity of the word text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue, and the Witten-Bell and Good-Turing methods should work well.
+The \mbox{$n$-gram} counts were then smoothed. Several smoothing methods were tested~--~Good-Turing, Kneser-Ney, and Chen-Goodman's modified Kneser-Ney, both in the back-off and interpolated variant. Perplexity of the word text model calculated on the testing set is presented in Table \ref{table:perplexitysmoothing}. The model discounted using the interpolated modified Kneser-Ney method has the lowest perplexity. This smoothing technique was used for all language models except for the POS and GNC models, where the size of the vocabulary is too small to apply it. However, in case of models with a small vocabulary, smoothing is less of an issue.
 
 \begin{table}[h!]
   \begin{center}
-	  \caption[Perplexity of a language model trained with different smoothing methods]{Perplexity of a language model trained on the full word corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (back-off), Kneser-Ney (interpolated), Chen-Goodman (back-off), Chen-Goodman (interpolated).}
+	  \caption[Perplexity of a language model with different smoothing methods]{Perplexity of a language model trained on the full word corpus with different smoothing methods~--~Good-Turing, Kneser-Ney (back-off), Kneser-Ney (interpolated), Chen-Goodman (back-off), Chen-Goodman (interpolated).}
 	    \label{table:perplexitysmoothing}
 	    \begin{tabular*}{.8\linewidth}{@{\extracolsep{\fill}}l*6r}
 		    {} & \multicolumn{1}{c}{GT} & \multicolumn{1}{c}{KNB} & \multicolumn{1}{c}{KNI} & \multicolumn{1}{c}{CGB} & \multicolumn{1}{c}{CGI}\\
@@ -186,23 +186,20 @@ where $k$ is the rank of the term from the most to the least frequent one, and $
 Figures \ref{figure:commonunigrams}-\ref{figure:commontrigrams} present the most common terms of the full word corpus. Although the popular unigrams and bigrams are mostly stop words and general phrases, trigrams reveal a strong bias towards parliamentary jargon. For example, the phrase \textit{radiofonii i telewizji} refers to a bill which was the subject of the so called Rywin affair, a large corruption scandal investigated by a parliamentary committee, proceedings of which consist a large portion of the training corpus. This lack of representativeness will probably be reflected during the model evaluation.
 
 \begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=8cm, width=13cm]{common_unigrams.png}
+	  \includegraphics[height=8cm, width=15cm]{common_unigrams.png}
 	      \caption{Most common unigrams of the full word corpus.}
 	      \label{figure:commonunigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=8cm, width=13cm]{common_bigrams.png}
+	  \includegraphics[height=8cm, width=15cm]{common_bigrams.png}
 	      \caption{Most common bigrams of the full word corpus.}
 	      \label{figure:commonbigrams}
 \end{figure}
 
 \begin{figure}[!htbp]
-	  \centering
-	  \includegraphics[height=8cm, width=13cm]{common_trigrams.png}
-	      \caption{Most common bigrams of the full word corpus.}
+	  \includegraphics[height=8cm, width=15cm]{common_trigrams.png}
+	      \caption{Most common trigrams of the full word corpus.}
 	      \label{figure:commontrigrams}
 \end{figure}
 

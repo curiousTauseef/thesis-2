@@ -8,7 +8,7 @@ Although more cumbersome, the \gls{werr} evaluation on a real \gls{asr} system i
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{total_werr.png}
-	  \caption[The absolute WERR achieved by respective models on n-best list rescoring]{The absolute WERR achieved by respective models on n-best list rescoring.}
+	  \caption[Absolute WERR achieved in n-best list rescoring]{The absolute WERR achieved by respective models in n-best list rescoring.}
 	      \label{figure:total}
 \end{figure}
 
@@ -17,13 +17,13 @@ The quality of the acoustic model may have been an important factor in the \gls{
 \begin{figure}[!htbp]
 	  \centering
 	  \includegraphics[height=10cm, width=15cm]{total_simulated.png}
-	  \caption[The absolute WERR achieved by respective models on mock n-best list rescoring]{The absolute WERR achieved by respective models on mock n-best list rescoring.}
+	  \caption[Absolute WERR achieved in mock n-best list rescoring]{The absolute WERR achieved by respective models in mock n-best list rescoring.}
 	      \label{figure:total_mock}
 \end{figure}
 
-To sum up, the experimental part provided some valuable insights into how to optimise the language modelling of highly inflected language for speech recognition. First of all, the speech data once again proved to be a more valuable source of information than written texts \cite{dziadzio2015comparison}. Unfortunately, the conversation corpus in the \gls{nkjp} is too small to repeat the experiments on general spoken language. 
+To sum up, the experimental part provided some valuable insights into how to optimise the language modelling of highly inflected language for speech recognition. First of all, the speech data once again proved to be a more valuable source of information than written texts~\cite{dziadzio2015comparison}. In~some cases, incorporating the text data into a speech-based model actually led to a degradation in performance. Unfortunately, the conversation subcorpus of the \gls{nkjp} is too small to repeat the experiments on general spoken language. 
 
-The second important observation is that a morphosyntactic model based on grammatical classes and three grammatical categories (gender, number, case) turned out to be a very effective way of modelling Polish for speech recognition. The GNC model performs similarly to a \mbox{lemma-based} model and does so at a fraction of the computational cost. It is likely that it is possible to find a similarly informative set of grammatical categories for other inflected languages. 
+The second important observation is that a morphosyntactic model based on grammatical classes and three grammatical categories (gender, number, case) turned out to be a very effective way of modelling Polish for speech recognition. The GNC model performs similarly to a \mbox{lemma-based} model and does so at a fraction of the computational cost. It is likely that it is possible to find an equally informative set of grammatical categories for other inflected languages. 
 
-The last conclusion that can be drawn from the experimental part is that although the neural network models in most cases outperform their \mbox{$n$-gram} counterparts, the differences are rather slight. This can be attributed to numerous factors. Firstly, the neural models were trained on full corpora instead of just the speech transcript parts. Moreover, they were not optimised, as the values of parameters (the number of \gls{bptt} steps, the size of the hidden layer, the number of classes) were chosen so that the training part would be feasible on a consumer hardware. Additional experiments could definitely shed some light on the matter. It would be especially interesting to build and test a neural GNC model trained entirely on speech data, this time with a much larger hidden layer and a lot more \gls{bptt} steps, as it has the potential of being a viable alternative to \mbox{word-based} \mbox{$n$-grams}.
+The last conclusion that can be drawn from the experimental part is that although the neural network models in most cases outperform their \mbox{$n$-gram} counterparts, the differences are rather slight. This can be attributed to numerous factors. Firstly, the neural models were trained on full corpora instead of just the speech transcripts. Moreover, they were not optimised, as the values of parameters (the number of \gls{bptt} steps, the size of the hidden layer, the number of classes) were chosen so that the training part would be feasible on a consumer hardware. Additional experiments could definitely shed some light on the matter. It would be especially interesting to build and test a neural GNC model trained entirely on speech data, this time with a much larger hidden layer and a lot more \gls{bptt} steps, as it has the potential of being a viable alternative to \mbox{word-based} \mbox{$n$-grams}.
 
